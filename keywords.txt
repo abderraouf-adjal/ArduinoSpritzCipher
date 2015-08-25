@@ -1,0 +1,6 @@
+SpritzCipher	KEYWORD1
+setup	KEYWORD2
+setupIV	KEYWORD2
+stream	KEYWORD2
+hash	KEYWORD2
+mac	KEYWORD2
