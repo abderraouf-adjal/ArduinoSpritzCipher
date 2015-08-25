@@ -171,18 +171,18 @@ void SpritzCipher::squeeze(spritz_t *ctx, unsigned char *out, unsigned int len)
 
 /******************************************************************************/
 void SpritzCipher::setup(spritz_t *ctx,
-                         const unsigned char *key, unsigned int keylen)
+                         const unsigned char *key, unsigned int keyLen)
 {
   stateInit(ctx);
-  absorbBytes(ctx, key, keylen);
+  absorbBytes(ctx, key, keyLen);
 }
 
 /* Use setupIV() after setup() to add NONCE */
 void SpritzCipher::setupIV(spritz_t *ctx,
-                           const unsigned char *nonce, unsigned int noncelen)
+                           const unsigned char *nonce, unsigned int nonceLen)
 {
   absorbStop(ctx);
-  absorbBytes(ctx, nonce, noncelen);
+  absorbBytes(ctx, nonce, nonceLen);
 }
 
 unsigned char SpritzCipher::stream(spritz_t *ctx)
@@ -191,29 +191,29 @@ unsigned char SpritzCipher::stream(spritz_t *ctx)
 }
 
 
-void SpritzCipher::hash(unsigned char *digest, unsigned char digestlen,
-                        const unsigned char *data, unsigned int datalen)
+void SpritzCipher::hash(unsigned char *digest, unsigned char digestLen,
+                        const unsigned char *data, unsigned int dataLen)
 {
   spritz_t ctx;
 
   stateInit(&ctx);
-  absorbBytes(&ctx, data, datalen);
+  absorbBytes(&ctx, data, dataLen);
   absorbStop(&ctx);
-  absorb(&ctx, digestlen);
-  squeeze(&ctx, digest, (unsigned int)digestlen);
+  absorb(&ctx, digestLen);
+  squeeze(&ctx, digest, (unsigned int)digestLen);
 }
 
-void SpritzCipher::mac(unsigned char *digest, unsigned char digestlen,
-                       const unsigned char *msg, unsigned int msglen,
-                       const unsigned char *key, unsigned int keylen)
+void SpritzCipher::mac(unsigned char *digest, unsigned char digestLen,
+                       const unsigned char *msg, unsigned int msgLen,
+                       const unsigned char *key, unsigned int keyLen)
 {
   spritz_t ctx;
 
   stateInit(&ctx);
-  absorbBytes(&ctx, key, keylen);
+  absorbBytes(&ctx, key, keyLen);
   absorbStop(&ctx);
-  absorbBytes(&ctx, msg, msglen);
+  absorbBytes(&ctx, msg, msgLen);
   absorbStop(&ctx);
-  absorb(&ctx, digestlen);
-  squeeze(&ctx, digest, (unsigned int)digestlen);
+  absorb(&ctx, digestLen);
+  squeeze(&ctx, digest, (unsigned int)digestLen);
 }

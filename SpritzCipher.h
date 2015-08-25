@@ -41,16 +41,16 @@ class SpritzCipher
     SpritzCipher();
 
     void setup(spritz_t *ctx,
-               const unsigned char *key, unsigned int keylen);
+               const unsigned char *key, unsigned int keyLen);
     void setupIV(spritz_t *ctx,
-                 const unsigned char *nonce, unsigned int noncelen);
+                 const unsigned char *nonce, unsigned int nonceLen);
     unsigned char stream(spritz_t *ctx);
 
-    void hash(unsigned char *digest, unsigned char digestlen,
-              const unsigned char *data, unsigned int datalen);
-    void mac(unsigned char *digest, unsigned char digestlen,
-             const unsigned char *msg, unsigned int msglen,
-             const unsigned char *key, unsigned int keylen);
+    void hash(unsigned char *digest, unsigned char digestLen,
+              const unsigned char *data, unsigned int dataLen);
+    void mac(unsigned char *digest, unsigned char digestLen,
+             const unsigned char *msg, unsigned int msgLen,
+             const unsigned char *key, unsigned int keyLen);
 
   private:
     void swap(unsigned char *a, unsigned char *b);
