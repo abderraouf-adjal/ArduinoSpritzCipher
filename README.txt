@@ -14,7 +14,7 @@ spritz_t - Contain the state.
 
 * Functions
 setup()   - To setup spritz state.
-setupIV() - Can be used after setup() to add Nonce.
+setupIV() - Usable after setup() to add Nonce.
 stream()  - Return random byte that can be used as a key.
 hash()    - Hash function.
 mac()     - Message Authentication Code (MAC) function.
@@ -42,7 +42,7 @@ Examples
 	./examples/SpritzCipherHashTest/SpritzCipherHashTest.ino
 
 * Generate random bytes:
-	./examples/SpritzCipherStreamTest/SpritzCipherStreamTest.ino -
+	./examples/SpritzCipherStreamTest/SpritzCipherStreamTest.ino
 
 
 Installation Guide
