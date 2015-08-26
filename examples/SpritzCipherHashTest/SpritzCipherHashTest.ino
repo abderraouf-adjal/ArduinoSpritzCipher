@@ -44,11 +44,10 @@ const unsigned char testVector3[32] =
   0x0e, 0x66, 0xbf, 0x18, 0x9c, 0x63, 0xf6, 0x99
 };
 
-unsigned char buf[32]; /* Output buffer */
+unsigned char digest[32]; /* Output buffer */
+unsigned char hashLen = 32;
 
 SpritzCipher sc;
-
-unsigned char hashLen = 32;
 
 
 void setup() {
@@ -62,54 +61,54 @@ void setup() {
 void loop() {
   /* Data: ABC */
   Serial.println("hash('ABC'):");
-  sc.hash(buf, hashLen, testData1, sizeof(testData1));
-  for (unsigned int i = 0; i < sizeof(buf); i++) {
-    if (buf[i] < 0x10) {
+  sc.hash(digest, hashLen, testData1, sizeof(testData1));
+  for (unsigned int i = 0; i < sizeof(digest); i++) {
+    if (digest[i] < 0x10) {
       Serial.write('0');
     }
-    Serial.print(buf[i], HEX);
+    Serial.print(digest[i], HEX);
   }
   Serial.println();
   /* Check the output */
-  for (size_t i = 0; i < sizeof(buf); i++) {
+  for (size_t i = 0; i < sizeof(digest); i++) {
     /* If the output is wrong */
-    if (buf[i] != testVector1[i]) {
+    if (digest[i] != testVector1[i]) {
       Serial.println("** WARNING: Output_1 != Test_Vector **");
     }
   }
 
   /* Data: spam */
   Serial.println("hash('spam'):");
-  sc.hash(buf, hashLen, testData2, sizeof(testData2));
-  for (unsigned int i = 0; i < sizeof(buf); i++) {
-    if (buf[i] < 0x10) {
+  sc.hash(digest, hashLen, testData2, sizeof(testData2));
+  for (unsigned int i = 0; i < sizeof(digest); i++) {
+    if (digest[i] < 0x10) {
       Serial.write('0');
     }
-    Serial.print(buf[i], HEX);
+    Serial.print(digest[i], HEX);
   }
   Serial.println();
   /* Check the output */
-  for (size_t i = 0; i < sizeof(buf); i++) {
+  for (size_t i = 0; i < sizeof(digest); i++) {
     /* If the output is wrong */
-    if (buf[i] != testVector2[i]) {
+    if (digest[i] != testVector2[i]) {
       Serial.println("** WARNING: Output_2 != Test_Vector **");
     }
   }
 
   /* Data: arcfour */
   Serial.println("hash('arcfour'):");
-  sc.hash(buf, hashLen, testData3, sizeof(testData3));
-  for (unsigned int i = 0; i < sizeof(buf); i++) {
-    if (buf[i] < 0x10) {
+  sc.hash(digest, hashLen, testData3, sizeof(testData3));
+  for (unsigned int i = 0; i < sizeof(digest); i++) {
+    if (digest[i] < 0x10) {
       Serial.write('0');
     }
-    Serial.print(buf[i], HEX);
+    Serial.print(digest[i], HEX);
   }
   Serial.println();
   /* Check the output */
-  for (size_t i = 0; i < sizeof(buf); i++) {
+  for (size_t i = 0; i < sizeof(digest); i++) {
     /* If the output is wrong */
-    if (buf[i] != testVector3[i]) {
+    if (digest[i] != testVector3[i]) {
       Serial.println("** WARNING: Output_3 != Test_Vector **");
     }
   }
