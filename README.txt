@@ -8,7 +8,7 @@ On Github: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
 
 
 Content
-======
+=======
 * Types
 spritz_t - Contain the state.
 
@@ -38,12 +38,15 @@ void mac(unsigned char *digest, unsigned char digestLen,
 Examples
 ========
 
-./examples/SpritzCipherHashTest
-./examples/SpritzCipherStreamTest
+* Hash data:
+	./examples/SpritzCipherHashTest/SpritzCipherHashTest.ino
+
+* Generate random bytes:
+	./examples/SpritzCipherStreamTest/SpritzCipherStreamTest.ino -
 
 
-Installation
-============
+Installation Guide
+==================
 
 <https://www.arduino.cc/en/Guide/Libraries>
 
