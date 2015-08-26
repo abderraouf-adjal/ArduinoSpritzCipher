@@ -5,14 +5,12 @@
  * using test vectors from "RS14.pdf" Page 30:
  * <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
  *
- *
  * The circuit:  No external hardware needed.
  *
  * Created 25 Aug. 2015
  * by Abderraouf Adjal <abderraouf.adjal@gmail.com>
  *
  * This example code is in the public domain.
- *
  */
 
 
