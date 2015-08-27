@@ -1,10 +1,12 @@
 SpritzCipher
 ============
 
-Spritz Library for Arduino.
+Spritz library for Arduino.
 A spongy RC4-like stream cipher, Hash and MAC function.
 
-On Github: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
+Home page: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
+
+Spritz paper: <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
 
 
 Content
@@ -62,5 +64,4 @@ Copyright
 =========
 
 Copyright (c) 2015 Abderraouf Adjal
-
 License: The MIT License.
