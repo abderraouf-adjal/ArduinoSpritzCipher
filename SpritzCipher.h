@@ -26,14 +26,16 @@
 #ifndef _SPRITZCIPHER_H
 #define _SPRITZCIPHER_H
 
+#include <Arduino.h>
 
 #define SPRITZ_N 256
 
+
 typedef struct
 {
-  unsigned char s[SPRITZ_N];
-  unsigned char i, j, k, z, a, w;
+  byte s[SPRITZ_N], i, j, k, z, a, w;
 } spritz_t;
+
 
 class SpritzCipher
 {
@@ -41,31 +43,31 @@ class SpritzCipher
     SpritzCipher();
 
     void setup(spritz_t *ctx,
-               const unsigned char *key, unsigned int keyLen);
+               const byte *key, unsigned int keyLen);
     void setupIV(spritz_t *ctx,
-                 const unsigned char *nonce, unsigned int nonceLen);
-    unsigned char stream(spritz_t *ctx);
+                 const byte *nonce, unsigned int nonceLen);
+    byte stream(spritz_t *ctx);
 
-    void hash(unsigned char *digest, unsigned char digestLen,
-              const unsigned char *data, unsigned int dataLen);
-    void mac(unsigned char *digest, unsigned char digestLen,
-             const unsigned char *msg, unsigned int msgLen,
-             const unsigned char *key, unsigned int keyLen);
+    void hash(byte *digest, byte digestLen,
+              const byte *data, unsigned int dataLen);
+    void mac(byte *digest, byte digestLen,
+             const byte *msg, unsigned int msgLen,
+             const byte *key, unsigned int keyLen);
 
   private:
-    void swap(unsigned char *a, unsigned char *b);
+    void swap(byte *a, byte *b);
     void stateInit(spritz_t *ctx);
     void update(spritz_t *ctx);
     void whip(spritz_t *ctx);
     void crush(spritz_t *ctx);
     void shuffle(spritz_t *ctx);
-    void absorbNibble(spritz_t *ctx, const unsigned char nibble);
-    void absorb(spritz_t *ctx, const unsigned char byte);
-    void absorbBytes(spritz_t *ctx, const unsigned char *buf, unsigned int len);
+    void absorbNibble(spritz_t *ctx, const byte nibble);
+    void absorb(spritz_t *ctx, const byte byte);
+    void absorbBytes(spritz_t *ctx, const byte *buf, unsigned int len);
     void absorbStop(spritz_t *ctx);
-    unsigned char output(spritz_t *ctx);
-    unsigned char drip(spritz_t *ctx);
-    void squeeze(spritz_t *ctx, unsigned char *out, unsigned int len);
+    byte output(spritz_t *ctx);
+    byte drip(spritz_t *ctx);
+    void squeeze(spritz_t *ctx, byte *out, byte len);
 };
 
 

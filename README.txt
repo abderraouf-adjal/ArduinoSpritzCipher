@@ -25,16 +25,16 @@ mac()     - Message Authentication Code (MAC) function.
 Functions
 =========
 void setup(spritz_t *ctx,
-           const unsigned char *key, unsigned int keyLen);
+           const byte *key, unsigned int keyLen);
 void setupIV(spritz_t *ctx,
-             const unsigned char *nonce, unsigned int nonceLen);
-unsigned char stream(spritz_t *ctx);
+             const byte *nonce, unsigned int nonceLen);
+byte stream(spritz_t *ctx);
 
-void hash(unsigned char *digest, unsigned char digestLen,
-          const unsigned char *data, unsigned int dataLen);
-void mac(unsigned char *digest, unsigned char digestLen,
-         const unsigned char *msg, unsigned int msgLen,
-         const unsigned char *key, unsigned int keyLen);
+void hash(byte *digest, byte digestLen,
+          const byte *data, unsigned int dataLen);
+void mac(byte *digest, byte digestLen,
+         const byte *msg, unsigned int msgLen,
+         const byte *key, unsigned int keyLen);
 
 
 Examples
