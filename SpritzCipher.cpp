@@ -26,7 +26,7 @@
 #include "SpritzCipher.h"
 
 #define SPRITZ_HALF_N 128 /* SPRITZ_N/2 */
-#define SAFE_TIMING_CRUSH
+// #define SAFE_TIMING_CRUSH /* Because of the compiler optimization this "could" be not useful */
 
 
 SpritzCipher::SpritzCipher() { }
@@ -46,30 +46,33 @@ void SpritzCipher::stateInit(spritz_t *ctx)
   ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = 0;
   ctx->w = 1;
   for (i = 0; i < SPRITZ_N; i++) {
-    ctx->s[i] = byte(i);
+    ctx->s[i] = i;
   }
 }
 
 void SpritzCipher::update(spritz_t *ctx)
 {
-  ctx->i = byte(ctx->i + ctx->w);
-  ctx->j = byte(ctx->k + ctx->s[byte(ctx->j + ctx->s[ctx->i])]);
-  ctx->k = byte(ctx->k + ctx->i + ctx->s[ctx->j]);
+  ctx->i += ctx->w;
+  ctx->j  = ctx->k + ctx->s[byte(ctx->j + ctx->s[ctx->i])];
+  ctx->k += ctx->i + ctx->s[ctx->j];
   swap(&ctx->s[ctx->i], &ctx->s[ctx->j]);
 }
 
 void SpritzCipher::whip(spritz_t *ctx)
 {
-  unsigned int i;
-  for (i = 0; i < (SPRITZ_N * 2); i++) {
+  byte i;
+  for (i = 0; i < SPRITZ_HALF_N; i++) {
+    update(ctx);
+    update(ctx);
+    update(ctx);
     update(ctx);
   }
-  ctx->w = byte(ctx->w + 2);
+  ctx->w += 2;
 }
 
 void SpritzCipher::crush(spritz_t *ctx)
 {
-  byte i, j = byte(SPRITZ_N - 1); /* j=255 */
+  byte i, j = 255; /* j=SPRITZ_N-1=255 */
 #ifdef SAFE_TIMING_CRUSH
   byte s_i, s_j;
   for (i = 0; i < SPRITZ_HALF_N; i++, j--) {
@@ -107,14 +110,14 @@ void SpritzCipher::absorbNibble(spritz_t *ctx, const byte nibble)
   if (ctx->a == SPRITZ_HALF_N) {
     shuffle(ctx);
   }
-  swap(&ctx->s[ctx->a], &ctx->s[byte(SPRITZ_HALF_N + nibble)]);
+  swap(&ctx->s[ctx->a], &ctx->s[SPRITZ_HALF_N + nibble]);
   ctx->a++;
 }
 
-void SpritzCipher::absorb(spritz_t *ctx, const byte byte)
+void SpritzCipher::absorb(spritz_t *ctx, const byte octet)
 {
-  absorbNibble(ctx, byte % 16); /* Low */
-  absorbNibble(ctx, byte / 16); /* High */
+  absorbNibble(ctx, octet % 16); /* Low */
+  absorbNibble(ctx, octet / 16); /* High */
 }
 
 void SpritzCipher::absorbBytes(spritz_t *ctx, const byte *buf, unsigned int len)

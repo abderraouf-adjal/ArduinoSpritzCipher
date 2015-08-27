@@ -49,7 +49,7 @@ const byte testVector3[32] =
 void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
 {
   byte digest[32]; /* Output buffer */
-  byte hashLen = 32;
+  byte hashLen = 32; /* 256-bit */
   SpritzCipher sc;
   
   /* Print input */

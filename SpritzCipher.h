@@ -62,7 +62,7 @@ class SpritzCipher
     void crush(spritz_t *ctx);
     void shuffle(spritz_t *ctx);
     void absorbNibble(spritz_t *ctx, const byte nibble);
-    void absorb(spritz_t *ctx, const byte byte);
+    void absorb(spritz_t *ctx, const byte octet);
     void absorbBytes(spritz_t *ctx, const byte *buf, unsigned int len);
     void absorbStop(spritz_t *ctx);
     byte output(spritz_t *ctx);
