@@ -59,6 +59,10 @@ void setup() {
   while (!Serial) {
     ; /* Wait for serial port to connect. Needed for Leonardo only */
   }
+  
+  /* initialize digital pin 13 as an output */
+  pinMode(13, OUTPUT);
+  digitalWrite(13, LOW);
 }
 
 void loop() {
@@ -75,6 +79,7 @@ void loop() {
   for (byte i = 0; i < sizeof(digest); i++) {
     /* If the output is wrong */
     if (digest[i] != testVector1[i]) {
+      digitalWrite(13, HIGH); /* Turn pin 13 LED on */
       Serial.println(warnMsg);
     }
   }
@@ -94,6 +99,7 @@ void loop() {
   for (byte i = 0; i < sizeof(digest); i++) {
     /* If the output is wrong */
     if (digest[i] != testVector2[i]) {
+      digitalWrite(13, HIGH); /* Turn pin 13 LED on */
       Serial.println(warnMsg);
     }
   }
@@ -113,6 +119,7 @@ void loop() {
   for (byte i = 0; i < sizeof(digest); i++) {
     /* If the output is wrong */
     if (digest[i] != testVector3[i]) {
+      digitalWrite(13, HIGH); /* Turn pin 13 LED on */
       Serial.println(warnMsg);
     }
   }
