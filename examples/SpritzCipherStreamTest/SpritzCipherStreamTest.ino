@@ -45,14 +45,38 @@ const byte testVector3[32] =
   0xeb, 0x03, 0x35, 0xd4, 0xa4, 0xe9, 0xa3, 0x6e
 };
 
-byte buf[32]; /* Output buffer */
 
-const char warnMsg[] = "** WARNING: Output != Test_Vector **";
-
-spritz_t s_ctx;
-
-SpritzCipher sc;
-
+void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
+{
+  byte buf[32]; /* Output buffer */
+  spritz_t s_ctx;
+  SpritzCipher sc;
+  
+  /* Print key */
+  for (byte i = 0; i < dataLen; i++) {
+    Serial.write(data[i]);
+  }
+  Serial.println();
+  
+  sc.setup(&s_ctx, data, dataLen);
+  
+  for (byte i = 0; i < sizeof(buf); i++) {
+    buf[i] = sc.stream(&s_ctx);
+    if (buf[i] < 0x10) {
+      Serial.write('0');
+    }
+    Serial.print(buf[i], HEX);
+  }
+  /* Check the output */
+  for (byte i = 0; i < sizeof(buf); i++) {
+    /* If the output is wrong */
+    if (buf[i] != ExpectedOutput[i]) {
+      digitalWrite(13, HIGH); /* Turn pin 13 LED on */
+      Serial.println("\n** WARNING: Output != Test_Vector **");
+    }
+  }
+  Serial.println();
+}
 
 void setup() {
   /* Initialize serial (4800 bps) and wait for port to open */
@@ -67,68 +91,14 @@ void setup() {
 }
 
 void loop() {
+  Serial.println("Spritz stream() test\n");
+  
   /* Key: ABC */
-  Serial.println("stream('ABC'):");
-  sc.setup(&s_ctx, testKey1, sizeof(testKey1));
-  for (byte i = 0; i < sizeof(buf); i++) {
-    buf[i] = sc.stream(&s_ctx);
-    if (buf[i] < 0x10) {
-      Serial.write('0');
-    }
-    Serial.print(buf[i], HEX);
-  }
-  /* Check the output */
-  for (byte i = 0; i < sizeof(buf); i++) {
-    /* If the output is wrong */
-    if (buf[i] != testVector1[i]) {
-      digitalWrite(13, HIGH); /* Turn pin 13 LED on */
-      Serial.println(warnMsg);
-    }
-  }
-  Serial.println();
-  
-  
+  testFunc(testVector1, testKey1, sizeof(testKey1));
   /* Key: spam */
-  Serial.println("stream('spam'):");
-  sc.setup(&s_ctx, testKey2, sizeof(testKey2));
-  for (byte i = 0; i < sizeof(buf); i++) {
-    buf[i] = sc.stream(&s_ctx);
-    if (buf[i] < 0x10) {
-      Serial.write('0');
-    }
-    Serial.print(buf[i], HEX);
-  }
-  /* Check the output */
-  for (byte i = 0; i < sizeof(buf); i++) {
-    /* If the output is wrong */
-    if (buf[i] != testVector2[i]) {
-      digitalWrite(13, HIGH); /* Turn pin 13 LED on */
-      Serial.println(warnMsg);
-    }
-  }
-  Serial.println();
-  
-  
+  testFunc(testVector2, testKey2, sizeof(testKey2));
   /* Key: arcfour */
-  Serial.println("stream('arcfour'):");
-  sc.setup(&s_ctx, testKey3, sizeof(testKey3));
-  for (byte i = 0; i < sizeof(buf); i++) {
-    buf[i] = sc.stream(&s_ctx);
-    if (buf[i] < 0x10) {
-      Serial.write('0');
-    }
-    Serial.print(buf[i], HEX);
-  }
-  /* Check the output */
-  for (byte i = 0; i < sizeof(buf); i++) {
-    /* If the output is wrong */
-    if (buf[i] != testVector3[i]) {
-      digitalWrite(13, HIGH); /* Turn pin 13 LED on */
-      Serial.println(warnMsg);
-    }
-  }
-  Serial.println();
-
+  testFunc(testVector3, testKey3, sizeof(testKey3));
 
   delay(5000); /* Wait 5s */
   Serial.println();

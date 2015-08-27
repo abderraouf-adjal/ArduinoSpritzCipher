@@ -45,13 +45,37 @@ const byte testVector3[32] =
   0x0e, 0x66, 0xbf, 0x18, 0x9c, 0x63, 0xf6, 0x99
 };
 
-byte digest[32]; /* Output buffer */
-byte hashLen = 32;
 
-const char warnMsg[] = "** WARNING: Output != Test_Vector **";
-
-SpritzCipher sc;
-
+void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
+{
+  byte digest[32]; /* Output buffer */
+  byte hashLen = 32;
+  SpritzCipher sc;
+  
+  /* Print input */
+  for (byte i = 0; i < dataLen; i++) {
+    Serial.write(data[i]);
+  }
+  Serial.println();
+  
+  sc.hash(digest, hashLen, data, dataLen);
+  
+  for (byte i = 0; i < sizeof(digest); i++) {
+    if (digest[i] < 0x10) {
+      Serial.write('0');
+    }
+    Serial.print(digest[i], HEX);
+  }
+  /* Check the output */
+  for (byte i = 0; i < sizeof(digest); i++) {
+    /* If the output is wrong */
+    if (digest[i] != ExpectedOutput[i]) {
+      digitalWrite(13, HIGH); /* Turn pin 13 LED on */
+      Serial.println("\n** WARNING: Output != Test_Vector **");
+    }
+  }
+  Serial.println();
+}
 
 void setup() {
   /* Initialize serial (4800 bps) and wait for port to open */
@@ -66,66 +90,15 @@ void setup() {
 }
 
 void loop() {
+  Serial.println("Spritz hash() test\n");
+  
   /* Data: ABC */
-  Serial.println("hash('ABC'):");
-  sc.hash(digest, hashLen, testData1, sizeof(testData1));
-  for (byte i = 0; i < sizeof(digest); i++) {
-    if (digest[i] < 0x10) {
-      Serial.write('0');
-    }
-    Serial.print(digest[i], HEX);
-  }
-  /* Check the output */
-  for (byte i = 0; i < sizeof(digest); i++) {
-    /* If the output is wrong */
-    if (digest[i] != testVector1[i]) {
-      digitalWrite(13, HIGH); /* Turn pin 13 LED on */
-      Serial.println(warnMsg);
-    }
-  }
-  Serial.println();
-  
-  
+  testFunc(testVector1, testData1, sizeof(testData1));
   /* Data: spam */
-  Serial.println("hash('spam'):");
-  sc.hash(digest, hashLen, testData2, sizeof(testData2));
-  for (byte i = 0; i < sizeof(digest); i++) {
-    if (digest[i] < 0x10) {
-      Serial.write('0');
-    }
-    Serial.print(digest[i], HEX);
-  }
-  /* Check the output */
-  for (byte i = 0; i < sizeof(digest); i++) {
-    /* If the output is wrong */
-    if (digest[i] != testVector2[i]) {
-      digitalWrite(13, HIGH); /* Turn pin 13 LED on */
-      Serial.println(warnMsg);
-    }
-  }
-  Serial.println();
-  
-  
+  testFunc(testVector2, testData2, sizeof(testData2));
   /* Data: arcfour */
-  Serial.println("hash('arcfour'):");
-  sc.hash(digest, hashLen, testData3, sizeof(testData3));
-  for (byte i = 0; i < sizeof(digest); i++) {
-    if (digest[i] < 0x10) {
-      Serial.write('0');
-    }
-    Serial.print(digest[i], HEX);
-  }
-  /* Check the output */
-  for (byte i = 0; i < sizeof(digest); i++) {
-    /* If the output is wrong */
-    if (digest[i] != testVector3[i]) {
-      digitalWrite(13, HIGH); /* Turn pin 13 LED on */
-      Serial.println(warnMsg);
-    }
-  }
-  Serial.println();
+  testFunc(testVector3, testData3, sizeof(testData3));
   
-
   delay(5000); /* Wait 5s */
   Serial.println();
 }
