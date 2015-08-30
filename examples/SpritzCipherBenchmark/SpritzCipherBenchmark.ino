@@ -1,9 +1,7 @@
 /**
- * Spritz Cipher Hash Test
+ * Spritz Cipher Benchmark
  *
- * This example code test SpritzCipher library hash output
- * using test vectors from "RS14.pdf" Page 30:
- * <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
+ * This example code test SpritzCipher library speed
  *
  * The circuit:  No external hardware needed.
  *
@@ -15,6 +13,7 @@
 
 
 #include <SpritzCipher.h>
+
 
 SpritzCipher sc;
 spritz_t s_ctx;
