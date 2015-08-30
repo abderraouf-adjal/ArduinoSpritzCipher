@@ -30,10 +30,11 @@ unsigned char buf[32];
 
 
 void setup() {
+  /* Initialize serial (4800 bps) and wait for port to open */
   Serial.begin(9600);
-  while (!Serial);
-
-  
+  while (!Serial) {
+    ; /* Wait for serial port to connect. Needed for Leonardo only */
+  }
 }
 
 

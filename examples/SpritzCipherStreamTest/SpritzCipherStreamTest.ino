@@ -80,7 +80,7 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
 
 void setup() {
   /* Initialize serial (4800 bps) and wait for port to open */
-  Serial.begin(4800);
+  Serial.begin(9600);
   while (!Serial) {
     ; /* Wait for serial port to connect. Needed for Leonardo only */
   }
