@@ -26,7 +26,6 @@
 #include "SpritzCipher.h"
 
 #define SPRITZ_N_HALF 128 /* SPRITZ_N / 2 */
-#define SPRITZ_N_MINUS_1 255 /* SPRITZ_N - 1 */
 #define SAFE_TIMING_CRUSH /* Because of the compiler optimization this "could" be not useful */
 
 
@@ -43,10 +42,14 @@ void SpritzCipher::swap(byte *a, byte *b)
 
 void SpritzCipher::stateInit(spritz_t *ctx)
 {
-  byte i; /* uchar save ~30uS on uno */
+  /* 8-bit arithmetic in Arduino Uno (ATmega328P) save
+   * around 48.5 microsecond in setup() & hash() & mac()
+   */
+  
+  byte i;
   ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = 0;
   ctx->w = 1;
-  for (i = 0; i < SPRITZ_N_MINUS_1; i++) {
+  for (i = 0; i < (SPRITZ_N - 1); i++) {
     ctx->s[i] = i;
   }
   ctx->s[255] = 255;
@@ -74,7 +77,7 @@ void SpritzCipher::whip(spritz_t *ctx)
 
 void SpritzCipher::crush(spritz_t *ctx)
 {
-  byte i, j = SPRITZ_N_MINUS_1; /* j=SPRITZ_N-1=255 */
+  byte i, j = (SPRITZ_N - 1);
 #ifdef SAFE_TIMING_CRUSH
   byte s_i, s_j;
   for (i = 0; i < SPRITZ_N_HALF; i++, j--) {

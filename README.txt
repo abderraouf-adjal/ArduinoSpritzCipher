@@ -4,6 +4,11 @@ SpritzCipher
 Spritz library for Arduino.
 A spongy RC4-like stream cipher, Hash and MAC function.
 
+This library can be used to:
+  * Encrypt data.
+  * Generate random numbers.
+  * Hash & authenticate data.
+
 Home page: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
 
 Spritz paper: <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
@@ -41,10 +46,13 @@ Examples
 ========
 
 * Hash data:
-	./examples/SpritzCipherHashTest/SpritzCipherHashTest.ino
+  ./examples/SpritzCipherHashTest/SpritzCipherHashTest.ino
 
 * Generate random bytes:
-	./examples/SpritzCipherStreamTest/SpritzCipherStreamTest.ino
+  ./examples/SpritzCipherStreamTest/SpritzCipherStreamTest.ino
+
+* Benchmark:
+  ./examples/SpritzCipherBenchmark/SpritzCipherBenchmark.ino
 
 
 Installation Guide
@@ -56,7 +64,7 @@ Installation Guide
 Reporting bugs
 ==============
 
-create an issue on GitHub:
+Create an issue on GitHub:
 <https://github.com/abderraouf-adjal/ArduinoSpritzCipher/issues>
 
 
