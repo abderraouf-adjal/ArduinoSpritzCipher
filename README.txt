@@ -2,7 +2,8 @@ SpritzCipher
 ============
 
 Spritz library for Arduino.
-A spongy RC4-like stream cipher, Hash and MAC function.
+A spongy RC4-like stream cipher. This library contain cryptographically secure
+pseudo-random bytes generator, Hash & MAC functions with configurable output length.
 
 This library can be used to:
   * Encrypt data.
