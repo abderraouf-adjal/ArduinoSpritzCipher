@@ -42,17 +42,44 @@ class SpritzCipher
   public:
     SpritzCipher();
 
+    /* Setup spritz state (spritz_t) */
     void setup(spritz_t *ctx,
                const byte *key, unsigned int keyLen);
+
+    /* Use setupIV() *after* setup() to add NONCE (Salt) */
     void setupIV(spritz_t *ctx,
                  const byte *nonce, unsigned int nonceLen);
+
+    /* Return random byte that can be used as a key */
     byte stream(spritz_t *ctx);
 
+    /**
+     * Cryptographic hash function
+     * 
+     * - digest: Hash output.
+     * - digestLen: Set hash output size, Value (>=) 32 is recommended.
+     * 
+     * - data: Data to hash.
+     * - dataLen: Data size.
+     */
     void hash(byte *digest, byte digestLen,
               const byte *data, unsigned int dataLen);
+    /**
+     * Message Authentication Code (MAC) function
+     * 
+     * - digest: MAC output.
+     * - digestLen: Set MAC output size, Value (>=) 32 is recommended.
+     * 
+     * - msg: Message to be authenticated.
+     * - msgLen: Message size.
+     * 
+     * - key: The secret key.
+     * - keyLen: The secret key size.
+     */
     void mac(byte *digest, byte digestLen,
              const byte *msg, unsigned int msgLen,
              const byte *key, unsigned int keyLen);
+
 
   private:
     void swap(byte *a, byte *b);

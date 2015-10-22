@@ -118,13 +118,11 @@ void SpritzCipher::absorbNibble(spritz_t *ctx, const byte nibble)
   swap(&ctx->s[ctx->a], &ctx->s[SPRITZ_N_HALF + nibble]);
   ctx->a++;
 }
-
 void SpritzCipher::absorb(spritz_t *ctx, const byte octet)
 {
   absorbNibble(ctx, octet % 16); /* Low */
   absorbNibble(ctx, octet / 16); /* High */
 }
-
 void SpritzCipher::absorbBytes(spritz_t *ctx, const byte *buf, unsigned int len)
 {
   unsigned int i;
@@ -169,7 +167,9 @@ void SpritzCipher::squeeze(spritz_t *ctx, byte *out, byte len)
 }
 
 
+/**************************| USER FUNCTIONS |**************************/
 
+/* Setup spritz state (spritz_t) */
 void SpritzCipher::setup(spritz_t *ctx,
                          const byte *key, unsigned int keyLen)
 {
@@ -177,7 +177,7 @@ void SpritzCipher::setup(spritz_t *ctx,
   absorbBytes(ctx, key, keyLen);
 }
 
-/* Use setupIV() after setup() to add NONCE */
+/* Use setupIV() *after* setup() to add NONCE (Salt) */
 void SpritzCipher::setupIV(spritz_t *ctx,
                            const byte *nonce, unsigned int nonceLen)
 {
@@ -185,12 +185,22 @@ void SpritzCipher::setupIV(spritz_t *ctx,
   absorbBytes(ctx, nonce, nonceLen);
 }
 
+/* Return random byte that can be used as a key */
 byte SpritzCipher::stream(spritz_t *ctx)
 {
   return drip(ctx);
 }
 
 
+/**
+ * Cryptographic hash function
+ * 
+ * - digest: Hash output.
+ * - digestLen: Set hash output size, Value (>=) 32 is recommended.
+ * 
+ * - data: Data to hash.
+ * - dataLen: Data size.
+ */
 void SpritzCipher::hash(byte *digest, byte digestLen,
                         const byte *data, unsigned int dataLen)
 {
@@ -202,6 +212,18 @@ void SpritzCipher::hash(byte *digest, byte digestLen,
   squeeze(&ctx, digest, digestLen);
 }
 
+/**
+ * Message Authentication Code (MAC) function
+ * 
+ * - digest: MAC output.
+ * - digestLen: Set MAC output size, Value (>=) 32 is recommended.
+ * 
+ * - msg: Message to be authenticated.
+ * - msgLen: Message size.
+ * 
+ * - key: The secret key.
+ * - keyLen: The secret key size.
+ */
 void SpritzCipher::mac(byte *digest, byte digestLen,
                        const byte *msg, unsigned int msgLen,
                        const byte *key, unsigned int keyLen)

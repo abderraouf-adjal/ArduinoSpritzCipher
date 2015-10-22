@@ -22,7 +22,7 @@ spritz_t - Contain the state.
 
 * Functions
 setup()   - To setup spritz state (spritz_t).
-setupIV() - Usable after setup() to add Nonce.
+setupIV() - Usable after setup() to add Nonce (Salt).
 stream()  - Return random byte that can be used as a key.
 hash()    - Hash function.
 mac()     - Message Authentication Code (MAC) function.
