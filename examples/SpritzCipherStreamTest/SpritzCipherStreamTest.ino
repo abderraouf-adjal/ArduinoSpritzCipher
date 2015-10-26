@@ -1,8 +1,8 @@
 /**
  * Spritz Cipher Stream Test
  *
- * This example code test SpritzCipher library stream output
- * using test vectors from "RS14.pdf" Page 30:
+ * This example code test SpritzCipher library stream (PRNG) output
+ * using test vectors from Spritz paper "RS14.pdf" Page 30:
  * <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
  *
  * The circuit:  No external hardware needed.
@@ -61,8 +61,8 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
   sc.setup(&s_ctx, data, dataLen);
   
   for (byte i = 0; i < sizeof(buf); i++) {
-    buf[i] = sc.stream(&s_ctx);
-    if (buf[i] < 0x10) {
+    buf[i] = sc.spritz_rand_byte(&s_ctx);
+    if (buf[i] < 0x10) { /* To print "0F" not "F" */
       Serial.write('0');
     }
     Serial.print(buf[i], HEX);
@@ -70,7 +70,7 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
   /* Check the output */
   for (byte i = 0; i < sizeof(buf); i++) {
     /* If the output is wrong */
-    if (buf[i] != ExpectedOutput[i]) {
+    if (buf[i] != ExpectedOutput[i]) { /* Alert if test fail */
       digitalWrite(13, HIGH); /* Turn pin 13 LED on */
       Serial.println("\n** WARNING: Output != Test_Vector **");
     }
@@ -91,7 +91,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Spritz stream() test\n");
+  Serial.println("Spritz spritz_rand_byte() test\n");
   
   /* Key: ABC */
   testFunc(testVector1, testKey1, sizeof(testKey1));

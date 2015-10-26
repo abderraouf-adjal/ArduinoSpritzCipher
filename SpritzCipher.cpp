@@ -25,47 +25,48 @@
 
 #include "SpritzCipher.h"
 
+#define SPRITZ_N_MINUS_1 255 /* SPRITZ_N - 1 */
 #define SPRITZ_N_HALF 128 /* SPRITZ_N / 2 */
-#define SAFE_TIMING_CRUSH /* Because of the compiler optimization this "could" be not useful */
+#define SAFE_TIMING_CRUSH /* NOTE: Because of the compiler optimization this "could" be not useful */
 
 
 SpritzCipher::SpritzCipher() { }
 
 
-void SpritzCipher::swap(byte *a, byte *b)
+static void
+swap(uint8_t *a, uint8_t *b)
 {
-  byte t = *a;
-  *a  = *b;
-  *b  = t;
+  uint8_t t = *a;
+  *a = *b;
+  *b = t;
 }
 
 
-void SpritzCipher::stateInit(spritz_t *ctx)
+void
+SpritzCipher::stateInit(spritz_t *ctx)
 {
-  /* 8-bit arithmetic in Arduino Uno (ATmega328P) save
-   * around 48.5 microsecond in setup() & hash() & mac()
-   */
-  
-  byte i;
+  uint8_t i;
   ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = 0;
   ctx->w = 1;
-  for (i = 0; i < (SPRITZ_N - 1); i++) {
+  for (i = 0; i < SPRITZ_N_MINUS_1; i++) {
     ctx->s[i] = i;
   }
   ctx->s[255] = 255;
 }
 
-void SpritzCipher::update(spritz_t *ctx)
+void
+SpritzCipher::update(spritz_t *ctx)
 {
   ctx->i += ctx->w;
-  ctx->j  = ctx->k + ctx->s[byte(ctx->j + ctx->s[ctx->i])];
+  ctx->j  = ctx->k + ctx->s[(uint8_t)(ctx->j + ctx->s[ctx->i])];
   ctx->k += ctx->i + ctx->s[ctx->j];
   swap(&ctx->s[ctx->i], &ctx->s[ctx->j]);
 }
 
-void SpritzCipher::whip(spritz_t *ctx)
+void
+SpritzCipher::whip(spritz_t *ctx)
 {
-  byte i;
+  uint8_t i;
   for (i = 0; i < SPRITZ_N_HALF; i++) {
     update(ctx);
     update(ctx);
@@ -75,11 +76,12 @@ void SpritzCipher::whip(spritz_t *ctx)
   ctx->w += 2;
 }
 
-void SpritzCipher::crush(spritz_t *ctx)
+void
+SpritzCipher::crush(spritz_t *ctx)
 {
-  byte i, j = (SPRITZ_N - 1);
+  uint8_t i, j = SPRITZ_N_MINUS_1;
 #ifdef SAFE_TIMING_CRUSH
-  byte s_i, s_j;
+  uint8_t s_i, s_j;
   for (i = 0; i < SPRITZ_N_HALF; i++, j--) {
     if ((s_i = ctx->s[i]) > (s_j = ctx->s[j])) {
       ctx->s[i] = s_j;
@@ -90,7 +92,6 @@ void SpritzCipher::crush(spritz_t *ctx)
       ctx->s[j] = s_j;
     }
   }
-
 #else /* SAFE_TIMING_CRUSH */
   for (i = 0; i < SPRITZ_N_HALF; i++, j--) {
     if (ctx->s[i] > ctx->s[j]) {
@@ -100,7 +101,8 @@ void SpritzCipher::crush(spritz_t *ctx)
 #endif
 }
 
-void SpritzCipher::shuffle(spritz_t *ctx)
+void
+SpritzCipher::shuffle(spritz_t *ctx)
 {
   whip(ctx);
   crush(ctx);
@@ -110,7 +112,9 @@ void SpritzCipher::shuffle(spritz_t *ctx)
   ctx->a = 0;
 }
 
-void SpritzCipher::absorbNibble(spritz_t *ctx, const byte nibble)
+/* Tip: nibble=4bit; octet=2*nibble=8bit; byte=octet in modern computers */
+void
+SpritzCipher::absorbNibble(spritz_t *ctx, const uint8_t nibble)
 {
   if (ctx->a == SPRITZ_N_HALF) {
     shuffle(ctx);
@@ -118,20 +122,15 @@ void SpritzCipher::absorbNibble(spritz_t *ctx, const byte nibble)
   swap(&ctx->s[ctx->a], &ctx->s[SPRITZ_N_HALF + nibble]);
   ctx->a++;
 }
-void SpritzCipher::absorb(spritz_t *ctx, const byte octet)
+void
+SpritzCipher::absorb(spritz_t *ctx, const uint8_t octet)
 {
   absorbNibble(ctx, octet % 16); /* Low */
   absorbNibble(ctx, octet / 16); /* High */
 }
-void SpritzCipher::absorbBytes(spritz_t *ctx, const byte *buf, unsigned int len)
-{
-  unsigned int i;
-  for (i = 0; i < len; i++) {
-    absorb(ctx, buf[i]);
-  }
-}
 
-void SpritzCipher::absorbStop(spritz_t *ctx)
+void
+SpritzCipher::absorbStop(spritz_t *ctx)
 {
   if (ctx->a == SPRITZ_N_HALF) {
     shuffle(ctx);
@@ -139,13 +138,14 @@ void SpritzCipher::absorbStop(spritz_t *ctx)
   ctx->a++;
 }
 
-byte SpritzCipher::output(spritz_t *ctx)
+uint8_t
+SpritzCipher::output(spritz_t *ctx)
 {
-  ctx->z = ctx->s[byte(ctx->j + ctx->s[byte(ctx->i + ctx->s[byte(ctx->z + ctx->k)])])];
+  ctx->z = ctx->s[(uint8_t)(ctx->j + ctx->s[(uint8_t)(ctx->i + ctx->s[(uint8_t)(ctx->z + ctx->k)])])];
   return ctx->z;
 }
-
-byte SpritzCipher::drip(spritz_t *ctx)
+uint8_t
+SpritzCipher::drip(spritz_t *ctx)
 {
   if (ctx->a) {
     shuffle(ctx);
@@ -155,9 +155,10 @@ byte SpritzCipher::drip(spritz_t *ctx)
 }
 
 /* squeeze() for hash() and mac() */
-void SpritzCipher::squeeze(spritz_t *ctx, byte *out, byte len)
+void
+SpritzCipher::squeeze(spritz_t *ctx, uint8_t *out, uint8_t len)
 {
-  byte i;
+  uint8_t i;
   if (ctx->a) {
     shuffle(ctx);
   }
@@ -167,30 +168,38 @@ void SpritzCipher::squeeze(spritz_t *ctx, byte *out, byte len)
 }
 
 
-/**************************| USER FUNCTIONS |**************************/
+/* ==== User Functions ==== */
 
 /* Setup spritz state (spritz_t) */
-void SpritzCipher::setup(spritz_t *ctx,
-                         const byte *key, unsigned int keyLen)
+void
+SpritzCipher::setup(spritz_t *ctx,
+                         const uint8_t *key, uint8_t keyLen)
 {
+  uint8_t i;
   stateInit(ctx);
-  absorbBytes(ctx, key, keyLen);
+  for (i = 0; i < keyLen; i++) {
+    absorb(ctx, key[i]);
+  }
 }
 
 /* Use setupIV() *after* setup() to add NONCE (Salt) */
-void SpritzCipher::setupIV(spritz_t *ctx,
-                           const byte *nonce, unsigned int nonceLen)
+void
+SpritzCipher::setupIV(spritz_t *ctx,
+                           const uint8_t *nonce, uint8_t nonceLen)
 {
+  uint8_t i;
   absorbStop(ctx);
-  absorbBytes(ctx, nonce, nonceLen);
+  for (i = 0; i < nonceLen; i++) {
+    absorb(ctx, nonce[i]);
+  }
 }
 
-/* Return random byte that can be used as a key */
-byte SpritzCipher::stream(spritz_t *ctx)
+/* Return random byte (can be used to make a key) from spritz state (spritz_t) */
+uint8_t
+SpritzCipher::spritz_rand_byte(spritz_t *ctx)
 {
   return drip(ctx);
 }
-
 
 /**
  * Cryptographic hash function
@@ -201,12 +210,16 @@ byte SpritzCipher::stream(spritz_t *ctx)
  * - data: Data to hash.
  * - dataLen: Data size.
  */
-void SpritzCipher::hash(byte *digest, byte digestLen,
-                        const byte *data, unsigned int dataLen)
+void
+SpritzCipher::hash(uint8_t *digest, uint8_t digestLen,
+                        const uint8_t *data, unsigned int dataLen)
 {
   spritz_t ctx;
+  unsigned int i;
   stateInit(&ctx);
-  absorbBytes(&ctx, data, dataLen);
+  for (i = 0; i < dataLen; i++) {
+    absorb(&ctx, data[i]);
+  }
   absorbStop(&ctx);
   absorb(&ctx, digestLen);
   squeeze(&ctx, digest, digestLen);
@@ -224,15 +237,21 @@ void SpritzCipher::hash(byte *digest, byte digestLen,
  * - key: The secret key.
  * - keyLen: The secret key size.
  */
-void SpritzCipher::mac(byte *digest, byte digestLen,
-                       const byte *msg, unsigned int msgLen,
-                       const byte *key, unsigned int keyLen)
+void
+SpritzCipher::mac(uint8_t *digest, uint8_t digestLen,
+                       const uint8_t *msg, unsigned int msgLen,
+                       const uint8_t *key, uint8_t keyLen)
 {
   spritz_t ctx;
+  unsigned int i;
   stateInit(&ctx);
-  absorbBytes(&ctx, key, keyLen);
+  for (i = 0; i < keyLen; i++) {
+    absorb(&ctx, key[i]);
+  }
   absorbStop(&ctx);
-  absorbBytes(&ctx, msg, msgLen);
+  for (i = 0; i < msgLen; i++) {
+    absorb(&ctx, msg[i]);
+  }
   absorbStop(&ctx);
   absorb(&ctx, digestLen);
   squeeze(&ctx, digest, digestLen);

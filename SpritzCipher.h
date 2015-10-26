@@ -26,14 +26,14 @@
 #ifndef _SPRITZCIPHER_H
 #define _SPRITZCIPHER_H
 
-#include <Arduino.h>
+
+#include <stdint.h> /* For uint8_t */
 
 #define SPRITZ_N 256
 
-
 typedef struct
 {
-  byte s[SPRITZ_N], i, j, k, z, a, w;
+  uint8_t s[SPRITZ_N], i, j, k, z, a, w;
 } spritz_t;
 
 
@@ -43,15 +43,18 @@ class SpritzCipher
     SpritzCipher();
 
     /* Setup spritz state (spritz_t) */
-    void setup(spritz_t *ctx,
-               const byte *key, unsigned int keyLen);
+    void
+    setup(spritz_t *ctx,
+          const uint8_t *key, uint8_t keyLen);
 
     /* Use setupIV() *after* setup() to add NONCE (Salt) */
-    void setupIV(spritz_t *ctx,
-                 const byte *nonce, unsigned int nonceLen);
+    void
+    setupIV(spritz_t *ctx,
+            const uint8_t *nonce, uint8_t nonceLen);
 
-    /* Return random byte that can be used as a key */
-    byte stream(spritz_t *ctx);
+    /* Return random byte (can be used to make a key) from spritz state (spritz_t) */
+    uint8_t
+    spritz_rand_byte(spritz_t *ctx);
 
     /**
      * Cryptographic hash function
@@ -62,8 +65,10 @@ class SpritzCipher
      * - data: Data to hash.
      * - dataLen: Data size.
      */
-    void hash(byte *digest, byte digestLen,
-              const byte *data, unsigned int dataLen);
+    void
+    hash(uint8_t *digest, uint8_t digestLen,
+         const uint8_t *data, unsigned int dataLen);
+
     /**
      * Message Authentication Code (MAC) function
      * 
@@ -76,25 +81,23 @@ class SpritzCipher
      * - key: The secret key.
      * - keyLen: The secret key size.
      */
-    void mac(byte *digest, byte digestLen,
-             const byte *msg, unsigned int msgLen,
-             const byte *key, unsigned int keyLen);
-
+    void
+    mac(uint8_t *digest, uint8_t digestLen,
+        const uint8_t *msg, unsigned int msgLen,
+        const uint8_t *key, uint8_t keyLen);
 
   private:
-    void swap(byte *a, byte *b);
     void stateInit(spritz_t *ctx);
     void update(spritz_t *ctx);
     void whip(spritz_t *ctx);
     void crush(spritz_t *ctx);
     void shuffle(spritz_t *ctx);
-    void absorbNibble(spritz_t *ctx, const byte nibble);
-    void absorb(spritz_t *ctx, const byte octet);
-    void absorbBytes(spritz_t *ctx, const byte *buf, unsigned int len);
+    void absorbNibble(spritz_t *ctx, const uint8_t nibble);
+    void absorb(spritz_t *ctx, const uint8_t octet);
     void absorbStop(spritz_t *ctx);
-    byte output(spritz_t *ctx);
-    byte drip(spritz_t *ctx);
-    void squeeze(spritz_t *ctx, byte *out, byte len);
+    uint8_t output(spritz_t *ctx);
+    uint8_t drip(spritz_t *ctx);
+    void squeeze(spritz_t *ctx, uint8_t *out, uint8_t len);
 };
 
 

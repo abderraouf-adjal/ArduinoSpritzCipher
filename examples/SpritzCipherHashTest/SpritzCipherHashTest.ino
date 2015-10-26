@@ -2,7 +2,7 @@
  * Spritz Cipher Hash Test
  *
  * This example code test SpritzCipher library hash output
- * using test vectors from "RS14.pdf" Page 30:
+ * using test vectors from Spritz paper "RS14.pdf" Page 30:
  * <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
  *
  * The circuit:  No external hardware needed.
@@ -61,7 +61,7 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
   sc.hash(digest, hashLen, data, dataLen);
   
   for (byte i = 0; i < sizeof(digest); i++) {
-    if (digest[i] < 0x10) {
+    if (digest[i] < 0x10) { /* To print "0F" not "F" */
       Serial.write('0');
     }
     Serial.print(digest[i], HEX);
@@ -69,7 +69,7 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
   /* Check the output */
   for (byte i = 0; i < sizeof(digest); i++) {
     /* If the output is wrong */
-    if (digest[i] != ExpectedOutput[i]) {
+    if (digest[i] != ExpectedOutput[i]) { /* Alert if test fail */
       digitalWrite(13, HIGH); /* Turn pin 13 LED on */
       Serial.println("\n** WARNING: Output != Test_Vector **");
     }

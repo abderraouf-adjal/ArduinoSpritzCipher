@@ -15,32 +15,35 @@ Home page: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
 Spritz paper: <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
 
 
-Content
-=======
+Library content for user
+========================
+
 * Types
-spritz_t - Contain the state.
+  spritz_t - Contain the state.
 
 * Functions
-setup()   - To setup spritz state (spritz_t).
-setupIV() - Usable after setup() to add Nonce (Salt).
-stream()  - Return random byte that can be used as a key.
-hash()    - Hash function.
-mac()     - Message Authentication Code (MAC) function.
+  setup()   - To setup spritz state (spritz_t).
+  setupIV() - Usable after setup() to add NONCE (Salt).
+  spritz_rand_byte() - Return random byte (can be used to make a key) from spritz state (spritz_t).
+
+  hash() - Cryptographic hash function.
+  mac()  - Message Authentication Code (MAC) function.
 
 
 Functions
 =========
-void setup(spritz_t *ctx,
-           const byte *key, unsigned int keyLen);
-void setupIV(spritz_t *ctx,
-             const byte *nonce, unsigned int nonceLen);
-byte stream(spritz_t *ctx);
 
-void hash(byte *digest, byte digestLen,
-          const byte *data, unsigned int dataLen);
-void mac(byte *digest, byte digestLen,
-         const byte *msg, unsigned int msgLen,
-         const byte *key, unsigned int keyLen);
+void setup(spritz_t *ctx,
+           const uint8_t *key, uint8_t keyLen);
+void setupIV(spritz_t *ctx,
+             const uint8_t *nonce, uint8_t nonceLen);
+uint8_t spritz_rand_byte(spritz_t *ctx);
+
+void hash(uint8_t *digest, uint8_t digestLen,
+          const uint8_t *data, unsigned int dataLen);
+void mac(uint8_t *digest, uint8_t digestLen,
+         const uint8_t *msg, unsigned int msgLen,
+         const uint8_t *key, uint8_t keyLen);
 
 
 Examples
@@ -51,9 +54,6 @@ Examples
 
 * Generate random bytes:
   ./examples/SpritzCipherStreamTest/SpritzCipherStreamTest.ino
-
-* Benchmark:
-  ./examples/SpritzCipherBenchmark/SpritzCipherBenchmark.ino
 
 
 Installation Guide
