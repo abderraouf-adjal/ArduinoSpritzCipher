@@ -71,7 +71,7 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
   for (byte i = 0; i < sizeof(buf); i++) {
     /* If the output is wrong */
     if (buf[i] != ExpectedOutput[i]) { /* Alert if test fail */
-      digitalWrite(13, HIGH); /* Turn pin 13 LED on */
+      digitalWrite(LED_BUILTIN, HIGH); /* Turn pin LED_BUILTIN (Most boards have this LED connected to digital pin 13) ON */
       Serial.println("\n** WARNING: Output != Test_Vector **");
     }
   }
@@ -85,9 +85,9 @@ void setup() {
     ; /* Wait for serial port to connect. Needed for Leonardo only */
   }
   
-  /* initialize digital pin 13 as an output */
-  pinMode(13, OUTPUT);
-  digitalWrite(13, LOW);
+  /* initialize digital pin LED_BUILTIN (Most boards have this LED connected to digital pin 13) as an output */
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
 }
 
 void loop() {
