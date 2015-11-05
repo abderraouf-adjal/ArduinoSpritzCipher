@@ -38,7 +38,7 @@
 /** \def WIPE_AFTER_USAGE
  * wipe sensitive buffers and variables in functions when they are no longer needed
  */
-// #define WIPE_AFTER_USAGE
+#define WIPE_AFTER_USAGE
 
 #define SPRITZ_N 256
 

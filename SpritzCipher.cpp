@@ -229,6 +229,9 @@ SpritzCipher::hash(uint8_t *digest, uint8_t digestLen,
   absorbStop(&ctx);
   absorb(&ctx, digestLen);
   squeeze(&ctx, digest, digestLen);
+#ifdef WIPE_AFTER_USAGE
+  wipe_spritz_ctx(&ctx);
+#endif
 }
 
 /* Message Authentication Code (MAC) function */
@@ -250,4 +253,7 @@ SpritzCipher::mac(uint8_t *digest, uint8_t digestLen,
   absorbStop(&ctx);
   absorb(&ctx, digestLen);
   squeeze(&ctx, digest, digestLen);
+#ifdef WIPE_AFTER_USAGE
+  wipe_spritz_ctx(&ctx);
+#endif
 }
