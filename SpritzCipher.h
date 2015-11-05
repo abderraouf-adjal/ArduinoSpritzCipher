@@ -68,14 +68,17 @@ class SpritzCipher
           const uint8_t *key, uint8_t keyLen);
 
 
-    /** \fn void setupIV(spritz_t *ctx, const uint8_t *nonce, uint8_t nonceLen)
-     * \brief add NONCE (Salt) to spritz state, Use setupIV() after setup()
+    /** \fn void setupIV(spritz_t *ctx, const uint8_t *key, uint8_t keyLen, const uint8_t *nonce, uint8_t nonceLen)
+     * \brief setup spritz state (spritz_t) with a key and nonce (Salt)
      * \param ctx the context
+     * \param key the key
+     * \param keyLen length of the key in bytes
      * \param nonce the nonce (salt)
      * \param nonceLen length of the nonce in bytes
      */
     void
     setupIV(spritz_t *ctx,
+            const uint8_t *key, uint8_t keyLen,
             const uint8_t *nonce, uint8_t nonceLen);
 
 

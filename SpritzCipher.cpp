@@ -173,7 +173,7 @@ SpritzCipher::squeeze(spritz_t *ctx, uint8_t *out, uint8_t len)
 /* Setup spritz state (spritz_t) with a key */
 void
 SpritzCipher::setup(spritz_t *ctx,
-                         const uint8_t *key, uint8_t keyLen)
+                    const uint8_t *key, uint8_t keyLen)
 {
   uint8_t i;
   stateInit(ctx);
@@ -182,12 +182,14 @@ SpritzCipher::setup(spritz_t *ctx,
   }
 }
 
-/* Add NONCE (Salt) to spritz state, Use setupIV() after setup() */
+/* Setup spritz state (spritz_t) with a key and nonce (Salt) */
 void
 SpritzCipher::setupIV(spritz_t *ctx,
-                           const uint8_t *nonce, uint8_t nonceLen)
+                      const uint8_t *key, uint8_t keyLen,
+                      const uint8_t *nonce, uint8_t nonceLen)
 {
   uint8_t i;
+  setup(ctx, key, keyLen);
   absorbStop(ctx);
   for (i = 0; i < nonceLen; i++) {
     absorb(ctx, nonce[i]);
@@ -218,7 +220,7 @@ SpritzCipher::spritz_rand_byte(spritz_t *ctx)
 /* Cryptographic hash function */
 void
 SpritzCipher::hash(uint8_t *digest, uint8_t digestLen,
-                        const uint8_t *data, unsigned int dataLen)
+                   const uint8_t *data, unsigned int dataLen)
 {
   spritz_t ctx;
   unsigned int i;
@@ -237,8 +239,8 @@ SpritzCipher::hash(uint8_t *digest, uint8_t digestLen,
 /* Message Authentication Code (MAC) function */
 void
 SpritzCipher::mac(uint8_t *digest, uint8_t digestLen,
-                       const uint8_t *msg, unsigned int msgLen,
-                       const uint8_t *key, uint8_t keyLen)
+                  const uint8_t *msg, unsigned int msgLen,
+                  const uint8_t *key, uint8_t keyLen)
 {
   spritz_t ctx;
   unsigned int i;

@@ -22,11 +22,11 @@ Library content for user
   spritz_t - The context/ctx (contain the state), holds indices and S-Box.
 
 * Functions
-  setup(ctx, key, keyLen)       - Setup spritz state (spritz_t) with a key.
-  setupIV(ctx, nonce, nonceLen) - Add NONCE (Salt) to spritz state, Use setupIV() after setup().
-  wipe_spritz_ctx(ctx)          - Wipe spritz context data.
-  spritz_rand_byte(ctx)         - Generates a byte of keystream from spritz state (spritz_t).
-  hash(digest, digestLen, data, dataLen) - Cryptographic hash function.
+  setup(ctx, key, keyLen) - Setup spritz state (spritz_t) with a key.
+  setupIV(ctx, key, keyLen, nonce, nonceLen) - Setup spritz state (spritz_t) with a key and nonce (Salt).
+  wipe_spritz_ctx(ctx)    - Wipe spritz context data.
+  spritz_rand_byte(ctx)   - Generates a byte of keystream from spritz state (spritz_t).
+  hash(digest, digestLen, data, dataLen)           - Cryptographic hash function.
   mac(digest, digestLen, msg, msgLen, key, keyLen) - Message Authentication Code (MAC) function.
 
 See <SpritzCipher.h> for the details.
