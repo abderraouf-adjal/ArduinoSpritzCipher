@@ -35,6 +35,11 @@
  */
 #define SAFE_TIMING_CRUSH
 
+/** \def WIPE_AFTER_USAGE
+ * wipe sensitive buffers and variables in functions when they are no longer needed
+ */
+// #define WIPE_AFTER_USAGE
+
 #define SPRITZ_N 256
 
 
@@ -72,6 +77,14 @@ class SpritzCipher
     void
     setupIV(spritz_t *ctx,
             const uint8_t *nonce, uint8_t nonceLen);
+
+
+    /** \fn void wipe_spritz_ctx(spritz_t *ctx)
+     * \brief Wipe spritz context (spritz_t) data
+     * \param ctx the context
+     */
+    void
+    wipe_spritz_ctx(spritz_t *ctx);
 
 
     /** \fn uint8_t spritz_rand_byte(spritz_t *ctx)

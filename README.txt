@@ -19,12 +19,13 @@ Library content for user
 ========================
 
 * Types
-  spritz_t - The context (contain the state), holds indices and S-Box.
+  spritz_t - The context/ctx (contain the state), holds indices and S-Box.
 
 * Functions
-  setup(context, key, keyLen)            - Setup spritz state (spritz_t) with a key.
-  setupIV(context, nonce, nonceLen)      - Add NONCE (Salt) to spritz state, Use setupIV() after setup().
-  spritz_rand_byte(context)              - Generates a byte of keystream from spritz state (spritz_t).
+  setup(ctx, key, keyLen)       - Setup spritz state (spritz_t) with a key.
+  setupIV(ctx, nonce, nonceLen) - Add NONCE (Salt) to spritz state, Use setupIV() after setup().
+  wipe_spritz_ctx(ctx)          - Wipe spritz context data.
+  spritz_rand_byte(ctx)         - Generates a byte of keystream from spritz state (spritz_t).
   hash(digest, digestLen, data, dataLen) - Cryptographic hash function.
   mac(digest, digestLen, msg, msgLen, key, keyLen) - Message Authentication Code (MAC) function.
 

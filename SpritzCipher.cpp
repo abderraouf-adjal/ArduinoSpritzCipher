@@ -194,12 +194,26 @@ SpritzCipher::setupIV(spritz_t *ctx,
   }
 }
 
+/* Wipe spritz context (spritz_t) data */
+void
+SpritzCipher::wipe_spritz_ctx(spritz_t *ctx)
+{
+  uint8_t i;
+  ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = ctx->w = 0;
+  for (i = 0; i < SPRITZ_N_MINUS_1; i++) {
+    ctx->s[i] = 0;
+  }
+  ctx->s[255] = 0;
+}
+
+
 /* Generates a byte of keystream from spritz state (spritz_t) */
 uint8_t
 SpritzCipher::spritz_rand_byte(spritz_t *ctx)
 {
   return drip(ctx);
 }
+
 
 /* Cryptographic hash function */
 void
