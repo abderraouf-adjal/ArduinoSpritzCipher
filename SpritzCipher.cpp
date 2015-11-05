@@ -25,9 +25,9 @@
 
 #include "SpritzCipher.h"
 
+
 #define SPRITZ_N_MINUS_1 255 /* SPRITZ_N - 1 */
 #define SPRITZ_N_HALF 128 /* SPRITZ_N / 2 */
-#define SAFE_TIMING_CRUSH /* NOTE: Because of the compiler optimization this "could" be not useful */
 
 
 SpritzCipher::SpritzCipher() { }
@@ -168,9 +168,9 @@ SpritzCipher::squeeze(spritz_t *ctx, uint8_t *out, uint8_t len)
 }
 
 
-/* ==== User Functions ==== */
+/* ================ User Functions ================ */
 
-/* Setup spritz state (spritz_t) */
+/* Setup spritz state (spritz_t) with a key */
 void
 SpritzCipher::setup(spritz_t *ctx,
                          const uint8_t *key, uint8_t keyLen)
@@ -182,7 +182,7 @@ SpritzCipher::setup(spritz_t *ctx,
   }
 }
 
-/* Use setupIV() *after* setup() to add NONCE (Salt) */
+/* Add NONCE (Salt) to spritz state, Use setupIV() after setup() */
 void
 SpritzCipher::setupIV(spritz_t *ctx,
                            const uint8_t *nonce, uint8_t nonceLen)
@@ -194,22 +194,14 @@ SpritzCipher::setupIV(spritz_t *ctx,
   }
 }
 
-/* Return random byte (can be used to make a key) from spritz state (spritz_t) */
+/* Generates a byte of keystream from spritz state (spritz_t) */
 uint8_t
 SpritzCipher::spritz_rand_byte(spritz_t *ctx)
 {
   return drip(ctx);
 }
 
-/**
- * Cryptographic hash function
- * 
- * - digest: Hash output.
- * - digestLen: Set hash output size, Value (>=) 32 is recommended.
- * 
- * - data: Data to hash.
- * - dataLen: Data size.
- */
+/* Cryptographic hash function */
 void
 SpritzCipher::hash(uint8_t *digest, uint8_t digestLen,
                         const uint8_t *data, unsigned int dataLen)
@@ -225,18 +217,7 @@ SpritzCipher::hash(uint8_t *digest, uint8_t digestLen,
   squeeze(&ctx, digest, digestLen);
 }
 
-/**
- * Message Authentication Code (MAC) function
- * 
- * - digest: MAC output.
- * - digestLen: Set MAC output size, Value (>=) 32 is recommended.
- * 
- * - msg: Message to be authenticated.
- * - msgLen: Message size.
- * 
- * - key: The secret key.
- * - keyLen: The secret key size.
- */
+/* Message Authentication Code (MAC) function */
 void
 SpritzCipher::mac(uint8_t *digest, uint8_t digestLen,
                        const uint8_t *msg, unsigned int msgLen,

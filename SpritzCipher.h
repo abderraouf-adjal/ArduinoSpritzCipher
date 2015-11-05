@@ -29,8 +29,18 @@
 
 #include <stdint.h> /* For uint8_t */
 
+
+/** \def SAFE_TIMING_CRUSH
+ * do safe timing swap in crush(), Because of the compiler optimization this may be not useful
+ */
+#define SAFE_TIMING_CRUSH
+
 #define SPRITZ_N 256
 
+
+/** \typedef spritz_t
+ * \brief the context (contain the state), holds indices and S-Box.
+ */
 typedef struct
 {
   uint8_t s[SPRITZ_N], i, j, k, z, a, w;
@@ -42,49 +52,63 @@ class SpritzCipher
   public:
     SpritzCipher();
 
-    /* Setup spritz state (spritz_t) */
+    /** \fn void setup(spritz_t *ctx, const uint8_t *key, uint8_t keyLen)
+     * \brief setup spritz state (spritz_t) with a key
+     * \param ctx the context
+     * \param key the key
+     * \param keyLen length of the key in bytes
+     */
     void
     setup(spritz_t *ctx,
           const uint8_t *key, uint8_t keyLen);
 
-    /* Use setupIV() *after* setup() to add NONCE (Salt) */
+
+    /** \fn void setupIV(spritz_t *ctx, const uint8_t *nonce, uint8_t nonceLen)
+     * \brief add NONCE (Salt) to spritz state, Use setupIV() after setup()
+     * \param ctx the context
+     * \param nonce the nonce (salt)
+     * \param nonceLen length of the nonce in bytes
+     */
     void
     setupIV(spritz_t *ctx,
             const uint8_t *nonce, uint8_t nonceLen);
 
-    /* Return random byte (can be used to make a key) from spritz state (spritz_t) */
+
+    /** \fn uint8_t spritz_rand_byte(spritz_t *ctx)
+     * \brief generates a byte of keystream from spritz state (spritz_t)
+     * \param ctx the context
+     * \return byte of keystream
+     */
     uint8_t
     spritz_rand_byte(spritz_t *ctx);
 
-    /**
-     * Cryptographic hash function
-     * 
-     * - digest: Hash output.
-     * - digestLen: Set hash output size, Value (>=) 32 is recommended.
-     * 
-     * - data: Data to hash.
-     * - dataLen: Data size.
+
+    /** \fn void hash(uint8_t *digest, uint8_t digestLen, const uint8_t *data, unsigned int dataLen)
+     * \brief cryptographic hash function
+     * \param digest digest (Hash) output.
+     * \param digestLen length of the digest in bytes
+     * \param data data to hash
+     * \param dataLen length of the data in bytes
      */
     void
     hash(uint8_t *digest, uint8_t digestLen,
          const uint8_t *data, unsigned int dataLen);
 
-    /**
-     * Message Authentication Code (MAC) function
-     * 
-     * - digest: MAC output.
-     * - digestLen: Set MAC output size, Value (>=) 32 is recommended.
-     * 
-     * - msg: Message to be authenticated.
-     * - msgLen: Message size.
-     * 
-     * - key: The secret key.
-     * - keyLen: The secret key size.
+
+    /** \fn void mac(uint8_t *digest, uint8_t digestLen, const uint8_t *msg, unsigned int msgLen, const uint8_t *key, uint8_t keyLen)
+     * \brief message authentication code (MAC) function
+     * \param digest MAC output.
+     * \param digestLen length of the digest in bytes
+     * \param msg the message to be authenticated
+     * \param msgLen length of the message in bytes
+     * \param key the secret key
+     * \param keyLen length of the key in bytes
      */
     void
     mac(uint8_t *digest, uint8_t digestLen,
         const uint8_t *msg, unsigned int msgLen,
         const uint8_t *key, uint8_t keyLen);
+
 
   private:
     void stateInit(spritz_t *ctx);
