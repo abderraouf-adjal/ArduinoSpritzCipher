@@ -3,7 +3,7 @@ SpritzCipher
 
 Spritz library for Arduino.
 A spongy RC4-like stream cipher. This library contains cryptographically secure
-pseudo-random bytes generator, Hash & MAC functions with configurable output length.
+pseudo-random bytes generator, Hash & MAC with configurable output length.
 
 This library can be used to:
   * Encrypt data.
@@ -22,30 +22,13 @@ Library content for user
   spritz_t - The context (contain the state), holds indices and S-Box.
 
 * Functions
-  setup()   - Setup spritz state (spritz_t) with a key.
-  setupIV() - Add NONCE (Salt) to spritz state, Use setupIV() after setup().
-  spritz_rand_byte() - Generates a byte of keystream from spritz state (spritz_t).
-  hash() - Cryptographic hash function.
-  mac()  - Message Authentication Code (MAC) function.
+  setup(context, key, keyLen)            - Setup spritz state (spritz_t) with a key.
+  setupIV(context, nonce, nonceLen)      - Add NONCE (Salt) to spritz state, Use setupIV() after setup().
+  spritz_rand_byte(context)              - Generates a byte of keystream from spritz state (spritz_t).
+  hash(digest, digestLen, data, dataLen) - Cryptographic hash function.
+  mac(digest, digestLen, msg, msgLen, key, keyLen) - Message Authentication Code (MAC) function.
 
-
-Functions
-=========
-
-void setup(spritz_t *ctx,
-           const uint8_t *key, uint8_t keyLen);
-
-void setupIV(spritz_t *ctx,
-             const uint8_t *nonce, uint8_t nonceLen);
-
-uint8_t spritz_rand_byte(spritz_t *ctx);
-
-void hash(uint8_t *digest, uint8_t digestLen,
-          const uint8_t *data, unsigned int dataLen);
-
-void mac(uint8_t *digest, uint8_t digestLen,
-         const uint8_t *msg, unsigned int msgLen,
-         const uint8_t *key, uint8_t keyLen);
+See <SpritzCipher.h> for the details.
 
 
 Examples
