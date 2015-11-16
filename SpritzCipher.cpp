@@ -79,10 +79,13 @@ SpritzCipher::whip(spritz_t *ctx)
 void
 SpritzCipher::crush(spritz_t *ctx)
 {
-  uint8_t i, j = SPRITZ_N_MINUS_1;
+  uint8_t i, j;
 #ifdef SAFE_TIMING_CRUSH
   uint8_t s_i, s_j;
-  for (i = 0; i < SPRITZ_N_HALF; i++, j--) {
+#endif
+
+  for (i = 0, j = SPRITZ_N_MINUS_1; i < SPRITZ_N_HALF; i++, j--) {
+#ifdef SAFE_TIMING_CRUSH
     if ((s_i = ctx->s[i]) > (s_j = ctx->s[j])) {
       ctx->s[i] = s_j;
       ctx->s[j] = s_i;
@@ -91,14 +94,12 @@ SpritzCipher::crush(spritz_t *ctx)
       ctx->s[i] = s_i;
       ctx->s[j] = s_j;
     }
-  }
 #else /* SAFE_TIMING_CRUSH */
-  for (i = 0; i < SPRITZ_N_HALF; i++, j--) {
     if (ctx->s[i] > ctx->s[j]) {
       swap(&ctx->s[i], &ctx->s[j]);
     }
-  }
 #endif
+  }
 }
 
 void
