@@ -43,7 +43,7 @@ swap(uint8_t *a, uint8_t *b)
 
 
 void
-SpritzCipher::stateInit(spritz_t *ctx)
+SpritzCipher::stateInit(spritz_ctx *ctx)
 {
   uint8_t i;
   ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = 0;
@@ -55,7 +55,7 @@ SpritzCipher::stateInit(spritz_t *ctx)
 }
 
 void
-SpritzCipher::update(spritz_t *ctx)
+SpritzCipher::update(spritz_ctx *ctx)
 {
   ctx->i += ctx->w;
   ctx->j  = ctx->k + ctx->s[(uint8_t)(ctx->j + ctx->s[ctx->i])];
@@ -64,7 +64,7 @@ SpritzCipher::update(spritz_t *ctx)
 }
 
 void
-SpritzCipher::whip(spritz_t *ctx)
+SpritzCipher::whip(spritz_ctx *ctx)
 {
   uint8_t i;
   for (i = 0; i < SPRITZ_N_HALF; i++) {
@@ -77,7 +77,7 @@ SpritzCipher::whip(spritz_t *ctx)
 }
 
 void
-SpritzCipher::crush(spritz_t *ctx)
+SpritzCipher::crush(spritz_ctx *ctx)
 {
   uint8_t i, j;
 #ifdef SAFE_TIMING_CRUSH
@@ -103,7 +103,7 @@ SpritzCipher::crush(spritz_t *ctx)
 }
 
 void
-SpritzCipher::shuffle(spritz_t *ctx)
+SpritzCipher::shuffle(spritz_ctx *ctx)
 {
   whip(ctx);
   crush(ctx);
@@ -115,7 +115,7 @@ SpritzCipher::shuffle(spritz_t *ctx)
 
 /* Tip: nibble=4bit; octet=2*nibble=8bit; byte=octet in modern computers */
 void
-SpritzCipher::absorbNibble(spritz_t *ctx, const uint8_t nibble)
+SpritzCipher::absorbNibble(spritz_ctx *ctx, const uint8_t nibble)
 {
   if (ctx->a == SPRITZ_N_HALF) {
     shuffle(ctx);
@@ -124,14 +124,14 @@ SpritzCipher::absorbNibble(spritz_t *ctx, const uint8_t nibble)
   ctx->a++;
 }
 void
-SpritzCipher::absorb(spritz_t *ctx, const uint8_t octet)
+SpritzCipher::absorb(spritz_ctx *ctx, const uint8_t octet)
 {
   absorbNibble(ctx, octet % 16); /* Low */
   absorbNibble(ctx, octet / 16); /* High */
 }
 
 void
-SpritzCipher::absorbStop(spritz_t *ctx)
+SpritzCipher::absorbStop(spritz_ctx *ctx)
 {
   if (ctx->a == SPRITZ_N_HALF) {
     shuffle(ctx);
@@ -140,13 +140,13 @@ SpritzCipher::absorbStop(spritz_t *ctx)
 }
 
 uint8_t
-SpritzCipher::output(spritz_t *ctx)
+SpritzCipher::output(spritz_ctx *ctx)
 {
   ctx->z = ctx->s[(uint8_t)(ctx->j + ctx->s[(uint8_t)(ctx->i + ctx->s[(uint8_t)(ctx->z + ctx->k)])])];
   return ctx->z;
 }
 uint8_t
-SpritzCipher::drip(spritz_t *ctx)
+SpritzCipher::drip(spritz_ctx *ctx)
 {
   if (ctx->a) {
     shuffle(ctx);
@@ -157,7 +157,7 @@ SpritzCipher::drip(spritz_t *ctx)
 
 /* squeeze() for hash() and mac() */
 void
-SpritzCipher::squeeze(spritz_t *ctx, uint8_t *out, uint8_t len)
+SpritzCipher::squeeze(spritz_ctx *ctx, uint8_t *out, uint8_t len)
 {
   uint8_t i;
   if (ctx->a) {
@@ -171,9 +171,9 @@ SpritzCipher::squeeze(spritz_t *ctx, uint8_t *out, uint8_t len)
 
 /* ================ User Functions ================ */
 
-/* Setup spritz state (spritz_t) with a key */
+/* Setup spritz state (spritz_ctx) with a key */
 void
-SpritzCipher::setup(spritz_t *ctx,
+SpritzCipher::setup(spritz_ctx *ctx,
                     const uint8_t *key, uint8_t keyLen)
 {
   uint8_t i;
@@ -183,9 +183,9 @@ SpritzCipher::setup(spritz_t *ctx,
   }
 }
 
-/* Setup spritz state (spritz_t) with a key and nonce (Salt) */
+/* Setup spritz state (spritz_ctx) with a key and nonce (Salt) */
 void
-SpritzCipher::setupIV(spritz_t *ctx,
+SpritzCipher::setupIV(spritz_ctx *ctx,
                       const uint8_t *key, uint8_t keyLen,
                       const uint8_t *nonce, uint8_t nonceLen)
 {
@@ -197,9 +197,9 @@ SpritzCipher::setupIV(spritz_t *ctx,
   }
 }
 
-/* Wipe spritz context (spritz_t) data */
+/* Wipe spritz context (spritz_ctx) data */
 void
-SpritzCipher::wipe_spritz_ctx(spritz_t *ctx)
+SpritzCipher::wipe_spritz_ctx(spritz_ctx *ctx)
 {
   uint8_t i;
   ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = ctx->w = 0;
@@ -210,9 +210,9 @@ SpritzCipher::wipe_spritz_ctx(spritz_t *ctx)
 }
 
 
-/* Generates a byte of keystream from spritz state (spritz_t) */
+/* Generates a byte of keystream from spritz state (spritz_ctx) */
 uint8_t
-SpritzCipher::spritz_rand_byte(spritz_t *ctx)
+SpritzCipher::spritz_rand_byte(spritz_ctx *ctx)
 {
   return drip(ctx);
 }
@@ -223,7 +223,7 @@ void
 SpritzCipher::hash(uint8_t *digest, uint8_t digestLen,
                    const uint8_t *data, unsigned int dataLen)
 {
-  spritz_t ctx;
+  spritz_ctx ctx;
   unsigned int i;
   stateInit(&ctx);
   for (i = 0; i < dataLen; i++) {
@@ -243,7 +243,7 @@ SpritzCipher::mac(uint8_t *digest, uint8_t digestLen,
                   const uint8_t *msg, unsigned int msgLen,
                   const uint8_t *key, uint8_t keyLen)
 {
-  spritz_t ctx;
+  spritz_ctx ctx;
   unsigned int i;
   stateInit(&ctx);
   for (i = 0; i < keyLen; i++) {

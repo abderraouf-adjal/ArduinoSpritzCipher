@@ -49,17 +49,17 @@ const byte testVector3[32] =
 void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
 {
   byte buf[32]; /* Output buffer */
-  spritz_t s_ctx;
+  spritz_ctx s_ctx;
   SpritzCipher sc;
-  
+
   /* Print key */
   for (byte i = 0; i < dataLen; i++) {
     Serial.write(data[i]);
   }
   Serial.println();
-  
+
   sc.setup(&s_ctx, data, dataLen);
-  
+
   for (byte i = 0; i < sizeof(buf); i++) {
     buf[i] = sc.spritz_rand_byte(&s_ctx);
     if (buf[i] < 0x10) { /* To print "0F" not "F" */
@@ -84,7 +84,7 @@ void setup() {
   while (!Serial) {
     ; /* Wait for serial port to connect. Needed for Leonardo only */
   }
-  
+
   /* initialize digital pin LED_BUILTIN (Most boards have this LED connected to digital pin 13) as an output */
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
@@ -92,7 +92,7 @@ void setup() {
 
 void loop() {
   Serial.println("Spritz spritz_rand_byte() test\n");
-  
+
   /* Key: ABC */
   testFunc(testVector1, testKey1, sizeof(testKey1));
   /* Key: spam */

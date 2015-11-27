@@ -43,13 +43,13 @@
 #define SPRITZ_N 256
 
 
-/** \typedef spritz_t
+/** \typedef spritz_ctx
  * \brief the context (contain the state), holds indices and S-Box.
  */
 typedef struct
 {
   uint8_t s[SPRITZ_N], i, j, k, z, a, w;
-} spritz_t;
+} spritz_ctx;
 
 
 class SpritzCipher
@@ -57,19 +57,19 @@ class SpritzCipher
   public:
     SpritzCipher();
 
-    /** \fn void setup(spritz_t *ctx, const uint8_t *key, uint8_t keyLen)
-     * \brief setup spritz state (spritz_t) with a key
+    /** \fn void setup(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen)
+     * \brief setup spritz state (spritz_ctx) with a key
      * \param ctx the context
      * \param key the key
      * \param keyLen length of the key in bytes
      */
     void
-    setup(spritz_t *ctx,
+    setup(spritz_ctx *ctx,
           const uint8_t *key, uint8_t keyLen);
 
 
-    /** \fn void setupIV(spritz_t *ctx, const uint8_t *key, uint8_t keyLen, const uint8_t *nonce, uint8_t nonceLen)
-     * \brief setup spritz state (spritz_t) with a key and nonce (Salt)
+    /** \fn void setupIV(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen, const uint8_t *nonce, uint8_t nonceLen)
+     * \brief setup spritz state (spritz_ctx) with a key and nonce (Salt)
      * \param ctx the context
      * \param key the key
      * \param keyLen length of the key in bytes
@@ -77,26 +77,26 @@ class SpritzCipher
      * \param nonceLen length of the nonce in bytes
      */
     void
-    setupIV(spritz_t *ctx,
+    setupIV(spritz_ctx *ctx,
             const uint8_t *key, uint8_t keyLen,
             const uint8_t *nonce, uint8_t nonceLen);
 
 
-    /** \fn void wipe_spritz_ctx(spritz_t *ctx)
-     * \brief Wipe spritz context (spritz_t) data
+    /** \fn void wipe_spritz_ctx(spritz_ctx *ctx)
+     * \brief Wipe spritz context (spritz_ctx) data
      * \param ctx the context
      */
     void
-    wipe_spritz_ctx(spritz_t *ctx);
+    wipe_spritz_ctx(spritz_ctx *ctx);
 
 
-    /** \fn uint8_t spritz_rand_byte(spritz_t *ctx)
-     * \brief generates a byte of keystream from spritz state (spritz_t)
+    /** \fn uint8_t spritz_rand_byte(spritz_ctx *ctx)
+     * \brief generates a byte of keystream from spritz state (spritz_ctx)
      * \param ctx the context
      * \return byte of keystream
      */
     uint8_t
-    spritz_rand_byte(spritz_t *ctx);
+    spritz_rand_byte(spritz_ctx *ctx);
 
 
     /** \fn void hash(uint8_t *digest, uint8_t digestLen, const uint8_t *data, unsigned int dataLen)
@@ -127,17 +127,17 @@ class SpritzCipher
 
 
   private:
-    void stateInit(spritz_t *ctx);
-    void update(spritz_t *ctx);
-    void whip(spritz_t *ctx);
-    void crush(spritz_t *ctx);
-    void shuffle(spritz_t *ctx);
-    void absorbNibble(spritz_t *ctx, const uint8_t nibble);
-    void absorb(spritz_t *ctx, const uint8_t octet);
-    void absorbStop(spritz_t *ctx);
-    uint8_t output(spritz_t *ctx);
-    uint8_t drip(spritz_t *ctx);
-    void squeeze(spritz_t *ctx, uint8_t *out, uint8_t len);
+    void stateInit(spritz_ctx *ctx);
+    void update(spritz_ctx *ctx);
+    void whip(spritz_ctx *ctx);
+    void crush(spritz_ctx *ctx);
+    void shuffle(spritz_ctx *ctx);
+    void absorbNibble(spritz_ctx *ctx, const uint8_t nibble);
+    void absorb(spritz_ctx *ctx, const uint8_t octet);
+    void absorbStop(spritz_ctx *ctx);
+    uint8_t output(spritz_ctx *ctx);
+    uint8_t drip(spritz_ctx *ctx);
+    void squeeze(spritz_ctx *ctx, uint8_t *out, uint8_t len);
 };
 
 

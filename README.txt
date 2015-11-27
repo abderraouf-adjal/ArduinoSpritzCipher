@@ -19,13 +19,13 @@ Library content for user
 ========================
 
 * Types
-  spritz_t - The context/ctx (contain the state), holds indices and S-Box.
+  spritz_ctx - The context/ctx (contain the state), holds indices and S-Box.
 
 * Functions
-  setup(ctx, key, keyLen) - Setup spritz state (spritz_t) with a key.
-  setupIV(ctx, key, keyLen, nonce, nonceLen) - Setup spritz state (spritz_t) with a key and nonce (Salt).
+  setup(ctx, key, keyLen) - Setup spritz state (spritz_ctx) with a key.
+  setupIV(ctx, key, keyLen, nonce, nonceLen) - Setup spritz state (spritz_ctx) with a key and nonce (Salt).
   wipe_spritz_ctx(ctx)    - Wipe spritz context data.
-  spritz_rand_byte(ctx)   - Generates a byte of keystream from spritz state (spritz_t).
+  spritz_rand_byte(ctx)   - Generates a byte of keystream from spritz state (spritz_ctx).
   hash(digest, digestLen, data, dataLen)           - Cryptographic hash function.
   mac(digest, digestLen, msg, msgLen, key, keyLen) - Message Authentication Code (MAC) function.
 
@@ -36,10 +36,10 @@ Examples
 ========
 
 * Hash data:
-  ./examples/SpritzCipherHashTest/SpritzCipherHashTest.ino
+  ./examples/SpritzHashTest/SpritzHashTest.ino
 
 * Generate random bytes:
-  ./examples/SpritzCipherStreamTest/SpritzCipherStreamTest.ino
+  ./examples/SpritzStreamTest/SpritzStreamTest.ino
 
 
 Installation Guide
