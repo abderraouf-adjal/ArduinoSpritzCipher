@@ -1,5 +1,5 @@
 /**
- * Spritz Cipher Hash Parts
+ * Spritz Cipher Hash Chunks
  *
  * This example code test SpritzCipher library to hash data chunk by chunk
  * using test vectors from Spritz paper "RS14.pdf" Page 30:
