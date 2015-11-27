@@ -1,7 +1,13 @@
 SpritzCipher	KEYWORD1
-setup	KEYWORD2
-setupIV	KEYWORD2
 wipe_spritz_ctx	KEYWORD2
+etup	KEYWORD2
+setupIV	KEYWORD2
 spritz_rand_byte	KEYWORD2
+hash_setup	KEYWORD2
+hash_update	KEYWORD2
+hash_final	KEYWORD2
 hash	KEYWORD2
+mac_setup	KEYWORD2
+mac_update	KEYWORD2
+mac_final	KEYWORD2
 mac	KEYWORD2

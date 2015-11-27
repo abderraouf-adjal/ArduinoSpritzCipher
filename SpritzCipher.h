@@ -57,6 +57,14 @@ class SpritzCipher
   public:
     SpritzCipher();
 
+    /** \fn void wipe_spritz_ctx(spritz_ctx *ctx)
+     * \brief Wipe spritz context (spritz_ctx) data
+     * \param ctx the context
+     */
+    void
+    wipe_spritz_ctx(spritz_ctx *ctx);
+
+
     /** \fn void setup(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen)
      * \brief setup spritz state (spritz_ctx) with a key
      * \param ctx the context
@@ -66,7 +74,6 @@ class SpritzCipher
     void
     setup(spritz_ctx *ctx,
           const uint8_t *key, uint8_t keyLen);
-
 
     /** \fn void setupIV(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen, const uint8_t *nonce, uint8_t nonceLen)
      * \brief setup spritz state (spritz_ctx) with a key and nonce (Salt)
@@ -81,15 +88,6 @@ class SpritzCipher
             const uint8_t *key, uint8_t keyLen,
             const uint8_t *nonce, uint8_t nonceLen);
 
-
-    /** \fn void wipe_spritz_ctx(spritz_ctx *ctx)
-     * \brief Wipe spritz context (spritz_ctx) data
-     * \param ctx the context
-     */
-    void
-    wipe_spritz_ctx(spritz_ctx *ctx);
-
-
     /** \fn uint8_t spritz_rand_byte(spritz_ctx *ctx)
      * \brief generates a byte of keystream from spritz state (spritz_ctx)
      * \param ctx the context
@@ -99,11 +97,39 @@ class SpritzCipher
     spritz_rand_byte(spritz_ctx *ctx);
 
 
+
+    /** \fn void hash_setup(spritz_ctx *hash_ctx)
+     * \brief Setup spritz hash state (spritz_ctx)
+     * \param hash_ctx the hash context (ctx)
+     */
+    void
+    hash_setup(spritz_ctx *hash_ctx);
+
+    /** \fn void hash_update(spritz_ctx *hash_ctx, const uint8_t *data, unsigned int dataLen)
+     * \brief Add data chunk to hash
+     * \param hash_ctx the hash context (ctx)
+     * \param data the data chunk to hash
+     * \param dataLen length of the data in bytes
+     */
+    void
+    hash_update(spritz_ctx *hash_ctx,
+                const uint8_t *data, unsigned int dataLen);
+
+    /** \fn void hash_final(spritz_ctx *hash_ctx, uint8_t *digest, uint8_t digestLen)
+     * \brief Output hash digest
+     * \param hash_ctx the hash context (ctx)
+     * \param digest the digest (Hash) output
+     * \param digestLen length of the digest in bytes
+     */
+    void
+    hash_final(spritz_ctx *hash_ctx,
+               uint8_t *digest, uint8_t digestLen);
+
     /** \fn void hash(uint8_t *digest, uint8_t digestLen, const uint8_t *data, unsigned int dataLen)
      * \brief cryptographic hash function
-     * \param digest digest (Hash) output.
+     * \param digest the digest (Hash) output
      * \param digestLen length of the digest in bytes
-     * \param data data to hash
+     * \param data the data to hash
      * \param dataLen length of the data in bytes
      */
     void
@@ -111,9 +137,40 @@ class SpritzCipher
          const uint8_t *data, unsigned int dataLen);
 
 
-    /** \fn void mac(uint8_t *digest, uint8_t digestLen, const uint8_t *msg, unsigned int msgLen, const uint8_t *key, uint8_t keyLen)
+
+    /** \fn void mac_setup(spritz_ctx *mac_ctx, const uint8_t *key, unsigned int keyLen)
+     * \brief Setup spritz MAC state (spritz_ctx)
+     * \param mac_ctx the MAC context (ctx)
+     * \param key the secret key
+     * \param keyLen length of the key in bytes
+     */
+    void
+    mac_setup(spritz_ctx *mac_ctx,
+                            const uint8_t *key, unsigned int keyLen);
+
+    /** \fn void mac_update(spritz_ctx *mac_ctx, const uint8_t *msg, unsigned int msgLen)
+     * \brief Add message/data chunk to MAC
+     * \param hash_ctx the hash context (ctx)
+     * \param msg the message chunk to be authenticated
+     * \param msgLen length of the message in bytes
+     */
+    void
+    mac_update(spritz_ctx *mac_ctx,
+                             const uint8_t *msg, unsigned int msgLen);
+
+    /** \fn void mac_final(spritz_ctx *mac_ctx, uint8_t *digest, uint8_t digestLen)
+     * \brief Output MAC digest
+     * \param mac_ctx the MAC context (ctx)
+     * \param digest MAC digest output.
+     * \param digestLen length of the digest in bytes
+     */
+    void
+    mac_final(spritz_ctx *mac_ctx,
+                            uint8_t *digest, uint8_t digestLen);
+
+    /** \fn void mac(uint8_t *digest, uint8_t digestLen, const uint8_t *msg, unsigned int msgLen, const uint8_t *key, unsigned int keyLen)
      * \brief message authentication code (MAC) function
-     * \param digest MAC output.
+     * \param digest MAC digest output.
      * \param digestLen length of the digest in bytes
      * \param msg the message to be authenticated
      * \param msgLen length of the message in bytes
@@ -123,7 +180,7 @@ class SpritzCipher
     void
     mac(uint8_t *digest, uint8_t digestLen,
         const uint8_t *msg, unsigned int msgLen,
-        const uint8_t *key, uint8_t keyLen);
+        const uint8_t *key, unsigned int keyLen);
 
 
   private:
@@ -134,6 +191,7 @@ class SpritzCipher
     void shuffle(spritz_ctx *ctx);
     void absorbNibble(spritz_ctx *ctx, const uint8_t nibble);
     void absorb(spritz_ctx *ctx, const uint8_t octet);
+    void absorbBytes(spritz_ctx *ctx, const uint8_t *buf, unsigned int len);
     void absorbStop(spritz_ctx *ctx);
     uint8_t output(spritz_ctx *ctx);
     uint8_t drip(spritz_ctx *ctx);

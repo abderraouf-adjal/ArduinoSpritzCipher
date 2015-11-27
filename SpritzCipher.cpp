@@ -129,6 +129,14 @@ SpritzCipher::absorb(spritz_ctx *ctx, const uint8_t octet)
   absorbNibble(ctx, octet % 16); /* Low */
   absorbNibble(ctx, octet / 16); /* High */
 }
+void
+SpritzCipher::absorbBytes(spritz_ctx *ctx, const uint8_t *buf, unsigned int len)
+{
+  unsigned int i;
+  for (i = 0; i < len; i++) {
+    absorb(ctx, buf[i]);
+  }
+}
 
 void
 SpritzCipher::absorbStop(spritz_ctx *ctx)
@@ -169,7 +177,28 @@ SpritzCipher::squeeze(spritz_ctx *ctx, uint8_t *out, uint8_t len)
 }
 
 
-/* ================ User Functions ================ */
+/* |====================|| User Functions ||====================| */
+
+/* Wipe spritz context (spritz_ctx) data */
+void
+SpritzCipher::wipe_spritz_ctx(spritz_ctx *ctx)
+{
+  uint8_t i, d;
+
+  start:
+  ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = ctx->w = 0;
+  d = ctx->i | ctx->j | ctx->k | ctx->z | ctx->a | ctx->w;
+  for (i = 0; i < SPRITZ_N_MINUS_1; i++) {
+    ctx->s[i] = 0;
+    d |= ctx->s[i];
+  }
+  ctx->s[255] = 0;
+  d |= ctx->s[255];
+  if (d) {
+    goto start;
+  }
+}
+
 
 /* Setup spritz state (spritz_ctx) with a key */
 void
@@ -178,9 +207,7 @@ SpritzCipher::setup(spritz_ctx *ctx,
 {
   uint8_t i;
   stateInit(ctx);
-  for (i = 0; i < keyLen; i++) {
-    absorb(ctx, key[i]);
-  }
+  absorbBytes(ctx, key, keyLen);
 }
 
 /* Setup spritz state (spritz_ctx) with a key and nonce (Salt) */
@@ -192,23 +219,8 @@ SpritzCipher::setupIV(spritz_ctx *ctx,
   uint8_t i;
   setup(ctx, key, keyLen);
   absorbStop(ctx);
-  for (i = 0; i < nonceLen; i++) {
-    absorb(ctx, nonce[i]);
-  }
+  absorbBytes(ctx, nonce, nonceLen);
 }
-
-/* Wipe spritz context (spritz_ctx) data */
-void
-SpritzCipher::wipe_spritz_ctx(spritz_ctx *ctx)
-{
-  uint8_t i;
-  ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = ctx->w = 0;
-  for (i = 0; i < SPRITZ_N_MINUS_1; i++) {
-    ctx->s[i] = 0;
-  }
-  ctx->s[255] = 0;
-}
-
 
 /* Generates a byte of keystream from spritz state (spritz_ctx) */
 uint8_t
@@ -218,45 +230,80 @@ SpritzCipher::spritz_rand_byte(spritz_ctx *ctx)
 }
 
 
+/* Setup spritz hash state (spritz_ctx) */
+void
+SpritzCipher::hash_setup(spritz_ctx *hash_ctx)
+{
+  stateInit(hash_ctx);
+}
+
+/* Add data chunk to hash */
+void
+SpritzCipher::hash_update(spritz_ctx *hash_ctx,
+                          const uint8_t *data, unsigned int dataLen)
+{
+  absorbBytes(hash_ctx, data, dataLen);
+}
+
+/* Output hash digest */
+void
+SpritzCipher::hash_final(spritz_ctx *hash_ctx,
+                         uint8_t *digest, uint8_t digestLen)
+{
+  absorbStop(hash_ctx);
+  absorb(hash_ctx, digestLen);
+  squeeze(hash_ctx, digest, digestLen);
+#ifdef WIPE_AFTER_USAGE
+  wipe_spritz_ctx(hash_ctx);
+#endif
+}
+
 /* Cryptographic hash function */
 void
 SpritzCipher::hash(uint8_t *digest, uint8_t digestLen,
                    const uint8_t *data, unsigned int dataLen)
 {
-  spritz_ctx ctx;
-  unsigned int i;
-  stateInit(&ctx);
-  for (i = 0; i < dataLen; i++) {
-    absorb(&ctx, data[i]);
-  }
-  absorbStop(&ctx);
-  absorb(&ctx, digestLen);
-  squeeze(&ctx, digest, digestLen);
-#ifdef WIPE_AFTER_USAGE
-  wipe_spritz_ctx(&ctx);
-#endif
+  spritz_ctx hash_ctx;
+  hash_setup(&hash_ctx);
+  hash_update(&hash_ctx, data, dataLen);
+  hash_final(&hash_ctx, digest, digestLen);
+}
+
+
+/* Setup spritz MAC state (spritz_ctx) */
+void
+SpritzCipher::mac_setup(spritz_ctx *mac_ctx,
+                        const uint8_t *key, unsigned int keyLen)
+{
+  stateInit(mac_ctx); /* hash_update() */
+  absorbBytes(mac_ctx, key, keyLen);
+  absorbStop(mac_ctx);
+}
+
+/* Add message/data chunk to MAC */
+void
+SpritzCipher::mac_update(spritz_ctx *mac_ctx,
+                          const uint8_t *msg, unsigned int msgLen)
+{
+  absorbBytes(mac_ctx, msg, msgLen); /* hash_update() */
+}
+
+/* Output MAC digest */
+void
+SpritzCipher::mac_final(spritz_ctx *mac_ctx,
+                         uint8_t *digest, uint8_t digestLen)
+{
+  hash_final(mac_ctx, digest, digestLen);
 }
 
 /* Message Authentication Code (MAC) function */
 void
 SpritzCipher::mac(uint8_t *digest, uint8_t digestLen,
                   const uint8_t *msg, unsigned int msgLen,
-                  const uint8_t *key, uint8_t keyLen)
+                  const uint8_t *key, unsigned int keyLen)
 {
-  spritz_ctx ctx;
-  unsigned int i;
-  stateInit(&ctx);
-  for (i = 0; i < keyLen; i++) {
-    absorb(&ctx, key[i]);
-  }
-  absorbStop(&ctx);
-  for (i = 0; i < msgLen; i++) {
-    absorb(&ctx, msg[i]);
-  }
-  absorbStop(&ctx);
-  absorb(&ctx, digestLen);
-  squeeze(&ctx, digest, digestLen);
-#ifdef WIPE_AFTER_USAGE
-  wipe_spritz_ctx(&ctx);
-#endif
+  spritz_ctx mac_ctx;
+  mac_setup(&mac_ctx, key, keyLen);
+  mac_update(&mac_ctx, msg, msgLen);
+  mac_final(&mac_ctx, digest, digestLen);
 }

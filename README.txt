@@ -2,15 +2,16 @@ SpritzCipher
 ============
 
 Spritz library for Arduino.
-A spongy RC4-like stream cipher. This library contains cryptographically secure
-pseudo-random bytes generator, Hash & MAC with configurable output length.
+A spongy RC4-like stream cipher. This library contains secure random bytes generator,
+Flexible cryptographic hash function & message authentication code (MAC).
 
 This library can be used to:
-  * Encrypt data.
-  * Generate random numbers.
-  * Hash & authenticate data.
+  * Hash data.
+  * Data encryption.
+  * Authenticated encryption.
+  * Generate random numbers from seed.
 
-Home page: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
+Home page on GitHub: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
 
 Spritz paper: <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
 
@@ -18,28 +19,56 @@ Spritz paper: <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
 Library content for user
 ========================
 
-* Types
-  spritz_ctx - The context/ctx (contain the state), holds indices and S-Box.
-
-* Functions
-  setup(ctx, key, keyLen) - Setup spritz state (spritz_ctx) with a key.
-  setupIV(ctx, key, keyLen, nonce, nonceLen) - Setup spritz state (spritz_ctx) with a key and nonce (Salt).
-  wipe_spritz_ctx(ctx)    - Wipe spritz context data.
-  spritz_rand_byte(ctx)   - Generates a byte of keystream from spritz state (spritz_ctx).
-  hash(digest, digestLen, data, dataLen)           - Cryptographic hash function.
-  mac(digest, digestLen, msg, msgLen, key, keyLen) - Message Authentication Code (MAC) function.
-
 See <SpritzCipher.h> for the details.
+
+* Types:
+  spritz_ctx
+    The context/ctx (contain the state), holds indices and S-Box.
+
+* Functions:
+  wipe_spritz_ctx(spritz_ctx ctx):
+    Wipe spritz context data.
+
+  setup(spritz_ctx ctx, key, keyLen)
+    Setup spritz state (spritz_ctx) with a key.
+  setupIV(spritz_ctx ctx, key, keyLen, nonce, nonceLen)
+    Setup spritz state with a key and nonce (Salt).
+  spritz_rand_byte(spritz_ctx ctx)
+    Generates a byte of keystream from spritz state (spritz_ctx).
+
+
+  hash(digest, digestLen, data, dataLen)
+    Spritz cryptographic hash function.
+  mac(digest, digestLen, msg, msgLen, key, keyLen)
+    Spritz Message Authentication Code (MAC) function.
+
+
+  hash_setup(spritz_ctx hash_ctx)
+    Setup spritz hash state.
+  hash_update(spritz_ctx hash_ctx, data, dataLen)
+    Add data chunk to hash.
+  hash_final(spritz_ctx hash_ctx, digest, digestLen)
+    Output hash digest.
+
+  mac_setup(spritz_ctx mac_ctx, key, keyLen)
+    Setup spritz MAC state.
+  mac_update(spritz_ctx mac_ctx, msg, msgLen)
+    Add message/data chunk to MAC.
+  mac_final(spritz_ctx mac_ctx, digest, digestLen)
+    Output MAC digest.
 
 
 Examples
 ========
 
+* Generate random bytes (Spritz stream test):
+  ./examples/SpritzStreamTest/SpritzStreamTest.ino
+
 * Hash data:
   ./examples/SpritzHashTest/SpritzHashTest.ino
 
-* Generate random bytes:
-  ./examples/SpritzStreamTest/SpritzStreamTest.ino
+* Hash data chunk by chunk:
+  ./examples/SpritzHashChunksTest/SpritzHashChunksTest.ino
 
 
 Installation Guide
