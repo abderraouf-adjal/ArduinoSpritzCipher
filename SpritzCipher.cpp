@@ -33,7 +33,7 @@
 SpritzCipher::SpritzCipher() { }
 
 
-static void
+static inline void
 swap(uint8_t *a, uint8_t *b)
 {
   uint8_t t = *a;
@@ -57,9 +57,9 @@ SpritzCipher::stateInit(spritz_ctx *ctx)
 void
 SpritzCipher::update(spritz_ctx *ctx)
 {
-  ctx->i += ctx->w;
-  ctx->j  = ctx->k + ctx->s[(uint8_t)(ctx->j + ctx->s[ctx->i])];
-  ctx->k += ctx->i + ctx->s[ctx->j];
+  ctx->i = (uint8_t)(ctx->i + ctx->w);
+  ctx->j = (uint8_t)(ctx->k + ctx->s[(uint8_t)(ctx->j + ctx->s[ctx->i])]);
+  ctx->k = (uint8_t)(ctx->k + ctx->i + ctx->s[ctx->j]);
   swap(&ctx->s[ctx->i], &ctx->s[ctx->j]);
 }
 
@@ -73,7 +73,7 @@ SpritzCipher::whip(spritz_ctx *ctx)
     update(ctx);
     update(ctx);
   }
-  ctx->w += 2;
+  ctx->w = (uint8_t)(ctx->w + 2);
 }
 
 void
@@ -205,7 +205,6 @@ void
 SpritzCipher::setup(spritz_ctx *ctx,
                     const uint8_t *key, uint8_t keyLen)
 {
-  uint8_t i;
   stateInit(ctx);
   absorbBytes(ctx, key, keyLen);
 }
@@ -216,7 +215,6 @@ SpritzCipher::setupIV(spritz_ctx *ctx,
                       const uint8_t *key, uint8_t keyLen,
                       const uint8_t *nonce, uint8_t nonceLen)
 {
-  uint8_t i;
   setup(ctx, key, keyLen);
   absorbStop(ctx);
   absorbBytes(ctx, nonce, nonceLen);
