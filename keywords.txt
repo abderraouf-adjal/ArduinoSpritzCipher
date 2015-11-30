@@ -1,6 +1,6 @@
 SpritzCipher	KEYWORD1
 wipe_spritz_ctx	KEYWORD2
-etup	KEYWORD2
+setup	KEYWORD2
 setupIV	KEYWORD2
 spritz_rand_byte	KEYWORD2
 hash_setup	KEYWORD2
