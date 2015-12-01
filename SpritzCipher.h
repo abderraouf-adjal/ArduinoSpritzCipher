@@ -181,21 +181,6 @@ class SpritzCipher
     mac(uint8_t *digest, uint8_t digestLen,
         const uint8_t *msg, unsigned int msgLen,
         const uint8_t *key, unsigned int keyLen);
-
-
-  private:
-    void stateInit(spritz_ctx *ctx);
-    void update(spritz_ctx *ctx);
-    void whip(spritz_ctx *ctx);
-    void crush(spritz_ctx *ctx);
-    void shuffle(spritz_ctx *ctx);
-    void absorbNibble(spritz_ctx *ctx, const uint8_t nibble);
-    void absorb(spritz_ctx *ctx, const uint8_t octet);
-    void absorbBytes(spritz_ctx *ctx, const uint8_t *buf, unsigned int len);
-    void absorbStop(spritz_ctx *ctx);
-    uint8_t output(spritz_ctx *ctx);
-    uint8_t drip(spritz_ctx *ctx);
-    void squeeze(spritz_ctx *ctx, uint8_t *out, uint8_t len);
 };
 
 
