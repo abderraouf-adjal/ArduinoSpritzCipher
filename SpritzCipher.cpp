@@ -30,9 +30,6 @@
 #define SPRITZ_N_HALF 128 /* SPRITZ_N / 2 */
 
 
-SpritzCipher::SpritzCipher() { }
-
-
 static void
 swap(uint8_t *a, uint8_t *b)
 {
@@ -86,7 +83,9 @@ crush(spritz_ctx *ctx)
 
   for (i = 0, j = SPRITZ_N_MINUS_1; i < SPRITZ_N_HALF; i++, j--) {
 #ifdef SAFE_TIMING_CRUSH
-    if ((s_i = ctx->s[i]) > (s_j = ctx->s[j])) {
+    s_i = ctx->s[i];
+    s_j = ctx->s[j];
+    if (s_i > s_j) {
       ctx->s[i] = s_j;
       ctx->s[j] = s_i;
     }
@@ -163,7 +162,7 @@ drip(spritz_ctx *ctx)
   return output(ctx);
 }
 
-/* squeeze() for hash() and mac() */
+/* squeeze() for hash and mac */
 static void
 squeeze(spritz_ctx *ctx, uint8_t *out, uint8_t len)
 {
@@ -181,7 +180,7 @@ squeeze(spritz_ctx *ctx, uint8_t *out, uint8_t len)
 
 /* Wipe spritz context (spritz_ctx) data */
 void
-SpritzCipher::wipe_spritz_ctx(spritz_ctx *ctx)
+spritz_wipe_ctx(spritz_ctx *ctx)
 {
   uint8_t i, d;
 
@@ -202,7 +201,7 @@ SpritzCipher::wipe_spritz_ctx(spritz_ctx *ctx)
 
 /* Setup spritz state (spritz_ctx) with a key */
 void
-SpritzCipher::setup(spritz_ctx *ctx,
+spritz_setup(spritz_ctx *ctx,
                     const uint8_t *key, uint8_t keyLen)
 {
   stateInit(ctx);
@@ -211,18 +210,18 @@ SpritzCipher::setup(spritz_ctx *ctx,
 
 /* Setup spritz state (spritz_ctx) with a key and nonce (Salt) */
 void
-SpritzCipher::setupIV(spritz_ctx *ctx,
+spritz_setupIV(spritz_ctx *ctx,
                       const uint8_t *key, uint8_t keyLen,
                       const uint8_t *nonce, uint8_t nonceLen)
 {
-  setup(ctx, key, keyLen);
+  spritz_setup(ctx, key, keyLen);
   absorbStop(ctx);
   absorbBytes(ctx, nonce, nonceLen);
 }
 
 /* Generates a byte of keystream from spritz state (spritz_ctx) */
 uint8_t
-SpritzCipher::spritz_rand_byte(spritz_ctx *ctx)
+spritz_rand_byte(spritz_ctx *ctx)
 {
   return drip(ctx);
 }
@@ -230,78 +229,78 @@ SpritzCipher::spritz_rand_byte(spritz_ctx *ctx)
 
 /* Setup spritz hash state (spritz_ctx) */
 void
-SpritzCipher::hash_setup(spritz_ctx *hash_ctx)
+spritz_hash_setup(spritz_ctx *hash_ctx)
 {
   stateInit(hash_ctx);
 }
 
 /* Add data chunk to hash */
 void
-SpritzCipher::hash_update(spritz_ctx *hash_ctx,
-                          const uint8_t *data, unsigned int dataLen)
+spritz_hash_update(spritz_ctx *hash_ctx,
+                   const uint8_t *data, unsigned int dataLen)
 {
   absorbBytes(hash_ctx, data, dataLen);
 }
 
 /* Output hash digest */
 void
-SpritzCipher::hash_final(spritz_ctx *hash_ctx,
-                         uint8_t *digest, uint8_t digestLen)
+spritz_hash_final(spritz_ctx *hash_ctx,
+                  uint8_t *digest, uint8_t digestLen)
 {
   absorbStop(hash_ctx);
   absorb(hash_ctx, digestLen);
   squeeze(hash_ctx, digest, digestLen);
 #ifdef WIPE_AFTER_USAGE
-  wipe_spritz_ctx(hash_ctx);
+  spritz_wipe_ctx(hash_ctx);
 #endif
 }
 
 /* Cryptographic hash function */
 void
-SpritzCipher::hash(uint8_t *digest, uint8_t digestLen,
-                   const uint8_t *data, unsigned int dataLen)
+spritz_hash(uint8_t *digest, uint8_t digestLen,
+            const uint8_t *data, unsigned int dataLen)
 {
   spritz_ctx hash_ctx;
-  hash_setup(&hash_ctx);
-  hash_update(&hash_ctx, data, dataLen);
-  hash_final(&hash_ctx, digest, digestLen);
+  spritz_hash_setup(&hash_ctx);
+  spritz_hash_update(&hash_ctx, data, dataLen);
+  spritz_hash_final(&hash_ctx, digest, digestLen);
 }
 
 
 /* Setup spritz MAC state (spritz_ctx) */
 void
-SpritzCipher::mac_setup(spritz_ctx *mac_ctx,
-                        const uint8_t *key, unsigned int keyLen)
+spritz_mac_setup(spritz_ctx *mac_ctx,
+                 const uint8_t *key, unsigned int keyLen)
 {
-  stateInit(mac_ctx); /* hash_update() */
+  stateInit(mac_ctx); /* Like spritz_hash_update() */
   absorbBytes(mac_ctx, key, keyLen);
   absorbStop(mac_ctx);
 }
 
 /* Add message/data chunk to MAC */
 void
-SpritzCipher::mac_update(spritz_ctx *mac_ctx,
-                          const uint8_t *msg, unsigned int msgLen)
+spritz_mac_update(spritz_ctx *mac_ctx,
+                  const uint8_t *msg, unsigned int msgLen)
 {
-  absorbBytes(mac_ctx, msg, msgLen); /* hash_update() */
+  absorbBytes(mac_ctx, msg, msgLen); /* spritz_hash_update() */
 }
 
 /* Output MAC digest */
 void
-SpritzCipher::mac_final(spritz_ctx *mac_ctx,
-                         uint8_t *digest, uint8_t digestLen)
+spritz_mac_final(spritz_ctx *mac_ctx,
+                 uint8_t *digest, uint8_t digestLen)
 {
-  hash_final(mac_ctx, digest, digestLen);
+  spritz_hash_final(mac_ctx, digest, digestLen);
 }
 
 /* Message Authentication Code (MAC) function */
 void
-SpritzCipher::mac(uint8_t *digest, uint8_t digestLen,
-                  const uint8_t *msg, unsigned int msgLen,
-                  const uint8_t *key, unsigned int keyLen)
+spritz_mac(uint8_t *digest, uint8_t digestLen,
+           const uint8_t *msg, unsigned int msgLen,
+           const uint8_t *key, unsigned int keyLen)
 {
   spritz_ctx mac_ctx;
-  mac_setup(&mac_ctx, key, keyLen);
-  mac_update(&mac_ctx, msg, msgLen);
-  mac_final(&mac_ctx, digest, digestLen);
+  spritz_mac_setup(&mac_ctx, key, keyLen);
+  spritz_mac_update(&mac_ctx, msg, msgLen);
+  spritz_mac_final(&mac_ctx, digest, digestLen);
 }

@@ -50,16 +50,15 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
 {
   byte digest[32]; /* Output buffer */
   byte hashLen = 32; /* 256-bit */
-  SpritzCipher sc;
-  
+
   /* Print input */
   for (byte i = 0; i < dataLen; i++) {
     Serial.write(data[i]);
   }
   Serial.println();
-  
-  sc.hash(digest, hashLen, data, dataLen);
-  
+
+  spritz_hash(digest, hashLen, data, dataLen);
+
   for (byte i = 0; i < sizeof(digest); i++) {
     if (digest[i] < 0x10) { /* To print "0F" not "F" */
       Serial.write('0');
@@ -83,22 +82,22 @@ void setup() {
   while (!Serial) {
     ; /* Wait for serial port to connect. Needed for Leonardo only */
   }
-  
+
   /* initialize digital pin LED_BUILTIN (Most boards have this LED connected to digital pin 13) as an output */
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
 }
 
 void loop() {
-  Serial.println("Spritz hash() test\n");
-  
+  Serial.println("Spritz spritz_hash() test\n");
+
   /* Data: ABC */
   testFunc(testVector1, testData1, sizeof(testData1));
   /* Data: spam */
   testFunc(testVector2, testData2, sizeof(testData2));
   /* Data: arcfour */
   testFunc(testVector3, testData3, sizeof(testData3));
-  
+
   delay(5000); /* Wait 5s */
   Serial.println();
 }

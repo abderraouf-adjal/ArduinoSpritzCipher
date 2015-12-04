@@ -50,7 +50,6 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
 {
   byte buf[32]; /* Output buffer */
   spritz_ctx s_ctx;
-  SpritzCipher sc;
 
   /* Print key */
   for (byte i = 0; i < dataLen; i++) {
@@ -58,10 +57,10 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
   }
   Serial.println();
 
-  sc.setup(&s_ctx, data, dataLen);
+  spritz_setup(&s_ctx, data, dataLen);
 
   for (byte i = 0; i < sizeof(buf); i++) {
-    buf[i] = sc.spritz_rand_byte(&s_ctx);
+    buf[i] = spritz_rand_byte(&s_ctx);
     if (buf[i] < 0x10) { /* To print "0F" not "F" */
       Serial.write('0');
     }

@@ -51,7 +51,6 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
   byte digest[32]; /* Output buffer */
   byte hashLen = 32; /* 256-bit */
   spritz_ctx hash_ctx;
-  SpritzCipher sc;
 
   /* Print input */
   for (byte i = 0; i < dataLen; i++) {
@@ -59,12 +58,12 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
   }
   Serial.println();
 
-  sc.hash_setup(&hash_ctx);
+  spritz_hash_setup(&hash_ctx);
   /* For easy test: code add a byte each time */
   for (byte i = 0; i < dataLen; i++) {
-    sc.hash_update(&hash_ctx, data + i, 1);
+    spritz_hash_update(&hash_ctx, data + i, 1);
   }
-  sc.hash_final(&hash_ctx, digest, hashLen);
+  spritz_hash_final(&hash_ctx, digest, hashLen);
 
   for (byte i = 0; i < sizeof(digest); i++) {
     if (digest[i] < 0x10) { /* To print "0F" not "F" */
