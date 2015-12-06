@@ -282,7 +282,7 @@ void
 spritz_mac_update(spritz_ctx *mac_ctx,
                   const uint8_t *msg, unsigned int msgLen)
 {
-  absorbBytes(mac_ctx, msg, msgLen); /* spritz_hash_update() */
+  absorbBytes(mac_ctx, msg, msgLen); /* Like spritz_hash_update() */
 }
 
 /* Output MAC digest */
