@@ -129,9 +129,9 @@ absorb(spritz_ctx *ctx, const uint8_t octet)
   absorbNibble(ctx, octet / 16); /* High */
 }
 static void
-absorbBytes(spritz_ctx *ctx, const uint8_t *buf, unsigned int len)
+absorbBytes(spritz_ctx *ctx, const uint8_t *buf, uint16_t len)
 {
-  unsigned int i;
+  uint16_t i;
   for (i = 0; i < len; i++) {
     absorb(ctx, buf[i]);
   }
@@ -237,7 +237,7 @@ spritz_hash_setup(spritz_ctx *hash_ctx)
 /* Add data chunk to hash */
 void
 spritz_hash_update(spritz_ctx *hash_ctx,
-                   const uint8_t *data, unsigned int dataLen)
+                   const uint8_t *data, uint16_t dataLen)
 {
   absorbBytes(hash_ctx, data, dataLen);
 }
@@ -258,7 +258,7 @@ spritz_hash_final(spritz_ctx *hash_ctx,
 /* Cryptographic hash function */
 void
 spritz_hash(uint8_t *digest, uint8_t digestLen,
-            const uint8_t *data, unsigned int dataLen)
+            const uint8_t *data, uint16_t dataLen)
 {
   spritz_ctx hash_ctx;
   spritz_hash_setup(&hash_ctx);
@@ -270,7 +270,7 @@ spritz_hash(uint8_t *digest, uint8_t digestLen,
 /* Setup spritz MAC state (spritz_ctx) */
 void
 spritz_mac_setup(spritz_ctx *mac_ctx,
-                 const uint8_t *key, unsigned int keyLen)
+                 const uint8_t *key, uint16_t keyLen)
 {
   stateInit(mac_ctx); /* Like spritz_hash_update() */
   absorbBytes(mac_ctx, key, keyLen);
@@ -280,7 +280,7 @@ spritz_mac_setup(spritz_ctx *mac_ctx,
 /* Add message/data chunk to MAC */
 void
 spritz_mac_update(spritz_ctx *mac_ctx,
-                  const uint8_t *msg, unsigned int msgLen)
+                  const uint8_t *msg, uint16_t msgLen)
 {
   absorbBytes(mac_ctx, msg, msgLen); /* Like spritz_hash_update() */
 }
@@ -296,8 +296,8 @@ spritz_mac_final(spritz_ctx *mac_ctx,
 /* Message Authentication Code (MAC) function */
 void
 spritz_mac(uint8_t *digest, uint8_t digestLen,
-           const uint8_t *msg, unsigned int msgLen,
-           const uint8_t *key, unsigned int keyLen)
+           const uint8_t *msg, uint16_t msgLen,
+           const uint8_t *key, uint16_t keyLen)
 {
   spritz_ctx mac_ctx;
   spritz_mac_setup(&mac_ctx, key, keyLen);

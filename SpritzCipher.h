@@ -27,7 +27,7 @@
 #define _SPRITZCIPHER_H
 
 
-#include <stdint.h> /* For uint8_t */
+#include <stdint.h> /* For uint8_t & uint16_t */
 
 
 /** \def SAFE_TIMING_CRUSH
@@ -99,7 +99,7 @@ spritz_rand_byte(spritz_ctx *ctx);
 void
 spritz_hash_setup(spritz_ctx *hash_ctx);
 
-/** \fn void spritz_hash_update(spritz_ctx *hash_ctx, const uint8_t *data, unsigned int dataLen)
+/** \fn void spritz_hash_update(spritz_ctx *hash_ctx, const uint8_t *data, uint16_t dataLen)
  * \brief Add data chunk to hash
  * \param hash_ctx the hash context (ctx)
  * \param data the data chunk to hash
@@ -107,7 +107,7 @@ spritz_hash_setup(spritz_ctx *hash_ctx);
  */
 void
 spritz_hash_update(spritz_ctx *hash_ctx,
-                   const uint8_t *data, unsigned int dataLen);
+                   const uint8_t *data, uint16_t dataLen);
 
 /** \fn void spritz_hash_final(spritz_ctx *hash_ctx, uint8_t *digest, uint8_t digestLen)
  * \brief Output hash digest
@@ -119,7 +119,7 @@ void
 spritz_hash_final(spritz_ctx *hash_ctx,
                   uint8_t *digest, uint8_t digestLen);
 
-/** \fn void spritz_hash(uint8_t *digest, uint8_t digestLen, const uint8_t *data, unsigned int dataLen)
+/** \fn void spritz_hash(uint8_t *digest, uint8_t digestLen, const uint8_t *data, uint16_t dataLen)
  * \brief cryptographic hash function
  * \param digest the digest (Hash) output
  * \param digestLen length of the digest in bytes
@@ -128,10 +128,10 @@ spritz_hash_final(spritz_ctx *hash_ctx,
  */
 void
 spritz_hash(uint8_t *digest, uint8_t digestLen,
-            const uint8_t *data, unsigned int dataLen);
+            const uint8_t *data, uint16_t dataLen);
 
 
-/** \fn void spritz_mac_setup(spritz_ctx *mac_ctx, const uint8_t *key, unsigned int keyLen)
+/** \fn void spritz_mac_setup(spritz_ctx *mac_ctx, const uint8_t *key, uint16_t keyLen)
  * \brief Setup spritz MAC state (spritz_ctx)
  * \param mac_ctx the MAC context (ctx)
  * \param key the secret key
@@ -139,9 +139,9 @@ spritz_hash(uint8_t *digest, uint8_t digestLen,
  */
 void
 spritz_mac_setup(spritz_ctx *mac_ctx,
-                 const uint8_t *key, unsigned int keyLen);
+                 const uint8_t *key, uint16_t keyLen);
 
-/** \fn void spritz_mac_update(spritz_ctx *mac_ctx, const uint8_t *msg, unsigned int msgLen)
+/** \fn void spritz_mac_update(spritz_ctx *mac_ctx, const uint8_t *msg, uint16_t msgLen)
  * \brief Add message/data chunk to MAC
  * \param hash_ctx the hash context (ctx)
  * \param msg the message chunk to be authenticated
@@ -149,7 +149,7 @@ spritz_mac_setup(spritz_ctx *mac_ctx,
  */
 void
 spritz_mac_update(spritz_ctx *mac_ctx,
-                  const uint8_t *msg, unsigned int msgLen);
+                  const uint8_t *msg, uint16_t msgLen);
 
 /** \fn void spritz_mac_final(spritz_ctx *mac_ctx, uint8_t *digest, uint8_t digestLen)
  * \brief Output MAC digest
@@ -161,7 +161,7 @@ void
 spritz_mac_final(spritz_ctx *mac_ctx,
                  uint8_t *digest, uint8_t digestLen);
 
-/** \fn void spritz_mac(uint8_t *digest, uint8_t digestLen, const uint8_t *msg, unsigned int msgLen, const uint8_t *key, unsigned int keyLen)
+/** \fn void spritz_mac(uint8_t *digest, uint8_t digestLen, const uint8_t *msg, uint16_t msgLen, const uint8_t *key, uint16_t keyLen)
  * \brief message authentication code (MAC) function
  * \param digest MAC digest output.
  * \param digestLen length of the digest in bytes
@@ -172,8 +172,8 @@ spritz_mac_final(spritz_ctx *mac_ctx,
  */
 void
 spritz_mac(uint8_t *digest, uint8_t digestLen,
-           const uint8_t *msg, unsigned int msgLen,
-           const uint8_t *key, unsigned int keyLen);
+           const uint8_t *msg, uint16_t msgLen,
+           const uint8_t *key, uint16_t keyLen);
 
 
 #endif /* SpritzCipher.h */

@@ -44,12 +44,12 @@ See <SpritzCipher.h> for the details.
                 ========================
 
   void spritz_hash(uint8_t *digest, uint8_t digestLen,
-                   const uint8_t *data, unsigned int dataLen)
+                   const uint8_t *data, uint16_t dataLen)
     # Spritz cryptographic hash function.
 
   void spritz_mac(uint8_t *digest, uint8_t digestLen,
-                  const uint8_t *msg, unsigned int msgLen,
-                  const uint8_t *key, unsigned int keyLen)
+                  const uint8_t *msg, uint16_t msgLen,
+                  const uint8_t *key, uint16_t keyLen)
     # Spritz Message Authentication Code (MAC) function.
                 ========================
 
@@ -57,7 +57,7 @@ See <SpritzCipher.h> for the details.
     # Setup spritz hash state.
 
   void spritz_hash_update(spritz_ctx *hash_ctx,
-                          const uint8_t *data, unsigned int dataLen)
+                          const uint8_t *data, uint16_t dataLen)
     # Add data chunk to hash.
 
   void spritz_hash_final(spritz_ctx *hash_ctx,
@@ -66,11 +66,11 @@ See <SpritzCipher.h> for the details.
                 ========================
 
   void spritz_mac_setup(spritz_ctx *mac_ctx,
-                        const uint8_t *key, unsigned int keyLen)
+                        const uint8_t *key, uint16_t keyLen)
     # Setup spritz MAC state.
 
   void spritz_mac_update(spritz_ctx *mac_ctx,
-                         const uint8_t *msg, unsigned int msgLen)
+                         const uint8_t *msg, uint16_t msgLen)
     # Add message/data chunk to MAC.
 
   void spritz_mac_final(spritz_ctx *mac_ctx,
