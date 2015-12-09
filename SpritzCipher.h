@@ -26,6 +26,10 @@
 #ifndef _SPRITZCIPHER_H
 #define _SPRITZCIPHER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 #include <stdint.h> /* For uint8_t & uint16_t */
 
@@ -175,5 +179,9 @@ spritz_mac(uint8_t *digest, uint8_t digestLen,
            const uint8_t *msg, uint16_t msgLen,
            const uint8_t *key, uint16_t keyLen);
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SpritzCipher.h */
