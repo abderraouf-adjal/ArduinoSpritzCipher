@@ -73,14 +73,12 @@ whip(spritz_ctx *ctx)
   ctx->w = (uint8_t)(ctx->w + 2);
 }
 
-
 #if defined(SAFE_TIMING_CRUSH)
-/* __attribute__ optimize("O0") for GCC and optnone for Clang to not optimize crush() to do safe-timing operation */
-# if (defined(SAFE_TIMING_CRUSH) && defined(__GNUC__) && !(defined(__clang__))) /* SAFE_TIMING_CRUSH and GCC */
-static void __attribute__((optimize("O0")))
-# elif (defined(SAFE_TIMING_CRUSH) && defined(__clang__)) /* SAFE_TIMING_CRUSH and Clang */
-static void __attribute__((optnone))
-# elif defined(SAFE_TIMING_CRUSH) /* SAFE_TIMING_CRUSH */
+# if defined(__GNUC__) && !defined(__clang__) /* SAFE_TIMING_CRUSH and GCC */
+static void __attribute__ ((optimize("O0")))
+# elif defined(__clang__) /* SAFE_TIMING_CRUSH and Clang */
+static void __attribute__ ((optnone))
+# else
 static void
 # endif
 crush(spritz_ctx *ctx)
@@ -99,7 +97,8 @@ crush(spritz_ctx *ctx)
     }
   }
 }
-#elif !(defined(SAFE_TIMING_CRUSH)) /* Don't use safe-timing cursh() */
+#else /* SAFE_TIMING_CRUSH */
+/* non equal time crush() */
 static void
 crush(spritz_ctx *ctx)
 {
@@ -111,7 +110,6 @@ crush(spritz_ctx *ctx)
   }
 }
 #endif
-
 
 static void
 shuffle(spritz_ctx *ctx)
