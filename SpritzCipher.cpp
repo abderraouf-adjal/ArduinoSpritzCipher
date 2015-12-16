@@ -189,7 +189,13 @@ squeeze(spritz_ctx *ctx, uint8_t *out, uint8_t len)
 /* |====================|| User Functions ||====================| */
 
 /* Wipe spritz context (spritz_ctx) data */
+#if defined(__GNUC__) && !defined(__clang__) /* GCC */
+void __attribute__ ((optimize("O0")))
+#elif defined(__clang__) /* Clang */
+void __attribute__ ((optnone))
+#else
 void
+#endif
 spritz_wipe_ctx(spritz_ctx *ctx)
 {
   uint8_t i, d;
