@@ -11,15 +11,25 @@ This library can be used to:
   * Authenticated encryption.
   * Generate random numbers from seed.
 
-Home page on GitHub: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
-
 Spritz paper: <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
+Home page on GitHub: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
 
 
 Library content for user
 ========================
 
-See <SpritzCipher.h> for the details.
+See the source code for the details.
+
+* Constants:
+  SAFE_TIMING_CRUSH
+    # If defined, Use safe timing crush().
+
+  WIPE_AFTER_USAGE
+    # If defined, Wipe sensitive data (like spritz_ctx) when they are
+      no longer needed in functions such as hash and mac.
+
+  SPRITZ_N 256
+    # Present the value of N in this spritz implementation.
 
 * Types:
   spritz_ctx
@@ -28,7 +38,7 @@ See <SpritzCipher.h> for the details.
 * Functions:
   void spritz_wipe_ctx(spritz_ctx *ctx)
     # Wipe spritz context data.
-                ========================
+                ------------------------
 
   void spritz_setup(spritz_ctx *ctx,
                     const uint8_t *key, uint8_t keyLen)
@@ -41,7 +51,7 @@ See <SpritzCipher.h> for the details.
 
   uint8_t spritz_rand_byte(spritz_ctx *ctx)
     # Generates a byte of keystream from spritz state (spritz_ctx).
-                ========================
+                ------------------------
 
   void spritz_hash(uint8_t *digest, uint8_t digestLen,
                    const uint8_t *data, uint16_t dataLen)
@@ -51,7 +61,7 @@ See <SpritzCipher.h> for the details.
                   const uint8_t *msg, uint16_t msgLen,
                   const uint8_t *key, uint16_t keyLen)
     # Spritz Message Authentication Code (MAC) function.
-                ========================
+                ------------------------
 
   void spritz_hash_setup(spritz_ctx *hash_ctx)
     # Setup spritz hash state.
@@ -63,7 +73,7 @@ See <SpritzCipher.h> for the details.
   void spritz_hash_final(spritz_ctx *hash_ctx,
                          uint8_t *digest, uint8_t digestLen)
     # Output hash digest.
-                ========================
+                ------------------------
 
   void spritz_mac_setup(spritz_ctx *mac_ctx,
                         const uint8_t *key, uint16_t keyLen)
