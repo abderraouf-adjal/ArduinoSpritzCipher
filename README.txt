@@ -22,7 +22,7 @@ See the source code for the details.
 
 * Constants:
   SAFE_TIMING_CRUSH
-    # If defined, Use safe timing crush().
+    # If defined, Use equal time crush().
 
   WIPE_AFTER_USAGE
     # If defined, Wipe sensitive data (like spritz_ctx) when they are

@@ -35,12 +35,13 @@ extern "C" {
 
 
 /** \def SAFE_TIMING_CRUSH
- * do safe timing swap in crush(), this may not be useful in some compilers with optimization
+ * use equal time crush(), this may not be useful in some compilers with optimization
  */
 #define SAFE_TIMING_CRUSH
 
 /** \def WIPE_AFTER_USAGE
- * wipe sensitive buffers and variables in functions when they are no longer needed
+ * Wipe sensitive data (like spritz_ctx) when they are
+ * no longer needed in functions such as hash and mac.
  */
 #define WIPE_AFTER_USAGE
 
