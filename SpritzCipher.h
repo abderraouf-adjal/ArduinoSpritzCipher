@@ -35,7 +35,7 @@ extern "C" {
 
 
 /** \def SAFE_TIMING_CRUSH
- * do safe timing swap in crush(), Because of the compiler optimization this may be not useful
+ * do safe timing swap in crush(), this may not be useful in some compilers with optimization
  */
 #define SAFE_TIMING_CRUSH
 
