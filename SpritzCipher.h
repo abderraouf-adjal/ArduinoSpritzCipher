@@ -35,16 +35,19 @@ extern "C" {
 
 
 /** \def SAFE_TIMING_CRUSH
- * use equal time crush(), this may not be useful in some compilers with optimization
+ * if defined, equal time crush() will be used. this may not be useful in some compilers with optimization
  */
 #define SAFE_TIMING_CRUSH
 
 /** \def WIPE_AFTER_USAGE
- * Wipe sensitive data (like spritz_ctx) when they are
- * no longer needed in functions such as hash and mac.
+ * if defined, Sensitive data (like spritz_ctx) when they are
+ * no longer needed in functions such as hash and mac will be wiped
  */
 #define WIPE_AFTER_USAGE
 
+/** \def SPRITZ_N
+ * present the value of N in this spritz implementation
+ */
 #define SPRITZ_N 256
 
 

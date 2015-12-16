@@ -22,11 +22,11 @@ See the source code for the details.
 
 * Constants:
   SAFE_TIMING_CRUSH
-    # If defined, Use equal time crush().
+    # If defined, Equal time crush() will be used.
 
   WIPE_AFTER_USAGE
-    # If defined, Wipe sensitive data (like spritz_ctx) when they are
-      no longer needed in functions such as hash and mac.
+    # If defined, Sensitive data (like spritz_ctx) when they are
+      no longer needed in functions such as hash and mac will be wiped.
 
   SPRITZ_N 256
     # Present the value of N in this spritz implementation.
