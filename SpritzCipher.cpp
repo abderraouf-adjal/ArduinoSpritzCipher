@@ -198,20 +198,13 @@ void
 #endif
 spritz_wipe_ctx(spritz_ctx *ctx)
 {
-  uint8_t i, d;
+  uint8_t i;
 
-  start:
   ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = ctx->w = 0;
-  d = ctx->i | ctx->j | ctx->k | ctx->z | ctx->a | ctx->w;
   for (i = 0; i < SPRITZ_N_MINUS_1; i++) {
     ctx->s[i] = 0;
-    d |= ctx->s[i];
   }
   ctx->s[255] = 0;
-  d |= ctx->s[255];
-  if (d) {
-    goto start;
-  }
 }
 
 
