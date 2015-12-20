@@ -55,8 +55,8 @@ static void
 update(spritz_ctx *ctx)
 {
   ctx->i = (uint8_t)(ctx->i + ctx->w);
-  ctx->j = (uint8_t)(ctx->k + ctx->s[(uint8_t)(ctx->j + ctx->s[ctx->i])]);
-  ctx->k = (uint8_t)(ctx->k + ctx->i + ctx->s[ctx->j]);
+  ctx->j = (uint8_t)(ctx->s[(uint8_t)(ctx->s[ctx->i] + ctx->j)] + ctx->k);
+  ctx->k = (uint8_t)(ctx->s[ctx->j] + ctx->k + ctx->i);
   swap(&ctx->s[ctx->i], &ctx->s[ctx->j]);
 }
 
@@ -159,7 +159,7 @@ absorbStop(spritz_ctx *ctx)
 static uint8_t
 output(spritz_ctx *ctx)
 {
-  ctx->z = ctx->s[(uint8_t)(ctx->j + ctx->s[(uint8_t)(ctx->i + ctx->s[(uint8_t)(ctx->z + ctx->k)])])];
+  ctx->z = ctx->s[(uint8_t)(ctx->s[(uint8_t)(ctx->s[(uint8_t)(ctx->z + ctx->k)] + ctx->i)] + ctx->j)];
   return ctx->z;
 }
 static uint8_t
