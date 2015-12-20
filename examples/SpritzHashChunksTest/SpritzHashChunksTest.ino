@@ -48,8 +48,8 @@ const byte testVector3[32] =
 
 void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
 {
-  byte digest[32]; /* Output buffer */
   byte hashLen = 32; /* 256-bit */
+  byte digest[hashLen]; /* Output buffer */
   spritz_ctx hash_ctx;
 
   /* Print input */
