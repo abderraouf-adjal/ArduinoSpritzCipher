@@ -270,8 +270,8 @@ spritz_hash(uint8_t *digest, uint8_t digestLen,
             const uint8_t *data, uint16_t dataLen)
 {
   spritz_ctx hash_ctx;
-  spritz_hash_setup(&hash_ctx);
-  spritz_hash_update(&hash_ctx, data, dataLen);
+  spritz_hash_setup(&hash_ctx); /* stateInit() */
+  spritz_hash_update(&hash_ctx, data, dataLen); /* absorbBytes() */
   spritz_hash_final(&hash_ctx, digest, digestLen);
 }
 
@@ -281,8 +281,8 @@ void
 spritz_mac_setup(spritz_ctx *mac_ctx,
                  const uint8_t *key, uint16_t keyLen)
 {
-  stateInit(mac_ctx); /* Like spritz_hash_update() */
-  absorbBytes(mac_ctx, key, keyLen);
+  spritz_hash_setup(mac_ctx); /* stateInit() */
+  spritz_hash_update(mac_ctx, key, keyLen); /* absorbBytes() */
   absorbStop(mac_ctx);
 }
 
@@ -291,7 +291,7 @@ void
 spritz_mac_update(spritz_ctx *mac_ctx,
                   const uint8_t *msg, uint16_t msgLen)
 {
-  absorbBytes(mac_ctx, msg, msgLen); /* Like spritz_hash_update() */
+  spritz_hash_update(mac_ctx, msg, msgLen); /* absorbBytes() */
 }
 
 /* Output MAC digest */
@@ -310,6 +310,6 @@ spritz_mac(uint8_t *digest, uint8_t digestLen,
 {
   spritz_ctx mac_ctx;
   spritz_mac_setup(&mac_ctx, key, keyLen);
-  spritz_mac_update(&mac_ctx, msg, msgLen);
+  spritz_mac_update(&mac_ctx, msg, msgLen); /* absorbBytes() */
   spritz_mac_final(&mac_ctx, digest, digestLen);
 }
