@@ -20,73 +20,83 @@ Library content for user
 
 See the source code for the details.
 
-* Constants:
-  SAFE_TIMING_CRUSH
-    # If defined, Equal time crush() will be used.
+# Constants:
+SAFE_TIMING_CRUSH
+  If defined, Equal time crush() will be used.
 
-  WIPE_AFTER_USAGE
-    # If defined, Sensitive data (like spritz_ctx) will be wiped when they are
-      no longer needed in the functions:
-        {spritz_hash(), spritz_mac(), spritz_hash_final(), spritz_mac_final()}.
+WIPE_AFTER_USAGE
+  If defined, Sensitive data (like spritz_ctx) will be wiped when they are
+  no longer needed in the functions:
+   {spritz_hash(), spritz_mac(), spritz_hash_final(), spritz_mac_final()}.
 
-  SPRITZ_N 256
-    # Present the value of N in this spritz implementation.
+SPRITZ_N 256
+  Present the value of N in this spritz implementation.
 
-* Types:
-  spritz_ctx
-    # The context/ctx (contain the state), holds indices and S-Box.
+SPRITZ_LIBRARY_VERSION_STRING "0.3.1"
+  Present the version of this spritz library (MAJOR . MINOR . PATCH)
+  using Semantic Versioning <semver.org>.
+SPRITZ_LIBRARY_VERSION_MAJOR 0
+  Present the MAJOR version.
+SPRITZ_LIBRARY_VERSION_MINOR 3
+  Present the MINOR version.
+SPRITZ_LIBRARY_VERSION_PATCH 1
+  Present the PATCH version.
 
-* Functions:
-  void spritz_wipe_ctx(spritz_ctx *ctx)
-    # Wipe spritz context data.
+# Types:
+spritz_ctx
+  The context/ctx (contain the state), holds indices and S-Box.
+
+# Functions:
+void spritz_setup(spritz_ctx *ctx,
+                  const uint8_t *key, uint8_t keyLen)
+  Setup spritz state (spritz_ctx) with a key.
+
+void spritz_setupIV(spritz_ctx *ctx,
+                    const uint8_t *key, uint8_t keyLen,
+                    const uint8_t *nonce, uint8_t nonceLen)
+  Setup spritz state with a key and nonce (Salt).
+
+uint8_t spritz_rand_byte(spritz_ctx *ctx)
+  Generates a byte of keystream from spritz state (spritz_ctx).
                 ------------------------
 
-  void spritz_setup(spritz_ctx *ctx,
-                    const uint8_t *key, uint8_t keyLen)
-    # Setup spritz state (spritz_ctx) with a key.
-
-  void spritz_setupIV(spritz_ctx *ctx,
-                      const uint8_t *key, uint8_t keyLen,
-                      const uint8_t *nonce, uint8_t nonceLen)
-    # Setup spritz state with a key and nonce (Salt).
-
-  uint8_t spritz_rand_byte(spritz_ctx *ctx)
-    # Generates a byte of keystream from spritz state (spritz_ctx).
+void spritz_wipe_ctx(spritz_ctx *ctx)
+  Wipe spritz context data.
                 ------------------------
 
-  void spritz_hash(uint8_t *digest, uint8_t digestLen,
-                   const uint8_t *data, uint16_t dataLen)
-    # Spritz cryptographic hash function.
+void spritz_hash(uint8_t *digest, uint8_t digestLen,
+                 const uint8_t *data, uint16_t dataLen)
+  Spritz cryptographic hash function.
 
-  void spritz_mac(uint8_t *digest, uint8_t digestLen,
-                  const uint8_t *msg, uint16_t msgLen,
-                  const uint8_t *key, uint16_t keyLen)
-    # Spritz Message Authentication Code (MAC) function.
+void spritz_mac(uint8_t *digest, uint8_t digestLen,
+                const uint8_t *msg, uint16_t msgLen,
+                const uint8_t *key, uint16_t keyLen)
+  Spritz Message Authentication Code (MAC) function.
                 ------------------------
 
-  void spritz_hash_setup(spritz_ctx *hash_ctx)
-    # Setup spritz hash state.
+void spritz_hash_setup(spritz_ctx *hash_ctx)
+  Setup spritz hash state.
 
-  void spritz_hash_update(spritz_ctx *hash_ctx,
-                          const uint8_t *data, uint16_t dataLen)
-    # Add data chunk to hash.
+void spritz_hash_update(spritz_ctx *hash_ctx,
+                        const uint8_t *data, uint16_t dataLen)
+  Add data chunk to hash.
 
-  void spritz_hash_final(spritz_ctx *hash_ctx,
-                         uint8_t *digest, uint8_t digestLen)
-    # Output hash digest.
+void spritz_hash_final(spritz_ctx *hash_ctx,
+                       uint8_t *digest, uint8_t digestLen)
+  Output hash digest.
                 ------------------------
 
-  void spritz_mac_setup(spritz_ctx *mac_ctx,
-                        const uint8_t *key, uint16_t keyLen)
-    # Setup spritz MAC state.
+void spritz_mac_setup(spritz_ctx *mac_ctx,
+                      const uint8_t *key, uint16_t keyLen)
+  Setup spritz MAC state.
 
-  void spritz_mac_update(spritz_ctx *mac_ctx,
-                         const uint8_t *msg, uint16_t msgLen)
-    # Add message/data chunk to MAC.
+void spritz_mac_update(spritz_ctx *mac_ctx,
+                       const uint8_t *msg, uint16_t msgLen)
+  Add message/data chunk to MAC.
 
-  void spritz_mac_final(spritz_ctx *mac_ctx,
-                        uint8_t *digest, uint8_t digestLen)
-    # Output MAC digest.
+void spritz_mac_final(spritz_ctx *mac_ctx,
+                      uint8_t *digest, uint8_t digestLen)
+  Output MAC digest.
 
 
 Examples

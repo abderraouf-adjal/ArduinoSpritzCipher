@@ -50,6 +50,12 @@ extern "C" {
  */
 #define SPRITZ_N 256
 
+/* Semantic Versioning of this library */
+#define SPRITZ_LIBRARY_VERSION_STRING "0.3.1"
+#define SPRITZ_LIBRARY_VERSION_MAJOR 0
+#define SPRITZ_LIBRARY_VERSION_MINOR 3
+#define SPRITZ_LIBRARY_VERSION_PATCH 1
+
 
 /** \typedef spritz_ctx
  * \brief the context (contain the state), holds indices and S-Box.
