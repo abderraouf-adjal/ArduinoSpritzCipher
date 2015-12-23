@@ -1,9 +1,10 @@
-SpritzCipher
-============
+Spritz library for Arduino
+==========================
 
-Spritz library for Arduino.
-A spongy RC4-like stream cipher. This library contains secure random bytes generator,
-Flexible cryptographic hash function & message authentication code (MAC).
+Spritz:
+  A spongy RC4-like stream cipher. This library contains
+  secure random bytes generator, Flexible cryptographic hash function
+  and message authentication code (MAC).
 
 This library can be used to:
   * Hash data.
@@ -12,7 +13,7 @@ This library can be used to:
   * Generate random numbers from seed.
 
 Spritz paper: <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
-Home page on GitHub: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
+This library on GitHub: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
 
 
 Library content for user
