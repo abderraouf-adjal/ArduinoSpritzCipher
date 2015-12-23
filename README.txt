@@ -32,14 +32,14 @@ WIPE_AFTER_USAGE
 SPRITZ_N 256
   Present the value of N in this spritz implementation.
 
-SPRITZ_LIBRARY_VERSION_STRING "0.3.1"
+SPRITZ_LIBRARY_VERSION_STRING "0.4.0"
   Present the version of this spritz library (MAJOR . MINOR . PATCH)
   using Semantic Versioning <semver.org>.
 SPRITZ_LIBRARY_VERSION_MAJOR 0
   Present the MAJOR version.
-SPRITZ_LIBRARY_VERSION_MINOR 3
+SPRITZ_LIBRARY_VERSION_MINOR 4
   Present the MINOR version.
-SPRITZ_LIBRARY_VERSION_PATCH 1
+SPRITZ_LIBRARY_VERSION_PATCH 0
   Present the PATCH version.
 
 # Types:
