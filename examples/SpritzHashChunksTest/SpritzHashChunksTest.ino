@@ -1,5 +1,5 @@
 /**
- * Spritz Cipher Hash Chunks
+ * Spritz Cipher Hash Chunks Test
  *
  * This example code test SpritzCipher library to hash data chunk by chunk
  * using test vectors from Spritz paper "RS14.pdf" Page 30:
@@ -7,8 +7,7 @@
  *
  * The circuit:  No external hardware needed.
  *
- * Created 27 Dec. 2015
- * by Abderraouf Adjal <abderraouf.adjal@gmail.com>
+ * by Abderraouf Adjal.
  *
  * This example code is in the public domain.
  */
@@ -77,6 +76,7 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
     if (digest[i] != ExpectedOutput[i]) { /* Alert if test fail */
       digitalWrite(LED_BUILTIN, HIGH); /* Turn pin LED_BUILTIN (Most boards have this LED connected to digital pin 13) ON */
       Serial.println("\n** WARNING: Output != Test_Vector **");
+      break;
     }
   }
   Serial.println();

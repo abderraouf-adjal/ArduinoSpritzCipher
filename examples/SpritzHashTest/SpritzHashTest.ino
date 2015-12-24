@@ -7,8 +7,7 @@
  *
  * The circuit:  No external hardware needed.
  *
- * Created 25 Aug. 2015
- * by Abderraouf Adjal <abderraouf.adjal@gmail.com>
+ * by Abderraouf Adjal.
  *
  * This example code is in the public domain.
  */
@@ -71,6 +70,7 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
     if (digest[i] != ExpectedOutput[i]) { /* Alert if test fail */
       digitalWrite(LED_BUILTIN, HIGH); /* Turn pin LED_BUILTIN (Most boards have this LED connected to digital pin 13) ON */
       Serial.println("\n** WARNING: Output != Test_Vector **");
+      break;
     }
   }
   Serial.println();

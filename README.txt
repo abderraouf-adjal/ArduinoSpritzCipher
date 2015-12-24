@@ -112,6 +112,9 @@ Examples
 * Hash data chunk by chunk:
   ./examples/SpritzHashChunksTest/SpritzHashChunksTest.ino
 
+* MAC test:
+  ./examples/SpritzMACTest/SpritzMACTest.ino
+
 
 Installation Guide
 ==================
