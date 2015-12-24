@@ -226,7 +226,8 @@ spritz_setupIV(spritz_ctx *ctx,
   absorbBytes(ctx, nonce, nonceLen);
 }
 
-/* Generates a byte of keystream from spritz state (spritz_ctx) */
+/* Generates a byte of keystream from spritz state (spritz_ctx),
+The byte can be used to make a random key or encrypt/decrypt data using XOR. */
 uint8_t
 spritz_rand_byte(spritz_ctx *ctx)
 {

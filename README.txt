@@ -58,7 +58,8 @@ void spritz_setupIV(spritz_ctx *ctx,
   Setup spritz state with a key and nonce (Salt).
 
 uint8_t spritz_rand_byte(spritz_ctx *ctx)
-  Generates a byte of keystream from spritz state (spritz_ctx).
+  Generates a byte of keystream from spritz state (spritz_ctx),
+  The byte can be used to make a random key or encrypt/decrypt data using XOR.
                 ------------------------
 
 void spritz_wipe_ctx(spritz_ctx *ctx)
