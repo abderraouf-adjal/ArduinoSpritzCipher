@@ -31,11 +31,11 @@
 
 
 static void
-swap(uint8_t *a, uint8_t *b)
+spritz_ctx_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
 {
-  uint8_t t = *a;
-  *a = *b;
-  *b = t;
+  uint8_t t = ctx->s[index_a];
+  ctx->s[index_a] = ctx->s[index_b];
+  ctx->s[index_b] = t;
 }
 
 
@@ -57,7 +57,7 @@ update(spritz_ctx *ctx)
   ctx->i = (uint8_t)(ctx->i + ctx->w);
   ctx->j = (uint8_t)(ctx->s[(uint8_t)(ctx->s[ctx->i] + ctx->j)] + ctx->k);
   ctx->k = (uint8_t)(ctx->s[ctx->j] + ctx->k + ctx->i);
-  swap(&ctx->s[ctx->i], &ctx->s[ctx->j]);
+  spritz_ctx_s_swap(ctx, ctx->i, ctx->j);
 }
 
 static void
@@ -74,12 +74,11 @@ whip(spritz_ctx *ctx)
 }
 
 #if defined(SAFE_TIMING_CRUSH)
-# if defined(__GNUC__) && !defined(__clang__) /* SAFE_TIMING_CRUSH and GCC */
-static void __attribute__ ((optimize("O0")))
-# elif defined(__clang__) /* SAFE_TIMING_CRUSH and Clang */
-static void __attribute__ ((optnone))
-# else
 static void
+# if defined(__GNUC__) && !defined(__clang__) /* SAFE_TIMING_CRUSH and GCC */
+__attribute__ ((optimize("O0")))
+# elif defined(__clang__) /* SAFE_TIMING_CRUSH and Clang */
+__attribute__ ((optnone))
 # endif
 crush(spritz_ctx *ctx)
 {
@@ -105,7 +104,7 @@ crush(spritz_ctx *ctx)
   uint8_t i, j;
   for (i = 0, j = SPRITZ_N_MINUS_1; i < SPRITZ_N_HALF; i++, j--) {
     if (ctx->s[i] > ctx->s[j]) {
-      swap(&ctx->s[i], &ctx->s[j]);
+      spritz_ctx_s_swap(ctx, i, j);
     }
   }
 }
@@ -129,7 +128,7 @@ absorbNibble(spritz_ctx *ctx, const uint8_t nibble)
   if (ctx->a == SPRITZ_N_HALF) {
     shuffle(ctx);
   }
-  swap(&ctx->s[ctx->a], &ctx->s[SPRITZ_N_HALF + nibble]);
+  spritz_ctx_s_swap(ctx, ctx->a, (uint8_t)(SPRITZ_N_HALF + nibble));
   ctx->a++;
 }
 static void
@@ -189,12 +188,11 @@ squeeze(spritz_ctx *ctx, uint8_t *out, uint8_t len)
 /* |====================|| User Functions ||====================| */
 
 /* Wipe spritz context (spritz_ctx) data */
-#if defined(__GNUC__) && !defined(__clang__) /* GCC */
-void __attribute__ ((optimize("O0")))
-#elif defined(__clang__) /* Clang */
-void __attribute__ ((optnone))
-#else
 void
+#if defined(__GNUC__) && !defined(__clang__) /* GCC */
+__attribute__ ((optimize("O0")))
+#elif defined(__clang__) /* Clang */
+__attribute__ ((optnone))
 #endif
 spritz_wipe_ctx(spritz_ctx *ctx)
 {
