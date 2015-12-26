@@ -19,7 +19,7 @@ This library on GitHub: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher
 Library content for user
 ========================
 
-See the source code for the details.
+See the source code and ".h" files for the details.
 
 # Constants:
 SAFE_TIMING_CRUSH
@@ -28,7 +28,7 @@ SAFE_TIMING_CRUSH
 WIPE_AFTER_USAGE
   If defined, Sensitive data (like spritz_ctx) will be wiped when they are
   no longer needed in the functions:
-   {spritz_hash(), spritz_mac(), spritz_hash_final(), spritz_mac_final()}.
+   {spritz_hash, spritz_mac, spritz_hash_final, spritz_mac_final}.
 
 SPRITZ_N 256
   Present the value of N in this spritz implementation.
@@ -45,7 +45,9 @@ SPRITZ_LIBRARY_VERSION_PATCH 0
 
 # Types:
 spritz_ctx
-  The context/ctx (contain the state), holds indices and S-Box.
+  The context/ctx (contain the state), The state consists of byte registers
+  {i, j, k, z, w, a}, And an array {s} containing a permutation
+  of {0, 1, ... , SPRITZ_N-1}.
 
 # Functions:
 void spritz_setup(spritz_ctx *ctx,
@@ -60,7 +62,11 @@ void spritz_setupIV(spritz_ctx *ctx,
 uint8_t spritz_rand_byte(spritz_ctx *ctx)
   Generates a byte of keystream from spritz state (spritz_ctx),
   The byte can be used to make a random key or encrypt/decrypt data using XOR.
-                ------------------------
+
+void spritz_data_crypt(spritz_ctx *ctx,
+                       const uint8_t *data, uint16_t dataLen,
+                       uint8_t *dataOut)
+  Encrypt or Decrypt data, Usable after spritz_setup() or spritz_setupIV().
 
 void spritz_wipe_ctx(spritz_ctx *ctx)
   Wipe spritz context data.
@@ -106,6 +112,9 @@ Examples
 
 * Generate random bytes (Spritz stream test):
   ./examples/SpritzStreamTest/SpritzStreamTest.ino
+
+* Test the library encryption/decryption function:
+  ./examples/SpritzCryptTest/SpritzCryptTest.ino
 
 * Hash data:
   ./examples/SpritzHashTest/SpritzHashTest.ino

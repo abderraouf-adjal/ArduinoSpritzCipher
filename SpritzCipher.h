@@ -66,14 +66,6 @@ typedef struct
 } spritz_ctx;
 
 
-/** \fn void spritz_wipe_ctx(spritz_ctx *ctx)
- * \brief Wipe spritz context (spritz_ctx) data
- * \param ctx the context
- */
-void
-spritz_wipe_ctx(spritz_ctx *ctx);
-
-
 /** \fn void spritz_setup(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen)
  * \brief setup spritz state (spritz_ctx) with a key
  * \param ctx the context
@@ -104,6 +96,25 @@ spritz_setupIV(spritz_ctx *ctx,
  */
 uint8_t
 spritz_rand_byte(spritz_ctx *ctx);
+
+/** \fn void spritz_data_crypt(spritz_ctx *ctx, uint16_t dataLen, const uint8_t *data, uint8_t *dataOut)
+ * \brief Encrypt or Decrypt data, Usable after spritz_setup() or spritz_setupIV()
+ * \param ctx the context
+ * \param data the data to encrypt or decrypt
+ * \param dataLen length of the data in bytes
+ * \param dataOut the output
+ */
+void
+spritz_data_crypt(spritz_ctx *ctx,
+                  const uint8_t *data, uint16_t dataLen,
+                  uint8_t *dataOut);
+
+/** \fn void spritz_wipe_ctx(spritz_ctx *ctx)
+ * \brief Wipe spritz context (spritz_ctx) data
+ * \param ctx the context
+ */
+void
+spritz_wipe_ctx(spritz_ctx *ctx);
 
 
 /** \fn void spritz_hash_setup(spritz_ctx *hash_ctx)

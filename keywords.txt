@@ -1,8 +1,9 @@
 SpritzCipher	KEYWORD1
-spritz_wipe_ctx	KEYWORD2
 spritz_setup	KEYWORD2
 spritz_setupIV	KEYWORD2
 spritz_rand_byte	KEYWORD2
+spritz_data_crypt	KEYWORD2
+spritz_wipe_ctx	KEYWORD2
 spritz_hash_setup	KEYWORD2
 spritz_hash_update	KEYWORD2
 spritz_hash_final	KEYWORD2

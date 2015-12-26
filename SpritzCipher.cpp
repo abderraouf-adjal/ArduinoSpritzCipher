@@ -34,6 +34,7 @@ static void
 spritz_ctx_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
 {
   uint8_t t = ctx->s[index_a];
+
   ctx->s[index_a] = ctx->s[index_b];
   ctx->s[index_b] = t;
 }
@@ -43,6 +44,7 @@ static void
 stateInit(spritz_ctx *ctx)
 {
   uint8_t i;
+
   ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = 0;
   ctx->w = 1;
   for (i = 0; i < SPRITZ_N_MINUS_1; i++) {
@@ -64,6 +66,7 @@ static void
 whip(spritz_ctx *ctx)
 {
   uint8_t i;
+
   for (i = 0; i < SPRITZ_N_HALF; i++) {
     update(ctx);
     update(ctx);
@@ -83,6 +86,7 @@ __attribute__ ((optnone))
 crush(spritz_ctx *ctx)
 {
   uint8_t i, j, s_i, s_j;
+
   for (i = 0, j = SPRITZ_N_MINUS_1; i < SPRITZ_N_HALF; i++, j--) {
     s_i = ctx->s[i];
     s_j = ctx->s[j];
@@ -102,6 +106,7 @@ static void
 crush(spritz_ctx *ctx)
 {
   uint8_t i, j;
+
   for (i = 0, j = SPRITZ_N_MINUS_1; i < SPRITZ_N_HALF; i++, j--) {
     if (ctx->s[i] > ctx->s[j]) {
       spritz_ctx_s_swap(ctx, i, j);
@@ -141,6 +146,7 @@ static void
 absorbBytes(spritz_ctx *ctx, const uint8_t *buf, uint16_t len)
 {
   uint16_t i;
+
   for (i = 0; i < len; i++) {
     absorb(ctx, buf[i]);
   }
@@ -171,21 +177,52 @@ drip(spritz_ctx *ctx)
   return output(ctx);
 }
 
-/* squeeze() for hash and mac */
-static void
-squeeze(spritz_ctx *ctx, uint8_t *out, uint8_t len)
+/* |====================|| User Functions ||====================| */
+
+/* Setup spritz state (spritz_ctx) with a key */
+void
+spritz_setup(spritz_ctx *ctx,
+             const uint8_t *key, uint8_t keyLen)
 {
-  uint8_t i;
+  stateInit(ctx);
+  absorbBytes(ctx, key, keyLen);
+}
+
+/* Setup spritz state (spritz_ctx) with a key and nonce (Salt) */
+void
+spritz_setupIV(spritz_ctx *ctx,
+               const uint8_t *key, uint8_t keyLen,
+               const uint8_t *nonce, uint8_t nonceLen)
+{
+  spritz_setup(ctx, key, keyLen);
+  absorbStop(ctx);
+  absorbBytes(ctx, nonce, nonceLen);
+}
+
+/* Generates a byte of keystream from spritz state (spritz_ctx),
+ * The byte can be used to make a random key or encrypt/decrypt data using XOR.
+ */
+uint8_t
+spritz_rand_byte(spritz_ctx *ctx)
+{
+  return drip(ctx);
+}
+
+/* Encrypt or Decrypt data, Usable after spritz_setup() or spritz_setupIV() */
+void
+spritz_data_crypt(spritz_ctx *ctx,
+                  const uint8_t *data, uint16_t dataLen,
+                  uint8_t *dataOut)
+{
+  uint16_t i;
+
   if (ctx->a) {
     shuffle(ctx);
   }
-  for (i = 0; i < len; i++) {
-    out[i] = drip(ctx);
+  for (i = 0; i < dataLen; i++) {
+    dataOut[i] = data[i] ^ spritz_rand_byte(ctx);
   }
 }
-
-
-/* |====================|| User Functions ||====================| */
 
 /* Wipe spritz context (spritz_ctx) data */
 void
@@ -203,35 +240,6 @@ spritz_wipe_ctx(spritz_ctx *ctx)
     ctx->s[i] = 0;
   }
   ctx->s[255] = 0;
-}
-
-
-/* Setup spritz state (spritz_ctx) with a key */
-void
-spritz_setup(spritz_ctx *ctx,
-                    const uint8_t *key, uint8_t keyLen)
-{
-  stateInit(ctx);
-  absorbBytes(ctx, key, keyLen);
-}
-
-/* Setup spritz state (spritz_ctx) with a key and nonce (Salt) */
-void
-spritz_setupIV(spritz_ctx *ctx,
-                      const uint8_t *key, uint8_t keyLen,
-                      const uint8_t *nonce, uint8_t nonceLen)
-{
-  spritz_setup(ctx, key, keyLen);
-  absorbStop(ctx);
-  absorbBytes(ctx, nonce, nonceLen);
-}
-
-/* Generates a byte of keystream from spritz state (spritz_ctx),
-The byte can be used to make a random key or encrypt/decrypt data using XOR. */
-uint8_t
-spritz_rand_byte(spritz_ctx *ctx)
-{
-  return drip(ctx);
 }
 
 
@@ -255,9 +263,17 @@ void
 spritz_hash_final(spritz_ctx *hash_ctx,
                   uint8_t *digest, uint8_t digestLen)
 {
+  uint8_t i;
+
   absorbStop(hash_ctx);
   absorb(hash_ctx, digestLen);
-  squeeze(hash_ctx, digest, digestLen);
+  /* squeeze() */
+  if (hash_ctx->a) {
+    shuffle(hash_ctx);
+  }
+  for (i = 0; i < digestLen; i++) {
+    digest[i] = drip(hash_ctx);
+  }
 #ifdef WIPE_AFTER_USAGE
   spritz_wipe_ctx(hash_ctx);
 #endif
@@ -269,6 +285,7 @@ spritz_hash(uint8_t *digest, uint8_t digestLen,
             const uint8_t *data, uint16_t dataLen)
 {
   spritz_ctx hash_ctx;
+
   spritz_hash_setup(&hash_ctx); /* stateInit() */
   spritz_hash_update(&hash_ctx, data, dataLen); /* absorbBytes() */
   spritz_hash_final(&hash_ctx, digest, digestLen);
@@ -308,6 +325,7 @@ spritz_mac(uint8_t *digest, uint8_t digestLen,
            const uint8_t *key, uint16_t keyLen)
 {
   spritz_ctx mac_ctx;
+
   spritz_mac_setup(&mac_ctx, key, keyLen);
   spritz_mac_update(&mac_ctx, msg, msgLen); /* absorbBytes() */
   spritz_mac_final(&mac_ctx, digest, digestLen);
