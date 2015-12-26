@@ -186,6 +186,9 @@ spritz_setup(spritz_ctx *ctx,
 {
   stateInit(ctx);
   absorbBytes(ctx, key, keyLen);
+  if (ctx->a) {
+    shuffle(ctx);
+  }
 }
 
 /* Setup spritz state (spritz_ctx) with a key and nonce (Salt) */
@@ -194,9 +197,13 @@ spritz_setupIV(spritz_ctx *ctx,
                const uint8_t *key, uint8_t keyLen,
                const uint8_t *nonce, uint8_t nonceLen)
 {
-  spritz_setup(ctx, key, keyLen);
+  stateInit(ctx);
+  absorbBytes(ctx, key, keyLen);
   absorbStop(ctx);
   absorbBytes(ctx, nonce, nonceLen);
+  if (ctx->a) {
+    shuffle(ctx);
+  }
 }
 
 /* Generates a byte of keystream from spritz state (spritz_ctx),
@@ -216,11 +223,8 @@ spritz_data_crypt(spritz_ctx *ctx,
 {
   uint16_t i;
 
-  if (ctx->a) {
-    shuffle(ctx);
-  }
   for (i = 0; i < dataLen; i++) {
-    dataOut[i] = data[i] ^ spritz_rand_byte(ctx);
+    dataOut[i] = data[i] ^ drip(ctx);
   }
 }
 
