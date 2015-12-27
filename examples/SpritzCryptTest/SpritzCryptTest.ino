@@ -40,7 +40,7 @@ void testFunc(const byte *msg, byte msgLen, const byte *key, byte keyLen)
   Serial.println();
 
   spritz_setup(&s_ctx, key, keyLen);
-  spritz_data_crypt(&s_ctx, msg, msgLen, buf);
+  spritz_crypt(&s_ctx, msg, msgLen, buf);
 
   /* Print Ciphertext */
   for (byte i = 0; i < msgLen; i++) {
@@ -51,9 +51,8 @@ void testFunc(const byte *msg, byte msgLen, const byte *key, byte keyLen)
   }
   Serial.println();
 
-  spritz_wipe_ctx(&s_ctx);
   spritz_setup(&s_ctx, key, keyLen);
-  spritz_data_crypt(&s_ctx, buf, msgLen, buf);
+  spritz_crypt(&s_ctx, buf, msgLen, buf);
 
   /* Print MSG after decryption */
   for (byte i = 0; i < msgLen; i++) {

@@ -191,11 +191,11 @@ spritz_setup(spritz_ctx *ctx,
   }
 }
 
-/* Setup spritz state (spritz_ctx) with a key and nonce (Salt) */
+/* Setup spritz state (spritz_ctx) with a key and nonce/Salt/IV */
 void
-spritz_setupIV(spritz_ctx *ctx,
-               const uint8_t *key, uint8_t keyLen,
-               const uint8_t *nonce, uint8_t nonceLen)
+spritz_setupWithIV(spritz_ctx *ctx,
+                   const uint8_t *key, uint8_t keyLen,
+                   const uint8_t *nonce, uint8_t nonceLen)
 {
   stateInit(ctx);
   absorbBytes(ctx, key, keyLen);
@@ -206,8 +206,9 @@ spritz_setupIV(spritz_ctx *ctx,
   }
 }
 
-/* Generates a byte of keystream from spritz state (spritz_ctx),
- * The byte can be used to make a random key or encrypt/decrypt data using XOR.
+/* Generates a byte of keystream from spritz state (spritz_ctx).
+ * Can be used to make a random key.
+ * spritz_rand_byte() usable after spritz_setup() or spritz_setupWithIV().
  */
 uint8_t
 spritz_rand_byte(spritz_ctx *ctx)
@@ -215,11 +216,13 @@ spritz_rand_byte(spritz_ctx *ctx)
   return drip(ctx);
 }
 
-/* Encrypt or Decrypt data, Usable after spritz_setup() or spritz_setupIV() */
+/* Encrypt or decrypt data chunk by XOR-ing it with spritz keystream.
+ * spritz_crypt() usable after spritz_setup() or spritz_setupWithIV().
+ */
 void
-spritz_data_crypt(spritz_ctx *ctx,
-                  const uint8_t *data, uint16_t dataLen,
-                  uint8_t *dataOut)
+spritz_crypt(spritz_ctx *ctx,
+             const uint8_t *data, uint16_t dataLen,
+             uint8_t *dataOut)
 {
   uint16_t i;
 
@@ -228,14 +231,14 @@ spritz_data_crypt(spritz_ctx *ctx,
   }
 }
 
-/* Wipe spritz context (spritz_ctx) data */
+/* Wipe spritz context data (spritz_ctx) */
 void
 #if defined(__GNUC__) && !defined(__clang__) /* GCC */
 __attribute__ ((optimize("O0")))
 #elif defined(__clang__) /* Clang */
 __attribute__ ((optnone))
 #endif
-spritz_wipe_ctx(spritz_ctx *ctx)
+spritz_wipe(spritz_ctx *ctx)
 {
   uint8_t i;
 
@@ -279,7 +282,7 @@ spritz_hash_final(spritz_ctx *hash_ctx,
     digest[i] = drip(hash_ctx);
   }
 #ifdef WIPE_AFTER_USAGE
-  spritz_wipe_ctx(hash_ctx);
+  spritz_wipe(hash_ctx);
 #endif
 }
 

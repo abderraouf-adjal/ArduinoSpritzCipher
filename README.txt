@@ -54,22 +54,24 @@ void spritz_setup(spritz_ctx *ctx,
                   const uint8_t *key, uint8_t keyLen)
   Setup spritz state (spritz_ctx) with a key.
 
-void spritz_setupIV(spritz_ctx *ctx,
-                    const uint8_t *key, uint8_t keyLen,
-                    const uint8_t *nonce, uint8_t nonceLen)
-  Setup spritz state with a key and nonce (Salt).
+void spritz_setupWithIV(spritz_ctx *ctx,
+                        const uint8_t *key, uint8_t keyLen,
+                        const uint8_t *nonce, uint8_t nonceLen)
+  Setup spritz state (spritz_ctx) with a key and nonce/Salt/IV.
 
 uint8_t spritz_rand_byte(spritz_ctx *ctx)
-  Generates a byte of keystream from spritz state (spritz_ctx),
-  The byte can be used to make a random key or encrypt/decrypt data using XOR.
+  Generates a byte of keystream from spritz state (spritz_ctx).
+  Can be used to make a random key.
+  spritz_rand_byte() usable after spritz_setup() or spritz_setupWithIV().
 
-void spritz_data_crypt(spritz_ctx *ctx,
-                       const uint8_t *data, uint16_t dataLen,
-                       uint8_t *dataOut)
-  Encrypt or Decrypt data, Usable after spritz_setup() or spritz_setupIV().
+void spritz_crypt(spritz_ctx *ctx,
+                  const uint8_t *data, uint16_t dataLen,
+                  uint8_t *dataOut)
+  Encrypt or decrypt data chunk by XOR-ing it with spritz keystream.
+  spritz_crypt() usable after spritz_setup() or spritz_setupWithIV().
 
-void spritz_wipe_ctx(spritz_ctx *ctx)
-  Wipe spritz context data.
+void spritz_wipe(spritz_ctx *ctx)
+  Wipe spritz context data (spritz_ctx).
                 ------------------------
 
 void spritz_hash(uint8_t *digest, uint8_t digestLen,

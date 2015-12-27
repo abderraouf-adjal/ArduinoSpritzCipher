@@ -76,8 +76,8 @@ void
 spritz_setup(spritz_ctx *ctx,
              const uint8_t *key, uint8_t keyLen);
 
-/** \fn void spritz_setupIV(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen, const uint8_t *nonce, uint8_t nonceLen)
- * \brief setup spritz state (spritz_ctx) with a key and nonce (Salt)
+/** \fn void spritz_setupWithIV(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen, const uint8_t *nonce, uint8_t nonceLen)
+ * \brief setup spritz state (spritz_ctx) with a key and nonce/Salt/IV
  * \param ctx the context
  * \param key the key
  * \param keyLen length of the key in bytes
@@ -85,36 +85,36 @@ spritz_setup(spritz_ctx *ctx,
  * \param nonceLen length of the nonce in bytes
  */
 void
-spritz_setupIV(spritz_ctx *ctx,
-               const uint8_t *key, uint8_t keyLen,
-               const uint8_t *nonce, uint8_t nonceLen);
+spritz_setupWithIV(spritz_ctx *ctx,
+                   const uint8_t *key, uint8_t keyLen,
+                   const uint8_t *nonce, uint8_t nonceLen);
 
 /** \fn uint8_t spritz_rand_byte(spritz_ctx *ctx)
- * \brief generates a byte of keystream from spritz state (spritz_ctx)
+ * \brief generates a byte of keystream from spritz state (spritz_ctx). Can be used to make a random key. Usable after spritz_setup() or spritz_setupWithIV()
  * \param ctx the context
  * \return byte of keystream
  */
 uint8_t
 spritz_rand_byte(spritz_ctx *ctx);
 
-/** \fn void spritz_data_crypt(spritz_ctx *ctx, uint16_t dataLen, const uint8_t *data, uint8_t *dataOut)
- * \brief Encrypt or Decrypt data, Usable after spritz_setup() or spritz_setupIV()
+/** \fn void spritz_crypt(spritz_ctx *ctx, uint16_t dataLen, const uint8_t *data, uint8_t *dataOut)
+ * \brief encrypt or decrypt data chunk by XOR-ing it with spritz keystream. Usable after spritz_setup() or spritz_setupWithIV()
  * \param ctx the context
  * \param data the data to encrypt or decrypt
  * \param dataLen length of the data in bytes
  * \param dataOut the output
  */
 void
-spritz_data_crypt(spritz_ctx *ctx,
-                  const uint8_t *data, uint16_t dataLen,
-                  uint8_t *dataOut);
+spritz_crypt(spritz_ctx *ctx,
+             const uint8_t *data, uint16_t dataLen,
+             uint8_t *dataOut);
 
-/** \fn void spritz_wipe_ctx(spritz_ctx *ctx)
- * \brief Wipe spritz context (spritz_ctx) data
+/** \fn void spritz_wipe(spritz_ctx *ctx)
+ * \brief wipe spritz context data (spritz_ctx)
  * \param ctx the context
  */
 void
-spritz_wipe_ctx(spritz_ctx *ctx);
+spritz_wipe(spritz_ctx *ctx);
 
 
 /** \fn void spritz_hash_setup(spritz_ctx *hash_ctx)
