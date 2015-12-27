@@ -208,10 +208,10 @@ spritz_setupWithIV(spritz_ctx *ctx,
 
 /* Generates a byte of keystream from spritz state (spritz_ctx).
  * Can be used to make a random key.
- * spritz_rand_byte() usable after spritz_setup() or spritz_setupWithIV().
+ * spritz_random_byte() usable after spritz_setup() or spritz_setupWithIV().
  */
 uint8_t
-spritz_rand_byte(spritz_ctx *ctx)
+spritz_random_byte(spritz_ctx *ctx)
 {
   return drip(ctx);
 }
@@ -227,7 +227,7 @@ spritz_crypt(spritz_ctx *ctx,
   uint16_t i;
 
   for (i = 0; i < dataLen; i++) {
-    dataOut[i] = data[i] ^ drip(ctx);
+    dataOut[i] = data[i] ^ spritz_random_byte(ctx);
   }
 }
 

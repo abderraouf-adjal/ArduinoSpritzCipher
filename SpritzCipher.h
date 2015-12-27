@@ -89,13 +89,13 @@ spritz_setupWithIV(spritz_ctx *ctx,
                    const uint8_t *key, uint8_t keyLen,
                    const uint8_t *nonce, uint8_t nonceLen);
 
-/** \fn uint8_t spritz_rand_byte(spritz_ctx *ctx)
+/** \fn uint8_t spritz_random_byte(spritz_ctx *ctx)
  * \brief generates a byte of keystream from spritz state (spritz_ctx). Can be used to make a random key. Usable after spritz_setup() or spritz_setupWithIV()
  * \param ctx the context
  * \return byte of keystream
  */
 uint8_t
-spritz_rand_byte(spritz_ctx *ctx);
+spritz_random_byte(spritz_ctx *ctx);
 
 /** \fn void spritz_crypt(spritz_ctx *ctx, uint16_t dataLen, const uint8_t *data, uint8_t *dataOut)
  * \brief encrypt or decrypt data chunk by XOR-ing it with spritz keystream. Usable after spritz_setup() or spritz_setupWithIV()

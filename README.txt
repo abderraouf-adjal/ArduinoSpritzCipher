@@ -59,10 +59,10 @@ void spritz_setupWithIV(spritz_ctx *ctx,
                         const uint8_t *nonce, uint8_t nonceLen)
   Setup spritz state (spritz_ctx) with a key and nonce/Salt/IV.
 
-uint8_t spritz_rand_byte(spritz_ctx *ctx)
+uint8_t spritz_random_byte(spritz_ctx *ctx)
   Generates a byte of keystream from spritz state (spritz_ctx).
   Can be used to make a random key.
-  spritz_rand_byte() usable after spritz_setup() or spritz_setupWithIV().
+  spritz_random_byte() usable after spritz_setup() or spritz_setupWithIV().
 
 void spritz_crypt(spritz_ctx *ctx,
                   const uint8_t *data, uint16_t dataLen,
