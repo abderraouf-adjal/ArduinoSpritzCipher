@@ -216,6 +216,16 @@ spritz_random_byte(spritz_ctx *ctx)
   return drip(ctx);
 }
 
+/* Add entropy to spritz state (spritz_ctx) using absorb().
+ * spritz_add_entropy() usable after spritz_setup() or spritz_setupWithIV().
+ */
+void
+spritz_add_entropy(spritz_ctx *ctx,
+            const uint8_t *entropy, uint16_t len)
+{
+  absorbBytes(ctx, entropy, len);
+}
+
 /* Encrypt or decrypt data chunk by XOR-ing it with spritz keystream.
  * spritz_crypt() usable after spritz_setup() or spritz_setupWithIV().
  */

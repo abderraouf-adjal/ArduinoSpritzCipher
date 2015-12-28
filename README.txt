@@ -64,6 +64,11 @@ uint8_t spritz_random_byte(spritz_ctx *ctx)
   Can be used to make a random key.
   spritz_random_byte() usable after spritz_setup() or spritz_setupWithIV().
 
+void spritz_add_entropy(spritz_ctx *ctx,
+                        const uint8_t *entropy, uint16_t len)
+  Add entropy to spritz state (spritz_ctx) using absorb().
+  spritz_add_entropy() usable after spritz_setup() or spritz_setupWithIV().
+
 void spritz_crypt(spritz_ctx *ctx,
                   const uint8_t *data, uint16_t dataLen,
                   uint8_t *dataOut)

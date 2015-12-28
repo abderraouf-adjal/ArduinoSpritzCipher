@@ -97,6 +97,16 @@ spritz_setupWithIV(spritz_ctx *ctx,
 uint8_t
 spritz_random_byte(spritz_ctx *ctx);
 
+/** \fn void spritz_add_entropy(spritz_ctx *ctx, const uint8_t *entropy, uint16_t len)
+ * \brief Add entropy to spritz state (spritz_ctx) using absorb(). Usable after spritz_setup() or spritz_setupWithIV().
+ * \param ctx the context
+ * \param entropy the entropy array
+ * \param len length of the entropy array in bytes
+ */
+void
+spritz_add_entropy(spritz_ctx *ctx,
+                   const uint8_t *entropy, uint16_t len);
+
 /** \fn void spritz_crypt(spritz_ctx *ctx, uint16_t dataLen, const uint8_t *data, uint8_t *dataOut)
  * \brief encrypt or decrypt data chunk by XOR-ing it with spritz keystream. Usable after spritz_setup() or spritz_setupWithIV()
  * \param ctx the context
