@@ -78,9 +78,11 @@ whip(spritz_ctx *ctx)
 
 #if defined(SAFE_TIMING_CRUSH)
 static void
-# if defined(__GNUC__) && !defined(__clang__) /* SAFE_TIMING_CRUSH and GCC */
+/* SAFE_TIMING_CRUSH and GCC: disable optimization for crush() */
+# if defined(__GNUC__) && !defined(__clang__)
 __attribute__ ((optimize("O0")))
-# elif defined(__clang__) /* SAFE_TIMING_CRUSH and Clang */
+/* SAFE_TIMING_CRUSH and Clang: disable optimization for crush() */
+# elif defined(__clang__)
 __attribute__ ((optnone))
 # endif
 crush(spritz_ctx *ctx)
