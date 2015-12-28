@@ -6,7 +6,7 @@ Spritz:
   secure random bytes generator, Flexible cryptographic hash function
   and message authentication code (MAC).
 
-This library can be used to:
+This C spritz library can be used to:
   * Hash data.
   * Data encryption.
   * Authenticated encryption.
