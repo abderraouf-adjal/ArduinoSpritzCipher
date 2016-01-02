@@ -22,6 +22,7 @@ Library content for user
 See the source code and ".h" files for the details.
 
 # Constants:
+============
 SAFE_TIMING_CRUSH
   If defined, Equal time crush() will be used.
 
@@ -44,12 +45,20 @@ SPRITZ_LIBRARY_VERSION_PATCH 0
   Present the PATCH version.
 
 # Types:
+========
 spritz_ctx
   The context/ctx (contain the state), The state consists of byte registers
   {i, j, k, z, w, a}, And an array {s} containing a permutation
   of {0, 1, ... , SPRITZ_N-1}.
 
 # Functions:
+============
+uint8_t spritz_is_equal(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
+  Timing-safe comparison for "data_a" and "data_b" equality.
+  This function can be used to compare passwords hash safely.
+  Return zero (0x00) if "data_a" equal "data_b", non-zero value if they are not.
+                ------------------------
+
 void spritz_setup(spritz_ctx *ctx,
                   const uint8_t *key, uint8_t keyLen)
   Setup spritz state (spritz_ctx) with a key.

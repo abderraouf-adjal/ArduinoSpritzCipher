@@ -66,6 +66,17 @@ typedef struct
 } spritz_ctx;
 
 
+/** \fn uint8_t spritz_is_equal(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
+ * \brief Timing-safe comparison for "data_a" and "data_b" equality. Return zero (0x00) if "data_a" equal "data_b", non-zero value if they are not
+ * \param data_a data A to compare with B
+ * \param data_b data B to compare with A
+ * \param len length of the data in bytes
+ * \return equality result, zero (0x00) if "data_a" equal "data_b", non-zero value if they are not
+ */
+uint8_t
+spritz_is_equal(const uint8_t *data_a, const uint8_t *data_b, uint16_t len);
+
+
 /** \fn void spritz_setup(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen)
  * \brief setup spritz state (spritz_ctx) with a key
  * \param ctx the context
