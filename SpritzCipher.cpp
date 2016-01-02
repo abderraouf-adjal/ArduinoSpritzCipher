@@ -78,10 +78,10 @@ whip(spritz_ctx *ctx)
 
 #if defined(SAFE_TIMING_CRUSH)
 static void
-/* SAFE_TIMING_CRUSH and GCC: disable optimization for crush() */
+/* SAFE_TIMING_CRUSH and GCC compiler: disable optimization for crush() */
 # if defined(__GNUC__) && !defined(__clang__)
 __attribute__ ((optimize("O0")))
-/* SAFE_TIMING_CRUSH and Clang: disable optimization for crush() */
+/* SAFE_TIMING_CRUSH and Clang compiler: disable optimization for crush() */
 # elif defined(__clang__)
 __attribute__ ((optnone))
 # endif
@@ -245,9 +245,11 @@ spritz_crypt(spritz_ctx *ctx,
 
 /* Wipe spritz context data (spritz_ctx) */
 void
-#if defined(__GNUC__) && !defined(__clang__) /* GCC */
+/* Disable optimization for spritz_wipe() if compiler is GCC */
+#if defined(__GNUC__) && !defined(__clang__)
 __attribute__ ((optimize("O0")))
-#elif defined(__clang__) /* Clang */
+/* Disable optimization for spritz_wipe() if compiler is Clang */
+#elif defined(__clang__)
 __attribute__ ((optnone))
 #endif
 spritz_wipe(spritz_ctx *ctx)
