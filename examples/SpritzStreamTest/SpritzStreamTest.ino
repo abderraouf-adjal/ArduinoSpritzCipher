@@ -65,14 +65,12 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
     }
     Serial.print(buf[i], HEX);
   }
+
   /* Check the output */
-  for (byte i = 0; i < sizeof(buf); i++) {
-    /* If the output is wrong */
-    if (buf[i] != ExpectedOutput[i]) { /* Alert if test fail */
-      digitalWrite(LED_BUILTIN, HIGH); /* Turn pin LED_BUILTIN (Most boards have this LED connected to digital pin 13) ON */
-      Serial.println("\n** WARNING: Output != Test_Vector **");
-      break;
-    }
+  if (spritz_is_equal(buf, ExpectedOutput, sizeof(buf))) {
+    /* If the output is wrong "Alert" */
+    digitalWrite(LED_BUILTIN, HIGH); /* Turn pin LED_BUILTIN On (Most boards have this LED connected to digital pin 13) */
+    Serial.println("\n** WARNING: Output != Test_Vector **");
   }
   Serial.println();
 }
