@@ -67,11 +67,11 @@ typedef struct
 
 
 /** \fn uint8_t spritz_is_equal(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
- * \brief Timing-safe comparison for "data_a" and "data_b" equality. Return zero (0x00) if "data_a" equal "data_b", non-zero value if they are not
+ * \brief Timing-safe equality comparison for "data_a" and "data_b"
  * \param data_a data A to compare with B
  * \param data_b data B to compare with A
  * \param len length of the data in bytes
- * \return equality result, zero (0x00) if "data_a" equal "data_b", non-zero value if they are not
+ * \return equality result, zero (0x00) if "data_a" equal "data_b" or "len" is zero, non-zero value if they are not equal
  */
 uint8_t
 spritz_is_equal(const uint8_t *data_a, const uint8_t *data_b, uint16_t len);

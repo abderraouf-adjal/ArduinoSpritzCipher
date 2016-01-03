@@ -184,7 +184,8 @@ drip(spritz_ctx *ctx)
 
 /* Timing-safe comparison for "data_a" and "data_b" equality.
  * This function can be used to compare passwords hash safely.
- * Return zero (0x00) if "data_a" equal "data_b", non-zero value if they are not.
+ * Return zero (0x00) if "data_a" equal "data_b" or "len" is zero,
+ * non-zero value if they are not equal.
  */
 uint8_t
 /* Disable optimization for spritz_is_equal() if compiler is GCC */
