@@ -165,6 +165,6 @@ spritz stream cipher, spritz encryption, spritz algorithm.
 Copyright
 =========
 
-Copyright (c) 2015 Abderraouf Adjal
+Copyright (c) 2015-2016 Abderraouf Adjal
 
 License: The MIT License.
