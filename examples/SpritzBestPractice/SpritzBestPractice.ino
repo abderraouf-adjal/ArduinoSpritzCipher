@@ -90,12 +90,12 @@ void loop() {
   }
 
 /* If spritz_hash_final() will not wipe hash_ctx data */
-#ifdef WIPE_AFTER_USAGE
+#ifndef WIPE_AFTER_USAGE
   spritz_wipe(&hash_ctx);
 #endif
 
   spritz_wipe(&rng_ctx);
 
 
-  //delay(5000); /* Wait 5s */
+  delay(5000); /* Wait 5s */
 }
