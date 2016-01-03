@@ -16,13 +16,13 @@ Spritz paper: <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
 This library on GitHub: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
 
 
-Library content for user
-========================
+# Library content for user
+  ========================
 
 See the source code and ".h" files for the details.
 
-# Constants:
-============
+* Constants:
+  ----------
 SAFE_TIMING_CRUSH
   If defined, Equal time crush() will be used.
 
@@ -44,21 +44,21 @@ SPRITZ_LIBRARY_VERSION_MINOR 4
 SPRITZ_LIBRARY_VERSION_PATCH 1
   Present the PATCH version.
 
-# Types:
-========
+* Types:
+  ------
 spritz_ctx
   The context/ctx (contain the state), The state consists of byte registers
   {i, j, k, z, w, a}, And an array {s} containing a permutation
   of {0, 1, ... , SPRITZ_N-1}.
 
-# Functions:
-============
+* Functions:
+  ----------
 uint8_t spritz_is_equal(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
   Timing-safe comparison for "data_a" and "data_b" equality.
   This function can be used to compare passwords hash safely.
   Return zero (0x00) if "data_a" equal "data_b" or "len" is zero,
   non-zero value if they are not equal.
-                ------------------------
+                ================================
 
 void spritz_setup(spritz_ctx *ctx,
                   const uint8_t *key, uint8_t keyLen)
@@ -87,7 +87,7 @@ void spritz_crypt(spritz_ctx *ctx,
 
 void spritz_wipe(spritz_ctx *ctx)
   Wipe spritz context data (spritz_ctx).
-                ------------------------
+                ================================
 
 void spritz_hash(uint8_t *digest, uint8_t digestLen,
                  const uint8_t *data, uint16_t dataLen)
@@ -97,7 +97,7 @@ void spritz_mac(uint8_t *digest, uint8_t digestLen,
                 const uint8_t *msg, uint16_t msgLen,
                 const uint8_t *key, uint16_t keyLen)
   Spritz Message Authentication Code (MAC) function.
-                ------------------------
+                ================================
 
 void spritz_hash_setup(spritz_ctx *hash_ctx)
   Setup spritz hash state.
@@ -109,7 +109,7 @@ void spritz_hash_update(spritz_ctx *hash_ctx,
 void spritz_hash_final(spritz_ctx *hash_ctx,
                        uint8_t *digest, uint8_t digestLen)
   Output hash digest.
-                ------------------------
+                ================================
 
 void spritz_mac_setup(spritz_ctx *mac_ctx,
                       const uint8_t *key, uint16_t keyLen)
@@ -124,8 +124,13 @@ void spritz_mac_final(spritz_ctx *mac_ctx,
   Output MAC digest.
 
 
-Examples
-========
+# Examples
+  ========
+
+* Hash 32 KB of Spritz stream (random bytes generator output) then print the result.
+  This code show what can ArduinoSpritzCipher library do (ShowOff API).
+  An embedded seed for the RNG is used.
+  ./examples/SpritzBestPractice/SpritzBestPractice.ino
 
 * Generate random bytes (Spritz stream test):
   ./examples/SpritzStreamTest/SpritzStreamTest.ino
@@ -143,28 +148,28 @@ Examples
   ./examples/SpritzMACTest/SpritzMACTest.ino
 
 
-Installation Guide
-==================
+# Installation Guide
+  ==================
 
 <https://www.arduino.cc/en/Guide/Libraries>
 
 
-Reporting bugs
-==============
+# Reporting bugs
+  ==============
 
 Create an issue on GitHub:
 <https://github.com/abderraouf-adjal/ArduinoSpritzCipher/issues>
 
 
-Keywords
-========
+# Keywords
+  ========
 
 spritz cipher implementation, spritz implementation, implementation of spritz
 spritz stream cipher, spritz encryption, spritz algorithm.
 
 
-Copyright
-=========
+# Copyright
+  =========
 
 Copyright (c) 2015-2016 Abderraouf Adjal
 
