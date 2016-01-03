@@ -51,6 +51,11 @@ spritz_ctx
   {i, j, k, z, w, a}, And an array {s} containing a permutation
   of {0, 1, ... , SPRITZ_N-1}.
 
+uint8_t
+  unsigned integer type with width of 8-bit, MAX=255.
+uint16_t
+  unsigned integer type with width of 16-bit, MAX=65,535.
+
 * Functions:
   ----------
 uint8_t spritz_is_equal(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
