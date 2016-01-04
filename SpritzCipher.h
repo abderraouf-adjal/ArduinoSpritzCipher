@@ -130,12 +130,12 @@ spritz_crypt(spritz_ctx *ctx,
              const uint8_t *data, uint16_t dataLen,
              uint8_t *dataOut);
 
-/** \fn void spritz_wipe(spritz_ctx *ctx)
+/** \fn void spritz_ctx_memzero(spritz_ctx *ctx)
  * \brief wipe spritz context data (spritz_ctx)
  * \param ctx the context
  */
 void
-spritz_wipe(spritz_ctx *ctx);
+spritz_ctx_memzero(spritz_ctx *ctx);
 
 
 /** \fn void spritz_hash_setup(spritz_ctx *hash_ctx)

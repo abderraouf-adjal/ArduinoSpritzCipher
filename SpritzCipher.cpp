@@ -272,14 +272,14 @@ spritz_crypt(spritz_ctx *ctx,
 
 /* Wipe spritz context data (spritz_ctx) */
 void
-/* Disable optimization for spritz_wipe() if compiler is GCC */
+/* Disable optimization for spritz_ctx_memzero() if compiler is GCC */
 #if defined(__GNUC__) && !defined(__clang__)
 __attribute__ ((optimize("O0")))
-/* Disable optimization for spritz_wipe() if compiler is Clang */
+/* Disable optimization for spritz_ctx_memzero() if compiler is Clang */
 #elif defined(__clang__)
 __attribute__ ((optnone))
 #endif
-spritz_wipe(spritz_ctx *ctx)
+spritz_ctx_memzero(spritz_ctx *ctx)
 {
   uint8_t i;
 
@@ -323,7 +323,7 @@ spritz_hash_final(spritz_ctx *hash_ctx,
     digest[i] = drip(hash_ctx);
   }
 #ifdef WIPE_AFTER_USAGE
-  spritz_wipe(hash_ctx);
+  spritz_ctx_memzero(hash_ctx);
 #endif
 }
 

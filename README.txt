@@ -91,7 +91,7 @@ void spritz_crypt(spritz_ctx *ctx,
   Encrypt or decrypt data chunk by XOR-ing it with spritz keystream.
   spritz_crypt() usable after spritz_setup() or spritz_setupWithIV().
 
-void spritz_wipe(spritz_ctx *ctx)
+void spritz_ctx_memzero(spritz_ctx *ctx)
   Wipe spritz context data (spritz_ctx).
                 ================================
 
