@@ -84,7 +84,7 @@ void loop() {
   Serial.println();
 
   /* Check the output */
-  if (spritz_is_equal(digest, ExpectedHash, (uint16_t)(sizeof(digest)))) {
+  if (spritz_compare(digest, ExpectedHash, (uint16_t)(sizeof(digest)))) {
     /* If the output is wrong "Alert" */
     Serial.println("\n** WARNING: hash != expected hash **");
   }

@@ -188,14 +188,14 @@ drip(spritz_ctx *ctx)
  * non-zero value if they are not equal.
  */
 uint8_t
-/* Disable optimization for spritz_is_equal() if compiler is GCC */
+/* Disable optimization for spritz_compare() if compiler is GCC */
 #if defined(__GNUC__) && !defined(__clang__)
 __attribute__ ((optimize("O0")))
-/* Disable optimization for spritz_is_equal() if compiler is Clang */
+/* Disable optimization for spritz_compare() if compiler is Clang */
 #elif defined(__clang__)
 __attribute__ ((optnone))
 #endif
-spritz_is_equal(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
+spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
 {
   uint8_t d;
   uint16_t i;

@@ -1,5 +1,5 @@
 SpritzCipher	KEYWORD1
-spritz_is_equal	KEYWORD2
+spritz_compare	KEYWORD2
 spritz_setup	KEYWORD2
 spritz_setupWithIV	KEYWORD2
 spritz_random_byte	KEYWORD2

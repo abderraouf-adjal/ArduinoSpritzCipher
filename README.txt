@@ -58,7 +58,8 @@ uint16_t
 
 * Functions:
   ----------
-uint8_t spritz_is_equal(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
+uint8_t spritz_compare(const uint8_t *data_a, const uint8_t *data_b,
+                       uint16_t len)
   Timing-safe comparison for "data_a" and "data_b" equality.
   This function can be used to compare passwords hash safely.
   Return zero (0x00) if "data_a" equal "data_b" or "len" is zero,

@@ -66,7 +66,7 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
   }
 
   /* Check the output */
-  if (spritz_is_equal(digest, ExpectedOutput, sizeof(digest))) {
+  if (spritz_compare(digest, ExpectedOutput, sizeof(digest))) {
     /* If the output is wrong "Alert" */
     digitalWrite(LED_BUILTIN, HIGH); /* Turn pin LED_BUILTIN On (Most boards have this LED connected to digital pin 13) */
     Serial.println("\n** WARNING: Output != Test_Vector **");
