@@ -22,7 +22,6 @@ const uint8_t seed[64] =
   '5', '3', '5', '8', '9', '7', '9', '3',
   '2', '3', '8', '4', '6', '2', '6', '4',
   '3', '3', '8', '3', '2', '7', '9', '5',
-
   '0', '2', '8', '8', '4', '1', '9', '7',
   '1', '6', '9', '3', '9', '9', '3', '7',
   '5', '1', '0', '5', '8', '2', '0', '9',
@@ -89,13 +88,15 @@ void loop() {
     Serial.println("\n** WARNING: hash != expected hash **");
   }
 
-/* If spritz_hash_final() will not wipe hash_ctx data */
+/* If WIPE_AFTER_USAGE is NOT defined, spritz_hash_final() will not
+ * wipe hash_ctx data. We have to do it manually */
 #ifndef WIPE_AFTER_USAGE
   spritz_ctx_memzero(&hash_ctx);
 #endif
+  spritz_memzero(digest, (uint16_t)(sizeof(digest)));
 
+  /* Keys, RNG seed & buffer should be wiped in realworld.
+   * In this example we should not wipe "seed" :-) */
   spritz_ctx_memzero(&rng_ctx);
-
-
-  delay(5000); /* Wait 5s */
+  spritz_memzero(rng_buf, (uint16_t)(sizeof(rng_buf)));
 }

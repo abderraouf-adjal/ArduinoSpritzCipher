@@ -298,13 +298,8 @@ __attribute__ ((optnone))
 #endif
 spritz_ctx_memzero(spritz_ctx *ctx)
 {
-  uint8_t i;
-
+  spritz_memzero(ctx->s, SPRITZ_N);
   ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = ctx->w = 0;
-  for (i = 0; i < SPRITZ_N_MINUS_1; i++) {
-    ctx->s[i] = 0;
-  }
-  ctx->s[255] = 0;
 }
 
 
