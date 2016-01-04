@@ -78,10 +78,10 @@ whip(spritz_ctx *ctx)
 
 #if defined(SAFE_TIMING_CRUSH)
 static void
-/* SAFE_TIMING_CRUSH and GCC compiler: disable optimization for crush() */
+/* SAFE_TIMING_CRUSH and GCC compiler, disable optimization for this function */
 # if defined(__GNUC__) && !defined(__clang__)
 __attribute__ ((optimize("O0")))
-/* SAFE_TIMING_CRUSH and Clang compiler: disable optimization for crush() */
+/* SAFE_TIMING_CRUSH and Clang compiler, disable optimization for this function */
 # elif defined(__clang__)
 __attribute__ ((optnone))
 # endif
@@ -188,10 +188,10 @@ drip(spritz_ctx *ctx)
  * non-zero value if they are not equal.
  */
 uint8_t
-/* Disable optimization for spritz_compare() if compiler is GCC */
+/* Disable optimization for this function if compiler is GCC */
 #if defined(__GNUC__) && !defined(__clang__)
 __attribute__ ((optimize("O0")))
-/* Disable optimization for spritz_compare() if compiler is Clang */
+/* Disable optimization for this function if compiler is Clang */
 #elif defined(__clang__)
 __attribute__ ((optnone))
 #endif
@@ -205,6 +205,23 @@ spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
   }
 
   return d;
+}
+
+/* Wipe "buf" data by replacing it with zeros (0x00). */
+void
+/* Disable optimization for this function if compiler is GCC */
+#if defined(__GNUC__) && !defined(__clang__)
+__attribute__ ((optimize("O0")))
+/* Disable optimization for this function if compiler is Clang */
+#elif defined(__clang__)
+__attribute__ ((optnone))
+#endif
+spritz_memzero(uint8_t *buf, uint16_t len)
+{
+  uint16_t i;
+  for (i = 0; i < len; i++) {
+    buf[i] = 0;
+  }
 }
 
 
@@ -270,12 +287,12 @@ spritz_crypt(spritz_ctx *ctx,
   }
 }
 
-/* Wipe spritz context data (spritz_ctx) */
+/* Wipe spritz context data by replacing "ctx" data with zeros (0x00) */
 void
-/* Disable optimization for spritz_ctx_memzero() if compiler is GCC */
+/* Disable optimization for this function if compiler is GCC */
 #if defined(__GNUC__) && !defined(__clang__)
 __attribute__ ((optimize("O0")))
-/* Disable optimization for spritz_ctx_memzero() if compiler is Clang */
+/* Disable optimization for this function if compiler is Clang */
 #elif defined(__clang__)
 __attribute__ ((optnone))
 #endif

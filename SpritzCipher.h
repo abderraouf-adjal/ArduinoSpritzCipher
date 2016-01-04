@@ -70,11 +70,19 @@ typedef struct
  * \brief Timing-safe equality comparison for "data_a" and "data_b"
  * \param data_a data A to compare with B
  * \param data_b data B to compare with A
- * \param len length of the data in bytes
+ * \param len length of the array in bytes
  * \return equality result, zero (0x00) if "data_a" equal "data_b" or "len" is zero, non-zero value if they are not equal
  */
 uint8_t
 spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len);
+
+/** \fn void spritz_memzero(uint8_t *buf, uint16_t len)
+ * \brief wipe "buf" data by replacing it with zeros (0x00)
+ * \param buf data to replace it with zeros (0x00)
+ * \param len length of array in bytes
+ */
+void
+spritz_memzero(uint8_t *buf, uint16_t len);
 
 
 /** \fn void spritz_setup(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen)
@@ -131,7 +139,7 @@ spritz_crypt(spritz_ctx *ctx,
              uint8_t *dataOut);
 
 /** \fn void spritz_ctx_memzero(spritz_ctx *ctx)
- * \brief wipe spritz context data (spritz_ctx)
+ * \brief wipe spritz context data by replacing "ctx" data with zeros (0x00)
  * \param ctx the context
  */
 void

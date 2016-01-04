@@ -64,6 +64,9 @@ uint8_t spritz_compare(const uint8_t *data_a, const uint8_t *data_b,
   This function can be used to compare passwords hash safely.
   Return zero (0x00) if "data_a" equal "data_b" or "len" is zero,
   non-zero value if they are not equal.
+
+void spritz_memzero(uint8_t *buf, uint16_t len)
+  Wipe "buf" data by replacing it with zeros (0x00).
                 ================================
 
 void spritz_setup(spritz_ctx *ctx,
@@ -92,7 +95,7 @@ void spritz_crypt(spritz_ctx *ctx,
   spritz_crypt() usable after spritz_setup() or spritz_setupWithIV().
 
 void spritz_ctx_memzero(spritz_ctx *ctx)
-  Wipe spritz context data (spritz_ctx).
+  Wipe spritz context data by replacing "ctx" data with zeros (0x00).
                 ================================
 
 void spritz_hash(uint8_t *digest, uint8_t digestLen,
