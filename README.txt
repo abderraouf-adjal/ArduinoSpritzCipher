@@ -162,6 +162,9 @@ void spritz_mac_final(spritz_ctx *mac_ctx,
 
 <https://www.arduino.cc/en/Guide/Libraries>
 
+Compiling this library with GCC or Clang will guarantee zero optimization
+for functions that should be compiler with zero optimization. 
+
 
 # Reporting bugs
   ==============
