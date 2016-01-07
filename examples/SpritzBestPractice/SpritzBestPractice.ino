@@ -3,7 +3,7 @@
  * then print the result.
  *
  * This code show what can ArduinoSpritzCipher library do (ShowOff API).
- * An embedded seed for the RNG is used.
+ * An embedded entropy/seed for the RNG is used.
  *
  * The circuit:  No external hardware needed.
  *
@@ -17,7 +17,7 @@
 
 
 /* The RNG seed (64 digits of Pi) */
-const uint8_t seed[64] =
+const uint8_t entropy[64] =
 { '3', '1', '4', '1', '5', '9', '2', '6',
   '5', '3', '5', '8', '9', '7', '9', '3',
   '2', '3', '8', '4', '6', '2', '6', '4',
@@ -30,10 +30,10 @@ const uint8_t seed[64] =
 
 /* The expected result, Same as Github user @jedisct1 implementation */
 const uint8_t ExpectedHash[32] =
-{ 0xef, 0xc4, 0x5b, 0xd6, 0xf9, 0xd9, 0xe7, 0x78,
-  0x83, 0xa5, 0x54, 0x60, 0x65, 0xde, 0xa2, 0x7f,
-  0x4a, 0x02, 0xa3, 0x3d, 0x35, 0x5b, 0xcd, 0x07,
-  0x48, 0xa9, 0xa1, 0xb3, 0x54, 0xfc, 0x50, 0x3a
+{ 0x11, 0xfe, 0x5e, 0xf8, 0x91, 0xa3, 0xcf, 0xb9,
+  0x54, 0x07, 0x54, 0x8e, 0xa0, 0x5e, 0x0b, 0xeb,
+  0xaf, 0x94, 0xf2, 0x7a, 0x46, 0xfa, 0xbb, 0xad,
+  0x21, 0xf7, 0x57, 0x4e, 0xee, 0x66, 0xab, 0xd9
 };
 
 void setup() {
@@ -49,26 +49,31 @@ void loop() {
   spritz_ctx rng_ctx; /* For the random bytes generator */
 
   uint8_t digest[32]; /* Hash result, 256-bit */
-  uint8_t rng_buf[32]; /* Random bytes generator output buffer */
+  uint8_t buf[32];
 
   uint8_t i;
   uint16_t j;
-  uint16_t LOOP_ROUNDS = 1024; /* 32 KB: (1024 * 32) / sizeof(rng_buf) */
+  uint16_t LOOP_ROUNDS = 1024; /* 32 KB: (1024 * 32) / sizeof(buf) */
 
 
   Serial.println("\n[Hash 32 KB of Spritz random bytes generator output]\n");
 
+  /* Make a 256-bit hash of the entropy in "buf" using one function */
+  spritz_hash(buf, (uint8_t)(sizeof(buf)), entropy, (uint8_t)(sizeof(entropy)));
+  /* Initialize/Seed the RNG with the hash of entropy */
+  spritz_setup(&rng_ctx, buf, (uint8_t)(sizeof(buf)));
 
+  /* The data will be generated in small chunks,
+   * So we can not use "one function API" */
   spritz_hash_setup(&hash_ctx);
-  spritz_setup(&rng_ctx, seed, (uint8_t)(sizeof(seed)));
 
   for (j = 0; j < LOOP_ROUNDS; j++) {
-    /* Fill rng_buf with Spritz random bytes generator output */
-    for (i = 0; i < (uint8_t)(sizeof(rng_buf)); i++) {
-      rng_buf[i] = spritz_random_byte(&rng_ctx);
+    /* Fill buf with Spritz random bytes generator output */
+    for (i = 0; i < (uint8_t)(sizeof(buf)); i++) {
+      buf[i] = spritz_random_byte(&rng_ctx);
     }
-    /* Add rng_buf data to hash_ctx */
-    spritz_hash_update(&hash_ctx, rng_buf, (uint16_t)(sizeof(rng_buf)));
+    /* Add buf data to hash_ctx */
+    spritz_hash_update(&hash_ctx, buf, (uint16_t)(sizeof(buf)));
   }
 
   spritz_hash_final(&hash_ctx, digest, (uint8_t)(sizeof(digest)));
@@ -96,7 +101,8 @@ void loop() {
   spritz_memzero(digest, (uint16_t)(sizeof(digest)));
 
   /* Keys, RNG seed & buffer should be wiped in realworld.
-   * In this example we should not wipe "seed" :-) */
+   * In this example we should not wipe "entropy"
+   * cause it is embedded in the code */
   spritz_ctx_memzero(&rng_ctx);
-  spritz_memzero(rng_buf, (uint16_t)(sizeof(rng_buf)));
+  spritz_memzero(buf, (uint16_t)(sizeof(buf)));
 }
