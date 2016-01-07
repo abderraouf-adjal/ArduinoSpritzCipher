@@ -46,14 +46,14 @@ WIPE_AFTER_USAGE_PARANOID
 SPRITZ_N 256
   Present the value of N in this spritz implementation.
 
-SPRITZ_LIBRARY_VERSION_STRING "0.4.3"
+SPRITZ_LIBRARY_VERSION_STRING "0.4.4"
   Present the version of this spritz library (MAJOR . MINOR . PATCH)
   using Semantic Versioning <semver.org>.
 SPRITZ_LIBRARY_VERSION_MAJOR 0
   Present the MAJOR version.
 SPRITZ_LIBRARY_VERSION_MINOR 4
   Present the MINOR version.
-SPRITZ_LIBRARY_VERSION_PATCH 3
+SPRITZ_LIBRARY_VERSION_PATCH 4
   Present the PATCH version.
 
 * Types:
