@@ -35,15 +35,33 @@ extern "C" {
 
 
 /** \def SAFE_TIMING_CRUSH
- * if defined, equal time crush() will be used. this may not be useful in some compilers with optimization
+ * if defined, equal time crush() will be used.
+ * this may not be useful in some compilers with optimization (except GCC and Clang)
  */
 #define SAFE_TIMING_CRUSH
 
 /** \def WIPE_AFTER_USAGE
  * if defined, Sensitive data (like spritz_ctx) when they are
  * no longer needed in functions such as hash and mac will be wiped
+ * functions that WIPE_AFTER_USAGE is involved with:
+ * {spritz_hash, spritz_mac, spritz_hash_final, spritz_mac_final}
  */
 #define WIPE_AFTER_USAGE
+
+/** \def WIPE_AFTER_USAGE_PARANOID
+ * if defined, Sensitive data like temporary variables in a swap function
+ * will be wiped when they are no longer needed.
+ * if defined, WIPE_AFTER_USAGE will be defined automatically
+ * functions that WIPE_AFTER_USAGE_PARANOID is involved with:
+ *   user: {spritz_compare}
+ *   internal library functions:
+ *     {spritz_ctx_s_swap (so: update, non equal time crush, absorbNibble),
+ *      equal time crush}
+ */
+/* #define WIPE_AFTER_USAGE_PARANOID */
+#if defined(WIPE_AFTER_USAGE_PARANOID) && !defined(WIPE_AFTER_USAGE)
+# define WIPE_AFTER_USAGE
+#endif
 
 /** \def SPRITZ_N
  * present the value of N in this spritz implementation

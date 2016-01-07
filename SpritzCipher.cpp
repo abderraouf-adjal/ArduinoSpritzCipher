@@ -31,12 +31,21 @@
 
 
 static void
+/* WIPE_AFTER_USAGE_PARANOID and GCC, disable optimization for this function */
+#if defined(WIPE_AFTER_USAGE_PARANOID) && defined(__GNUC__) && !defined(__clang__)
+__attribute__ ((optimize("O0")))
+/* WIPE_AFTER_USAGE_PARANOID and Clang, disable optimization for this function */
+#elif defined(WIPE_AFTER_USAGE_PARANOID) && defined(__clang__)
+__attribute__ ((optnone))
+#endif
 spritz_ctx_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
 {
   uint8_t t = ctx->s[index_a];
-
   ctx->s[index_a] = ctx->s[index_b];
   ctx->s[index_b] = t;
+#ifdef WIPE_AFTER_USAGE_PARANOID
+    t = 0;
+#endif
 }
 
 
@@ -78,10 +87,10 @@ whip(spritz_ctx *ctx)
 
 #if defined(SAFE_TIMING_CRUSH)
 static void
-/* SAFE_TIMING_CRUSH and GCC compiler, disable optimization for this function */
+/* SAFE_TIMING_CRUSH and GCC, disable optimization for this function */
 # if defined(__GNUC__) && !defined(__clang__)
 __attribute__ ((optimize("O0")))
-/* SAFE_TIMING_CRUSH and Clang compiler, disable optimization for this function */
+/* SAFE_TIMING_CRUSH and Clang, disable optimization for this function */
 # elif defined(__clang__)
 __attribute__ ((optnone))
 # endif
@@ -101,6 +110,11 @@ crush(spritz_ctx *ctx)
       ctx->s[j] = s_j;
     }
   }
+
+# ifdef WIPE_AFTER_USAGE_PARANOID
+  s_i = 0;
+  s_j = 0;
+# endif
 }
 #else /* SAFE_TIMING_CRUSH */
 /* non equal time crush() */
@@ -204,6 +218,15 @@ spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
     d |= data_a[i] ^ data_b[i];
   }
 
+#ifdef WIPE_AFTER_USAGE_PARANOID
+  if (d) {
+    d = 1;
+  }
+  else {
+    d = 0;
+  }
+#endif
+
   return d;
 }
 
@@ -283,7 +306,7 @@ spritz_crypt(spritz_ctx *ctx,
   uint16_t i;
 
   for (i = 0; i < dataLen; i++) {
-    dataOut[i] = data[i] ^ spritz_random_byte(ctx);
+    dataOut[i] = data[i] ^ drip(ctx);
   }
 }
 

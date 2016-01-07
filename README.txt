@@ -25,11 +25,23 @@ See the source code and ".h" files for the details.
   ----------
 SAFE_TIMING_CRUSH
   If defined, Equal time crush() will be used.
+  SAFE_TIMING_CRUSH is defined by default.
 
 WIPE_AFTER_USAGE
   If defined, Sensitive data (like spritz_ctx) will be wiped when they are
   no longer needed in the functions:
-   {spritz_hash, spritz_mac, spritz_hash_final, spritz_mac_final}.
+   {spritz_hash, spritz_mac, spritz_hash_final, spritz_mac_final}
+  WIPE_AFTER_USAGE is defined by default.
+
+WIPE_AFTER_USAGE_PARANOID
+  If defined, Sensitive data like temporary variables in a swap function
+  will be wiped when they are no longer needed in the functions:
+    - User: {spritz_compare}
+    - Internal library functions:
+        {spritz_ctx_s_swap (So: update, Non equal time crush, absorbNibble),
+         Equal time crush}
+  If defined, WIPE_AFTER_USAGE will be defined automatically.
+  WIPE_AFTER_USAGE_PARANOID is NOT defined by default for performance.
 
 SPRITZ_N 256
   Present the value of N in this spritz implementation.
