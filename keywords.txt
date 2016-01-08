@@ -1,12 +1,12 @@
 SpritzCipher	KEYWORD1
 spritz_compare	KEYWORD2
 spritz_memzero	KEYWORD2
+spritz_ctx_memzero	KEYWORD2
 spritz_setup	KEYWORD2
 spritz_setupWithIV	KEYWORD2
 spritz_random_byte	KEYWORD2
 spritz_add_entropy	KEYWORD2
 spritz_crypt	KEYWORD2
-spritz_ctx_memzero	KEYWORD2
 spritz_hash_setup	KEYWORD2
 spritz_hash_update	KEYWORD2
 spritz_hash_final	KEYWORD2

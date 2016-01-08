@@ -76,6 +76,7 @@ void loop() {
     spritz_hash_update(&hash_ctx, buf, (uint16_t)(sizeof(buf)));
   }
 
+  /* Output the final hash */
   spritz_hash_final(&hash_ctx, digest, (uint8_t)(sizeof(digest)));
 
   /* Print the hash in HEX */
@@ -93,11 +94,12 @@ void loop() {
     Serial.println("\n** WARNING: hash != expected hash **");
   }
 
-/* If WIPE_AFTER_USAGE is NOT defined, spritz_hash_final() will not
- * wipe hash_ctx data. We have to do it manually */
+/* If WIPE_AFTER_USAGE is NOT defined, spritz_hash_final() will not wipe hash_ctx data. */
 #ifndef WIPE_AFTER_USAGE
   spritz_ctx_memzero(&hash_ctx);
 #endif
+
+  /* wipe "digest" data by replacing it with zeros (0x00) */
   spritz_memzero(digest, (uint16_t)(sizeof(digest)));
 
   /* Keys, RNG seed & buffer should be wiped in realworld.

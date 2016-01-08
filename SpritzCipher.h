@@ -49,18 +49,21 @@ extern "C" {
 #define WIPE_AFTER_USAGE
 
 /** \def WIPE_AFTER_USAGE_PARANOID
- * if defined, Sensitive data like temporary variables in a swap function
- * will be wiped when they are no longer needed.
- * if defined, WIPE_AFTER_USAGE will be defined automatically
- * functions that WIPE_AFTER_USAGE_PARANOID is involved with:
- *   user: {spritz_compare}
- *   internal library functions:
- *     {spritz_ctx_s_swap (so: update, non equal time crush, absorbNibble),
- *      equal time crush}
+ * if defined, Sensitive variable contain bit or more of spritz state
+ * such as temporary variables in a swap function or a user data will
+ * be wiped when they are no longer needed
+ * note that variables that contain a data length will not be wiped
+ * if defined, WIPE_AFTER_USAGE and SAFE_TIMING_CRUSH will be defined automatically
  */
-/* #define WIPE_AFTER_USAGE_PARANOID */
-#if defined(WIPE_AFTER_USAGE_PARANOID) && !defined(WIPE_AFTER_USAGE)
-# define WIPE_AFTER_USAGE
+#define WIPE_AFTER_USAGE_PARANOID
+
+#ifdef WIPE_AFTER_USAGE_PARANOID
+# ifndef SAFE_TIMING_CRUSH
+#  define SAFE_TIMING_CRUSH
+# endif
+# ifndef WIPE_AFTER_USAGE
+#  define WIPE_AFTER_USAGE
+# endif
 #endif
 
 /** \def SPRITZ_N
@@ -81,8 +84,12 @@ extern "C" {
 typedef struct
 {
   uint8_t s[SPRITZ_N], i, j, k, z, a, w;
+#ifdef WIPE_AFTER_USAGE_PARANOID
+  /* tmp1: spritz_ctx_s_swap(), safe timing crush();
+   * tmp2: safe timing crush() */
+  uint8_t tmp1, tmp2;
+#endif
 } spritz_ctx;
-
 
 /** \fn uint8_t spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
  * \brief Timing-safe equality comparison for "data_a" and "data_b"
@@ -101,6 +108,13 @@ spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len);
  */
 void
 spritz_memzero(uint8_t *buf, uint16_t len);
+
+/** \fn void spritz_ctx_memzero(spritz_ctx *ctx)
+ * \brief wipe spritz_ctx data by replacing its data with zeros (0x00)
+ * \param ctx the context
+ */
+void
+spritz_ctx_memzero(spritz_ctx *ctx);
 
 
 /** \fn void spritz_setup(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen)
@@ -155,13 +169,6 @@ void
 spritz_crypt(spritz_ctx *ctx,
              const uint8_t *data, uint16_t dataLen,
              uint8_t *dataOut);
-
-/** \fn void spritz_ctx_memzero(spritz_ctx *ctx)
- * \brief wipe spritz context data by replacing "ctx" data with zeros (0x00)
- * \param ctx the context
- */
-void
-spritz_ctx_memzero(spritz_ctx *ctx);
 
 
 /** \fn void spritz_hash_setup(spritz_ctx *hash_ctx)

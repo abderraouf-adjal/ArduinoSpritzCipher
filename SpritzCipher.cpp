@@ -31,21 +31,17 @@
 
 
 static void
-/* WIPE_AFTER_USAGE_PARANOID and GCC, disable optimization for this function */
-#if defined(WIPE_AFTER_USAGE_PARANOID) && defined(__GNUC__) && !defined(__clang__)
-__attribute__ ((optimize("O0")))
-/* WIPE_AFTER_USAGE_PARANOID and Clang, disable optimization for this function */
-#elif defined(WIPE_AFTER_USAGE_PARANOID) && defined(__clang__)
-__attribute__ ((optnone))
-#endif
 spritz_ctx_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
 {
-  uint8_t t = ctx->s[index_a];
-  ctx->s[index_a] = ctx->s[index_b];
-  ctx->s[index_b] = t;
 #ifdef WIPE_AFTER_USAGE_PARANOID
-    t = 0;
-#endif
+  ctx->tmp1 = ctx->s[index_a];
+  ctx->s[index_a] = ctx->s[index_b];
+  ctx->s[index_b] = ctx->tmp1;
+#else
+  uint8_t tmp = ctx->s[index_a];
+  ctx->s[index_a] = ctx->s[index_b];
+  ctx->s[index_b] = tmp;
+#endif /* WIPE_AFTER_USAGE_PARANOID */
 }
 
 
@@ -85,7 +81,7 @@ whip(spritz_ctx *ctx)
   ctx->w = (uint8_t)(ctx->w + 2);
 }
 
-#if defined(SAFE_TIMING_CRUSH)
+#ifdef SAFE_TIMING_CRUSH
 static void
 /* SAFE_TIMING_CRUSH and GCC, disable optimization for this function */
 # if defined(__GNUC__) && !defined(__clang__)
@@ -96,8 +92,22 @@ __attribute__ ((optnone))
 # endif
 crush(spritz_ctx *ctx)
 {
+# ifdef WIPE_AFTER_USAGE_PARANOID
+  uint8_t i, j;
+  for (i = 0, j = SPRITZ_N_MINUS_1; i < SPRITZ_N_HALF; i++, j--) {
+    ctx->tmp1 = ctx->s[i]; /* s_i=ctx->s[i] */
+    ctx->tmp2 = ctx->s[j]; /* s_j=ctx->s[j] */
+    if (ctx->tmp1 > ctx->tmp2) { /* if(s_i>s_j) */
+      ctx->s[i] = ctx->tmp2; /* ctx->s[i]=s_j */
+      ctx->s[j] = ctx->tmp1; /* ctx->s[j]=s_i */
+    }
+    else {
+      ctx->s[i] = ctx->tmp1; /* ctx->s[i]=s_i */
+      ctx->s[j] = ctx->tmp2; /* ctx->s[j]=s_j */
+    }
+  }
+# else
   uint8_t i, j, s_i, s_j;
-
   for (i = 0, j = SPRITZ_N_MINUS_1; i < SPRITZ_N_HALF; i++, j--) {
     s_i = ctx->s[i];
     s_j = ctx->s[j];
@@ -110,19 +120,14 @@ crush(spritz_ctx *ctx)
       ctx->s[j] = s_j;
     }
   }
-
-# ifdef WIPE_AFTER_USAGE_PARANOID
-  s_i = 0;
-  s_j = 0;
-# endif
+# endif /* WIPE_AFTER_USAGE_PARANOID */
 }
 #else /* SAFE_TIMING_CRUSH */
-/* non equal time crush() */
+/* non equal/safe time crush() */
 static void
 crush(spritz_ctx *ctx)
 {
   uint8_t i, j;
-
   for (i = 0, j = SPRITZ_N_MINUS_1; i < SPRITZ_N_HALF; i++, j--) {
     if (ctx->s[i] > ctx->s[j]) {
       spritz_ctx_s_swap(ctx, i, j);
@@ -211,23 +216,25 @@ __attribute__ ((optnone))
 #endif
 spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
 {
-  uint8_t d;
+  uint8_t d = 0;
   uint16_t i;
 
-  for (i = 0, d = 0; i < len; i++) {
+  for (i = 0; i < len; i++) {
     d |= data_a[i] ^ data_b[i];
   }
 
 #ifdef WIPE_AFTER_USAGE_PARANOID
   if (d) {
-    d = 1;
+    d = 0;
+    return 1;
   }
   else {
     d = 0;
+    return 0;
   }
-#endif
-
+#else
   return d;
+#endif
 }
 
 /* Wipe "buf" data by replacing it with zeros (0x00). */
@@ -245,6 +252,25 @@ spritz_memzero(uint8_t *buf, uint16_t len)
   for (i = 0; i < len; i++) {
     buf[i] = 0;
   }
+}
+
+/* Wipe spritz_ctx data by replacing its data with zeros (0x00) */
+void
+/* Disable optimization for this function if compiler is GCC */
+#if defined(__GNUC__) && !defined(__clang__)
+__attribute__ ((optimize("O0")))
+/* Disable optimization for this function if compiler is Clang */
+#elif defined(__clang__)
+__attribute__ ((optnone))
+#endif
+spritz_ctx_memzero(spritz_ctx *ctx)
+{
+  spritz_memzero(ctx->s, SPRITZ_N);
+  ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = ctx->w = 0;
+#ifdef WIPE_AFTER_USAGE_PARANOID
+  ctx->tmp1 = 0;
+  ctx->tmp2 = 0;
+#endif
 }
 
 
@@ -310,21 +336,6 @@ spritz_crypt(spritz_ctx *ctx,
   }
 }
 
-/* Wipe spritz context data by replacing "ctx" data with zeros (0x00) */
-void
-/* Disable optimization for this function if compiler is GCC */
-#if defined(__GNUC__) && !defined(__clang__)
-__attribute__ ((optimize("O0")))
-/* Disable optimization for this function if compiler is Clang */
-#elif defined(__clang__)
-__attribute__ ((optnone))
-#endif
-spritz_ctx_memzero(spritz_ctx *ctx)
-{
-  spritz_memzero(ctx->s, SPRITZ_N);
-  ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = ctx->w = 0;
-}
-
 
 /* Setup spritz hash state (spritz_ctx) */
 void
@@ -372,6 +383,7 @@ spritz_hash(uint8_t *digest, uint8_t digestLen,
   spritz_hash_setup(&hash_ctx); /* stateInit() */
   spritz_hash_update(&hash_ctx, data, dataLen); /* absorbBytes() */
   spritz_hash_final(&hash_ctx, digest, digestLen);
+  /* hash_ctx data will be wiped if WIPE_AFTER_USAGE is defined */
 }
 
 
@@ -399,6 +411,7 @@ spritz_mac_final(spritz_ctx *mac_ctx,
                  uint8_t *digest, uint8_t digestLen)
 {
   spritz_hash_final(mac_ctx, digest, digestLen);
+  /* mac_ctx data will be wiped if WIPE_AFTER_USAGE is defined */
 }
 
 /* Message Authentication Code (MAC) function */
@@ -412,4 +425,5 @@ spritz_mac(uint8_t *digest, uint8_t digestLen,
   spritz_mac_setup(&mac_ctx, key, keyLen);
   spritz_mac_update(&mac_ctx, msg, msgLen); /* absorbBytes() */
   spritz_mac_final(&mac_ctx, digest, digestLen);
+  /* mac_ctx data will be wiped if WIPE_AFTER_USAGE is defined */
 }

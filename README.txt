@@ -34,14 +34,12 @@ WIPE_AFTER_USAGE
   WIPE_AFTER_USAGE is defined by default.
 
 WIPE_AFTER_USAGE_PARANOID
-  If defined, Sensitive data like temporary variables in a swap function
-  will be wiped when they are no longer needed in the functions:
-    - User: {spritz_compare}
-    - Internal library functions:
-        {spritz_ctx_s_swap (So: update, Non equal time crush, absorbNibble),
-         Equal time crush}
-  If defined, WIPE_AFTER_USAGE will be defined automatically.
-  WIPE_AFTER_USAGE_PARANOID is NOT defined by default for performance.
+  If defined, Sensitive variable contain bit or more of spritz state
+  such as temporary variables in a swap function or a user data will
+  be wiped when they are no longer needed.
+  Note that variables that contain a data length will not be wiped.
+  If defined, WIPE_AFTER_USAGE and SAFE_TIMING_CRUSH will be defined automatically.
+  WIPE_AFTER_USAGE_PARANOID is defined by default.
 
 SPRITZ_N 256
   Present the value of N in this spritz implementation.
@@ -79,6 +77,9 @@ uint8_t spritz_compare(const uint8_t *data_a, const uint8_t *data_b,
 
 void spritz_memzero(uint8_t *buf, uint16_t len)
   Wipe "buf" data by replacing it with zeros (0x00).
+
+void spritz_ctx_memzero(spritz_ctx *ctx)
+  Wipe spritz_ctx data by replacing its data with zeros (0x00).
                 ================================
 
 void spritz_setup(spritz_ctx *ctx,
@@ -105,9 +106,6 @@ void spritz_crypt(spritz_ctx *ctx,
                   uint8_t *dataOut)
   Encrypt or decrypt data chunk by XOR-ing it with spritz keystream.
   spritz_crypt() usable after spritz_setup() or spritz_setupWithIV().
-
-void spritz_ctx_memzero(spritz_ctx *ctx)
-  Wipe spritz context data by replacing "ctx" data with zeros (0x00).
                 ================================
 
 void spritz_hash(uint8_t *digest, uint8_t digestLen,
