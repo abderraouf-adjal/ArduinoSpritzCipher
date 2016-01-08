@@ -28,15 +28,14 @@ SAFE_TIMING_CRUSH
   SAFE_TIMING_CRUSH is defined by default.
 
 WIPE_AFTER_USAGE
-  If defined, Sensitive data (like spritz_ctx) will be wiped when they are
+  If defined, Sensitive data like "spritz_ctx" will be wiped when they are
   no longer needed in the functions:
    {spritz_hash, spritz_mac, spritz_hash_final, spritz_mac_final}
   WIPE_AFTER_USAGE is defined by default.
 
 WIPE_AFTER_USAGE_PARANOID
-  If defined, Sensitive variable contain bit or more of spritz state
-  such as temporary variables in a swap function or a user data will
-  be wiped when they are no longer needed.
+  If defined, Any variable will be wiped if it contain a bit or more
+  of spritz state such as temporary variables in a swap function or a user data.
   Note that variables that contain a data length will not be wiped.
   If defined, WIPE_AFTER_USAGE and SAFE_TIMING_CRUSH will be defined automatically.
   WIPE_AFTER_USAGE_PARANOID is defined by default.
@@ -80,6 +79,8 @@ void spritz_memzero(uint8_t *buf, uint16_t len)
 
 void spritz_ctx_memzero(spritz_ctx *ctx)
   Wipe spritz_ctx data by replacing its data with zeros (0x00).
+  If WIPE_AFTER_USAGE_PARANOID is defined, This function will
+  wipe the "sensitive" temporary variables in spritz_ctx.
                 ================================
 
 void spritz_setup(spritz_ctx *ctx,
