@@ -49,10 +49,10 @@ extern "C" {
 #define WIPE_AFTER_USAGE
 
 /** \def WIPE_AFTER_USAGE_PARANOID
- * if defined, any variable will be wiped if it contain a bit or more
- * of spritz state such as temporary variables in a swap function or a user data
+ * if defined, any variable will be wiped if it contains a bit or more
+ * of spritz state such as temporary variables in a swap function or an user data
  * be wiped when they are no longer needed
- * note that variables that contain a data length will not be wiped
+ * internal variables that contain data length will not be wiped
  * if defined, WIPE_AFTER_USAGE and SAFE_TIMING_CRUSH will be defined automatically
  */
 #define WIPE_AFTER_USAGE_PARANOID

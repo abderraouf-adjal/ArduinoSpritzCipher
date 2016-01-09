@@ -1,19 +1,21 @@
 Spritz library for Arduino
 ==========================
 
-Spritz:
-  A spongy RC4-like stream cipher. This library contains
-  secure random bytes generator, Flexible cryptographic hash function
-  and message authentication code (MAC).
+Spritz - a spongy RC4-like stream cipher and hash function.
 
-This C spritz library can be used to:
-  * Hash data.
-  * Data encryption.
-  * Authenticated encryption.
-  * Generate random numbers from seed.
+ArduinoSpritzCipher library contains secure random bytes generator,
+Cryptographic hash function, Message Authentication Code (MAC) function,
+Data encryption/decryption using Key and Nonce/Salt/IV, General purpose
+functions such as timing-safe comparison and data wiping from memory.
 
-Spritz paper: <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
-This library on GitHub: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
+This C Spritz library can be used to:
+  - Hash data.
+  - Data encryption.
+  - Authenticated encryption.
+  - Generate random numbers from entropy/seed.
+
+- Spritz paper: <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
+- GitHub repository: <https://github.com/abderraouf-adjal/ArduinoSpritzCipher>
 
 
 # Library content for user
@@ -34,9 +36,9 @@ WIPE_AFTER_USAGE
   WIPE_AFTER_USAGE is defined by default.
 
 WIPE_AFTER_USAGE_PARANOID
-  If defined, Any variable will be wiped if it contain a bit or more
-  of spritz state such as temporary variables in a swap function or a user data.
-  Note that variables that contain a data length will not be wiped.
+  If defined, Any variable will be wiped if it contains a bit or more
+  of spritz state such as temporary variables in a swap function or an user data.
+  Internal variables that contain data length will not be wiped.
   If defined, WIPE_AFTER_USAGE and SAFE_TIMING_CRUSH will be defined automatically.
   WIPE_AFTER_USAGE_PARANOID is defined by default.
 
@@ -70,7 +72,7 @@ uint16_t
 uint8_t spritz_compare(const uint8_t *data_a, const uint8_t *data_b,
                        uint16_t len)
   Timing-safe comparison for "data_a" and "data_b" equality.
-  This function can be used to compare passwords hash safely.
+  This function compares passwords hash safely.
   Return zero (0x00) if "data_a" equal "data_b" or "len" is zero,
   non-zero value if they are not equal.
 
@@ -149,7 +151,7 @@ void spritz_mac_final(spritz_ctx *mac_ctx,
 
 * Hash 32 KB of Spritz stream (random bytes generator output) then print the result.
   This code show what can ArduinoSpritzCipher library do (ShowOff API).
-  An embedded seed for the RNG is used.
+  An embedded entropy/seed for the random bytes generator is used.
   ./examples/SpritzBestPractice/SpritzBestPractice.ino
 
 * Generate random bytes (Spritz stream test):
@@ -182,13 +184,6 @@ for functions that should be compiler with zero optimization.
 
 Create an issue on GitHub:
 <https://github.com/abderraouf-adjal/ArduinoSpritzCipher/issues>
-
-
-# Keywords
-  ========
-
-spritz cipher implementation, spritz implementation, implementation of spritz
-spritz stream cipher, spritz encryption, spritz algorithm.
 
 
 # Copyright
