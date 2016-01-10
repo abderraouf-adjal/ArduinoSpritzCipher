@@ -141,12 +141,29 @@ spritz_setupWithIV(spritz_ctx *ctx,
                    const uint8_t *nonce, uint8_t nonceLen);
 
 /** \fn uint8_t spritz_random_byte(spritz_ctx *ctx)
- * \brief generates a byte of keystream from spritz state (spritz_ctx). Can be used to make a random key. Usable after spritz_setup() or spritz_setupWithIV()
+ * \brief generates a random byte of keystream from spritz state (spritz_ctx). Usable after spritz_setup() or spritz_setupWithIV()
  * \param ctx the context
  * \return byte of keystream
  */
 uint8_t
 spritz_random_byte(spritz_ctx *ctx);
+
+/** \fn uint32_t spritz_random_u32(spritz_ctx *ctx)
+ * \brief generates a random 32-bit (4 bytes) of keystream from spritz state (spritz_ctx). Usable after spritz_setup() or spritz_setupWithIV()
+ * \param ctx the context
+ * \return 32-bit (4 bytes) of keystream
+ */
+uint32_t
+spritz_random_u32(spritz_ctx *ctx);
+
+/** \fn uint32_t spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
+ * \brief calculate a uniformly distributed random number less than upper_bound avoiding modulo bias. Usable after spritz_setup() or spritz_setupWithIV()
+ * \param ctx the context
+ * \param upper_bound The roof, (upper_bound - 1) is the largest random number that can be returned
+ * \return random number less than upper_bound, 0 if upper_bound<2
+ */
+uint32_t
+spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound);
 
 /** \fn void spritz_add_entropy(spritz_ctx *ctx, const uint8_t *entropy, uint16_t len)
  * \brief Add entropy to spritz state (spritz_ctx) using absorb(). Usable after spritz_setup() or spritz_setupWithIV().

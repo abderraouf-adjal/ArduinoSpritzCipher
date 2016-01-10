@@ -301,14 +301,68 @@ spritz_setupWithIV(spritz_ctx *ctx,
   }
 }
 
-/* Generates a byte of keystream from spritz state (spritz_ctx).
- * Can be used to make a random key.
+/* Generates a random byte of keystream from spritz state (spritz_ctx).
  * spritz_random_byte() usable after spritz_setup() or spritz_setupWithIV().
  */
 uint8_t
 spritz_random_byte(spritz_ctx *ctx)
 {
   return drip(ctx);
+}
+
+/* Generates a random 32-bit (4 bytes) of keystream from spritz state (spritz_ctx).
+ * spritz_random_u32() usable after spritz_setup() or spritz_setupWithIV().
+ */
+uint32_t
+spritz_random_u32(spritz_ctx *ctx)
+{
+  return (uint32_t)(
+      (uint32_t)(spritz_random_byte(ctx))
+    | (uint32_t)(spritz_random_byte(ctx)) << 8
+    | (uint32_t)(spritz_random_byte(ctx)) << 16
+    | (uint32_t)(spritz_random_byte(ctx)) << 24
+  );
+}
+
+/* spritz_random_uniform() derives from OpenBSD's arc4random_uniform()
+ * Copyright (c) 2008, Damien Miller <djm@openbsd.org>
+ */
+/* Calculate a uniformly distributed random number less than upper_bound
+ * avoiding "modulo bias".
+ * Uniformity is achieved by generating new random numbers until the one
+ * returned is outside the range [0, 2**32 % upper_bound).
+ * This guarantees the selected random number will be inside
+ * [2**32 % upper_bound, 2**32) which maps back to [0, upper_bound)
+ * after reduction modulo upper_bound.
+ * spritz_random_uniform() usable after spritz_setup() or spritz_setupWithIV().
+ */
+uint32_t
+spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
+{
+  uint32_t r = 0, min;
+
+  if (upper_bound < 2)
+  {
+    return 0;
+  }
+
+  /* 2**32 % x == (2**32 - x) % x */
+  min = (uint32_t)(-upper_bound % upper_bound);
+
+  /* This could theoretically loop forever but each retry has
+   * p > 0.5 (worst case, usually far better) of selecting a
+   * number inside the range we need, so it should rarely need
+   * to re-roll.
+   */
+  for (;;) {
+    r = spritz_random_u32(ctx);
+    if (r >= min)
+    {
+      break;
+    }
+  }
+
+  return (uint32_t)(r % upper_bound);
 }
 
 /* Add entropy to spritz state (spritz_ctx) using absorb().

@@ -66,6 +66,8 @@ uint8_t
   unsigned integer type with width of 8-bit, MAX=255.
 uint16_t
   unsigned integer type with width of 16-bit, MAX=65,535.
+uint32_t
+  unsigned integer type with width of 32-bit, MAX=4,294,967,295.
 
 * Functions:
   ----------
@@ -95,9 +97,23 @@ void spritz_setupWithIV(spritz_ctx *ctx,
   Setup spritz state (spritz_ctx) with a key and nonce/Salt/IV.
 
 uint8_t spritz_random_byte(spritz_ctx *ctx)
-  Generates a byte of keystream from spritz state (spritz_ctx).
-  Can be used to make a random key.
+  Generates a random byte of keystream from spritz state (spritz_ctx).
   spritz_random_byte() usable after spritz_setup() or spritz_setupWithIV().
+
+uint32_t spritz_random_u32(spritz_ctx *ctx)
+  Generates a random 32-bit (4 bytes) of keystream from spritz state (spritz_ctx).
+  spritz_random_u32() usable after spritz_setup() or spritz_setupWithIV().
+
+uint32_t spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
+  Calculate a uniformly distributed random number less than upper_bound
+  avoiding "modulo bias".
+  Uniformity is achieved by generating new random numbers until the one
+  returned is outside the range [0, 2**32 % upper_bound).
+  This guarantees the selected random number will be inside
+  [2**32 % upper_bound, 2**32) which maps back to [0, upper_bound)
+  after reduction modulo upper_bound.
+  spritz_random_uniform() usable after spritz_setup() or spritz_setupWithIV().
+
 
 void spritz_add_entropy(spritz_ctx *ctx,
                         const uint8_t *entropy, uint16_t len)
@@ -153,6 +169,11 @@ void spritz_mac_final(spritz_ctx *mac_ctx,
   This code show what can ArduinoSpritzCipher library do (ShowOff API).
   An embedded entropy/seed for the random bytes generator is used.
   ./examples/SpritzBestPractice/SpritzBestPractice.ino
+
+* Make strong Alphanumeric passwords then print it.
+  This code show what can ArduinoSpritzCipher library do (ShowOff API).
+  An embedded entropy/seed for the random bytes generator is used.
+  ./examples/SpritzBestPracticePassword/SpritzBestPracticePassword.ino
 
 * Generate random bytes (Spritz stream test):
   ./examples/SpritzStreamTest/SpritzStreamTest.ino
