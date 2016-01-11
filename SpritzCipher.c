@@ -316,12 +316,18 @@ spritz_random_byte(spritz_ctx *ctx)
 uint32_t
 spritz_random_u32(spritz_ctx *ctx)
 {
+  /* Code with the same result:
+   * uint32_t b;
+   * b = (uint32_t)(     (uint32_t)(spritz_random_byte(ctx)) <<  0);
+   * b = (uint32_t)(b | ((uint32_t)(spritz_random_byte(ctx)) <<  8));
+   * b = (uint32_t)(b | ((uint32_t)(spritz_random_byte(ctx)) << 16));
+   * b = (uint32_t)(b | ((uint32_t)(spritz_random_byte(ctx)) << 24));
+   */
   return (uint32_t)(
-      (uint32_t)(spritz_random_byte(ctx))
-    | (uint32_t)(spritz_random_byte(ctx)) << 8
-    | (uint32_t)(spritz_random_byte(ctx)) << 16
-    | (uint32_t)(spritz_random_byte(ctx)) << 24
-  );
+      ((uint32_t)(spritz_random_byte(ctx)) <<  0)
+    | ((uint32_t)(spritz_random_byte(ctx)) <<  8)
+    | ((uint32_t)(spritz_random_byte(ctx)) << 16)
+    | ((uint32_t)(spritz_random_byte(ctx)) << 24));
 }
 
 /* spritz_random_uniform() derives from OpenBSD's arc4random_uniform()
