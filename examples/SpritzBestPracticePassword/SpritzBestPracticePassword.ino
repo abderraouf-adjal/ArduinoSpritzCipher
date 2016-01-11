@@ -49,9 +49,9 @@ void setup() {
     ; /* Wait for serial port to connect. Needed for Leonardo only */
   }
 
-  uint8_t buf[32];
+  uint8_t buf[64];
 
-  /* Make a 256-bit hash of the entropy in "buf" using one function */
+  /* Make a 512-bit hash of the entropy in "buf" using one function */
   spritz_hash(buf, (uint8_t)(sizeof(buf)), entropy, (uint8_t)(sizeof(entropy)));
   /* Initialize/Seed the RNG with the hash of entropy */
   spritz_setup(&rng_ctx, buf, (uint8_t)(sizeof(buf)));
