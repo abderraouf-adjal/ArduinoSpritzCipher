@@ -3,7 +3,7 @@ Spritz library for Arduino
 
 Spritz - a spongy RC4-like stream cipher and hash function.
 
-This library contains cryptographic random bytes generator,
+This library contains cryptographic pseudo-random number generator,
 Cryptographic hash function, Message Authentication Code (MAC) function,
 Data encryption/decryption using Key and Nonce/Salt/IV, General purpose
 functions such as timing-safe comparison and data wiping from memory.
@@ -114,7 +114,6 @@ uint32_t spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
   after reduction modulo upper_bound.
   spritz_random_uniform() usable after spritz_setup() or spritz_setupWithIV().
 
-
 void spritz_add_entropy(spritz_ctx *ctx,
                         const uint8_t *entropy, uint16_t len)
   Add entropy to spritz state (spritz_ctx) using absorb().
@@ -165,14 +164,14 @@ void spritz_mac_final(spritz_ctx *mac_ctx,
 # Examples
   ========
 
-* Hash 32 KB of Spritz stream (random bytes generator output) then print the result.
+* Hash 32 KB of Spritz stream (pseudo-random number generator output) then print the result.
   This code show what can ArduinoSpritzCipher library do (ShowOff API).
-  An embedded entropy/seed for the random bytes generator is used.
+  An embedded entropy/seed for the pseudo-random number generator is used.
   ./examples/SpritzBestPractice/SpritzBestPractice.ino
 
 * Make strong Alphanumeric passwords then print it.
   This code show what can ArduinoSpritzCipher library do (ShowOff API).
-  An embedded entropy/seed for the random bytes generator is used.
+  An embedded entropy/seed for the pseudo-random number generator is used.
   ./examples/SpritzBestPracticePassword/SpritzBestPracticePassword.ino
 
 * Generate random bytes (Spritz stream test):
