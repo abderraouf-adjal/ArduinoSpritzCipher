@@ -29,18 +29,18 @@ SPRITZ_TIMING_SAFE_CRUSH
   If defined, Equal time crush() will be used.
   SPRITZ_TIMING_SAFE_CRUSH is defined by default.
 
-WIPE_AFTER_USAGE
+SPRITZ_WIPE_TRACES
   If defined, Sensitive data like "spritz_ctx" will be wiped when they are
   no longer needed in the functions:
    {spritz_hash, spritz_mac, spritz_hash_final, spritz_mac_final}
-  WIPE_AFTER_USAGE is defined by default.
+  SPRITZ_WIPE_TRACES is defined by default.
 
-WIPE_AFTER_USAGE_PARANOID
+SPRITZ_WIPE_TRACES_PARANOID
   If defined, Any variable will be wiped if it contains a bit or more
   of spritz state such as temporary variables in a swap function or an user data.
   Internal variables that contain data length will not be wiped.
-  If defined, WIPE_AFTER_USAGE and SPRITZ_TIMING_SAFE_CRUSH will be defined automatically.
-  WIPE_AFTER_USAGE_PARANOID is defined by default.
+  If defined, SPRITZ_WIPE_TRACES and SPRITZ_TIMING_SAFE_CRUSH will be defined automatically.
+  SPRITZ_WIPE_TRACES_PARANOID is defined by default.
 
 SPRITZ_N 256
   Present the value of N in this spritz implementation.
@@ -83,7 +83,7 @@ void spritz_memzero(uint8_t *buf, uint16_t len)
 
 void spritz_ctx_memzero(spritz_ctx *ctx)
   Wipe spritz_ctx data by replacing its data with zeros (0x00).
-  If WIPE_AFTER_USAGE_PARANOID is defined, This function will
+  If SPRITZ_WIPE_TRACES_PARANOID is defined, This function will
   wipe the "sensitive" temporary variables in spritz_ctx.
                 ================================
 

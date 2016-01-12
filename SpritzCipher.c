@@ -33,7 +33,7 @@
 static void
 spritz_ctx_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
 {
-#ifdef WIPE_AFTER_USAGE_PARANOID
+#ifdef SPRITZ_WIPE_TRACES_PARANOID
   ctx->tmp1 = ctx->s[index_a];
   ctx->s[index_a] = ctx->s[index_b];
   ctx->s[index_b] = ctx->tmp1;
@@ -41,7 +41,7 @@ spritz_ctx_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
   uint8_t tmp = ctx->s[index_a];
   ctx->s[index_a] = ctx->s[index_b];
   ctx->s[index_b] = tmp;
-#endif /* WIPE_AFTER_USAGE_PARANOID */
+#endif /* SPRITZ_WIPE_TRACES_PARANOID */
 }
 
 
@@ -96,7 +96,7 @@ __attribute__ ((optnone))
 # endif
 crush(spritz_ctx *ctx)
 {
-# ifdef WIPE_AFTER_USAGE_PARANOID
+# ifdef SPRITZ_WIPE_TRACES_PARANOID
   uint8_t i, j;
   for (i = 0, j = SPRITZ_N_MINUS_1; i < SPRITZ_N_HALF; i++, j--) {
     ctx->tmp1 = ctx->s[i]; /* s_i=ctx->s[i] */
@@ -124,7 +124,7 @@ crush(spritz_ctx *ctx)
       ctx->s[j] = s_j;
     }
   }
-# endif /* WIPE_AFTER_USAGE_PARANOID */
+# endif /* SPRITZ_WIPE_TRACES_PARANOID */
 }
 #else /* SPRITZ_TIMING_SAFE_CRUSH */
 /* non equal/safe time crush() */
@@ -227,7 +227,7 @@ spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
     d |= data_a[i] ^ data_b[i];
   }
 
-#ifdef WIPE_AFTER_USAGE_PARANOID
+#ifdef SPRITZ_WIPE_TRACES_PARANOID
   if (d) {
     d = 0;
     return 1;
@@ -276,7 +276,7 @@ spritz_ctx_memzero(spritz_ctx *ctx)
   ctx->z = 0;
   ctx->a = 0;
   ctx->w = 0;
-#ifdef WIPE_AFTER_USAGE_PARANOID
+#ifdef SPRITZ_WIPE_TRACES_PARANOID
   ctx->tmp1 = 0;
   ctx->tmp2 = 0;
 #endif
@@ -437,7 +437,7 @@ spritz_hash_final(spritz_ctx *hash_ctx,
   for (i = 0; i < digestLen; i++) {
     digest[i] = drip(hash_ctx);
   }
-#ifdef WIPE_AFTER_USAGE
+#ifdef SPRITZ_WIPE_TRACES
   spritz_ctx_memzero(hash_ctx);
 #endif
 }
@@ -452,7 +452,7 @@ spritz_hash(uint8_t *digest, uint8_t digestLen,
   spritz_hash_setup(&hash_ctx); /* stateInit() */
   spritz_hash_update(&hash_ctx, data, dataLen); /* absorbBytes() */
   spritz_hash_final(&hash_ctx, digest, digestLen);
-  /* hash_ctx data will be wiped if WIPE_AFTER_USAGE is defined */
+  /* hash_ctx data will be wiped if SPRITZ_WIPE_TRACES is defined */
 }
 
 
@@ -480,7 +480,7 @@ spritz_mac_final(spritz_ctx *mac_ctx,
                  uint8_t *digest, uint8_t digestLen)
 {
   spritz_hash_final(mac_ctx, digest, digestLen);
-  /* mac_ctx data will be wiped if WIPE_AFTER_USAGE is defined */
+  /* mac_ctx data will be wiped if SPRITZ_WIPE_TRACES is defined */
 }
 
 /* Message Authentication Code (MAC) function */
@@ -494,5 +494,5 @@ spritz_mac(uint8_t *digest, uint8_t digestLen,
   spritz_mac_setup(&mac_ctx, key, keyLen);
   spritz_mac_update(&mac_ctx, msg, msgLen); /* absorbBytes() */
   spritz_mac_final(&mac_ctx, digest, digestLen);
-  /* mac_ctx data will be wiped if WIPE_AFTER_USAGE is defined */
+  /* mac_ctx data will be wiped if SPRITZ_WIPE_TRACES is defined */
 }

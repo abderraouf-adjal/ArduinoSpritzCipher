@@ -94,8 +94,8 @@ void loop() {
     Serial.println("\n** WARNING: hash != expected hash **");
   }
 
-/* If WIPE_AFTER_USAGE is NOT defined, spritz_hash_final() will not wipe hash_ctx data. */
-#ifndef WIPE_AFTER_USAGE
+/* If SPRITZ_WIPE_TRACES is NOT defined, spritz_hash_final() will not wipe hash_ctx data. */
+#ifndef SPRITZ_WIPE_TRACES
   spritz_ctx_memzero(&hash_ctx);
 #endif
 

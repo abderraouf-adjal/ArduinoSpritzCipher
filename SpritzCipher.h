@@ -40,29 +40,29 @@ extern "C" {
  */
 #define SPRITZ_TIMING_SAFE_CRUSH
 
-/** \def WIPE_AFTER_USAGE
+/** \def SPRITZ_WIPE_TRACES
  * if defined, Sensitive data (like spritz_ctx) when they are
  * no longer needed in functions such as hash and mac will be wiped
- * functions that WIPE_AFTER_USAGE is involved with:
+ * functions that SPRITZ_WIPE_TRACES is involved with:
  * {spritz_hash, spritz_mac, spritz_hash_final, spritz_mac_final}
  */
-#define WIPE_AFTER_USAGE
+#define SPRITZ_WIPE_TRACES
 
-/** \def WIPE_AFTER_USAGE_PARANOID
+/** \def SPRITZ_WIPE_TRACES_PARANOID
  * if defined, any variable will be wiped if it contains a bit or more
  * of spritz state such as temporary variables in a swap function or an user data
  * be wiped when they are no longer needed
  * internal variables that contain data length will not be wiped
- * if defined, WIPE_AFTER_USAGE and SPRITZ_TIMING_SAFE_CRUSH will be defined automatically
+ * if defined, SPRITZ_WIPE_TRACES and SPRITZ_TIMING_SAFE_CRUSH will be defined automatically
  */
-#define WIPE_AFTER_USAGE_PARANOID
+#define SPRITZ_WIPE_TRACES_PARANOID
 
-#ifdef WIPE_AFTER_USAGE_PARANOID
+#ifdef SPRITZ_WIPE_TRACES_PARANOID
 # ifndef SPRITZ_TIMING_SAFE_CRUSH
 #  define SPRITZ_TIMING_SAFE_CRUSH
 # endif
-# ifndef WIPE_AFTER_USAGE
-#  define WIPE_AFTER_USAGE
+# ifndef SPRITZ_WIPE_TRACES
+#  define SPRITZ_WIPE_TRACES
 # endif
 #endif
 
@@ -84,7 +84,7 @@ extern "C" {
 typedef struct
 {
   uint8_t s[SPRITZ_N], i, j, k, z, a, w;
-#ifdef WIPE_AFTER_USAGE_PARANOID
+#ifdef SPRITZ_WIPE_TRACES_PARANOID
   /* tmp1: spritz_ctx_s_swap(), safe timing crush();
    * tmp2: safe timing crush() */
   uint8_t tmp1, tmp2;
