@@ -85,12 +85,12 @@ whip(spritz_ctx *ctx)
   ctx->w = (uint8_t)(ctx->w + 2);
 }
 
-#ifdef SAFE_TIMING_CRUSH
+#ifdef SPRITZ_TIMING_SAFE_CRUSH
 static void
-/* SAFE_TIMING_CRUSH and GCC, disable optimization for this function */
+/* SPRITZ_TIMING_SAFE_CRUSH and GCC, disable optimization for this function */
 # if defined(__GNUC__) && !defined(__clang__)
 __attribute__ ((optimize("O0")))
-/* SAFE_TIMING_CRUSH and Clang, disable optimization for this function */
+/* SPRITZ_TIMING_SAFE_CRUSH and Clang, disable optimization for this function */
 # elif defined(__clang__)
 __attribute__ ((optnone))
 # endif
@@ -126,7 +126,7 @@ crush(spritz_ctx *ctx)
   }
 # endif /* WIPE_AFTER_USAGE_PARANOID */
 }
-#else /* SAFE_TIMING_CRUSH */
+#else /* SPRITZ_TIMING_SAFE_CRUSH */
 /* non equal/safe time crush() */
 static void
 crush(spritz_ctx *ctx)

@@ -23,8 +23,8 @@
  */
 
 
-#ifndef _SPRITZCIPHER_H
-#define _SPRITZCIPHER_H
+#ifndef SPRITZCIPHER_H
+#define SPRITZCIPHER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,11 +34,11 @@ extern "C" {
 #include <stdint.h> /* For uint8_t & uint16_t */
 
 
-/** \def SAFE_TIMING_CRUSH
+/** \def SPRITZ_TIMING_SAFE_CRUSH
  * if defined, equal time crush() will be used.
  * this may not be useful in some compilers with optimization (except GCC and Clang)
  */
-#define SAFE_TIMING_CRUSH
+#define SPRITZ_TIMING_SAFE_CRUSH
 
 /** \def WIPE_AFTER_USAGE
  * if defined, Sensitive data (like spritz_ctx) when they are
@@ -53,13 +53,13 @@ extern "C" {
  * of spritz state such as temporary variables in a swap function or an user data
  * be wiped when they are no longer needed
  * internal variables that contain data length will not be wiped
- * if defined, WIPE_AFTER_USAGE and SAFE_TIMING_CRUSH will be defined automatically
+ * if defined, WIPE_AFTER_USAGE and SPRITZ_TIMING_SAFE_CRUSH will be defined automatically
  */
 #define WIPE_AFTER_USAGE_PARANOID
 
 #ifdef WIPE_AFTER_USAGE_PARANOID
-# ifndef SAFE_TIMING_CRUSH
-#  define SAFE_TIMING_CRUSH
+# ifndef SPRITZ_TIMING_SAFE_CRUSH
+#  define SPRITZ_TIMING_SAFE_CRUSH
 # endif
 # ifndef WIPE_AFTER_USAGE
 #  define WIPE_AFTER_USAGE

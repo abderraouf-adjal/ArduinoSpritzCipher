@@ -25,9 +25,9 @@ See the source code and ".h" files for the details.
 
 * Constants:
   ----------
-SAFE_TIMING_CRUSH
+SPRITZ_TIMING_SAFE_CRUSH
   If defined, Equal time crush() will be used.
-  SAFE_TIMING_CRUSH is defined by default.
+  SPRITZ_TIMING_SAFE_CRUSH is defined by default.
 
 WIPE_AFTER_USAGE
   If defined, Sensitive data like "spritz_ctx" will be wiped when they are
@@ -39,7 +39,7 @@ WIPE_AFTER_USAGE_PARANOID
   If defined, Any variable will be wiped if it contains a bit or more
   of spritz state such as temporary variables in a swap function or an user data.
   Internal variables that contain data length will not be wiped.
-  If defined, WIPE_AFTER_USAGE and SAFE_TIMING_CRUSH will be defined automatically.
+  If defined, WIPE_AFTER_USAGE and SPRITZ_TIMING_SAFE_CRUSH will be defined automatically.
   WIPE_AFTER_USAGE_PARANOID is defined by default.
 
 SPRITZ_N 256
