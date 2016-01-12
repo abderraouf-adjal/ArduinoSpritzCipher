@@ -45,14 +45,14 @@ SPRITZ_WIPE_TRACES_PARANOID
 SPRITZ_N 256
   Present the value of N in this spritz implementation.
 
-SPRITZ_LIBRARY_VERSION_STRING "0.5.0"
+SPRITZ_LIBRARY_VERSION_STRING "0.5.1"
   Present the version of this spritz library (MAJOR . MINOR . PATCH)
   using Semantic Versioning <semver.org>.
 SPRITZ_LIBRARY_VERSION_MAJOR 0
   Present the MAJOR version.
 SPRITZ_LIBRARY_VERSION_MINOR 5
   Present the MINOR version.
-SPRITZ_LIBRARY_VERSION_PATCH 0
+SPRITZ_LIBRARY_VERSION_PATCH 1
   Present the PATCH version.
 
 * Types:
