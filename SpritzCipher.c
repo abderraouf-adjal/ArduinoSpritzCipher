@@ -50,7 +50,11 @@ stateInit(spritz_ctx *ctx)
 {
   uint8_t i;
 
-  ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = 0;
+  ctx->i = 0;
+  ctx->j = 0;
+  ctx->k = 0;
+  ctx->z = 0;
+  ctx->a = 0;
   ctx->w = 1;
   for (i = 0; i < SPRITZ_N_MINUS_1; i++) {
     ctx->s[i] = i;
@@ -266,7 +270,12 @@ __attribute__ ((optnone))
 spritz_ctx_memzero(spritz_ctx *ctx)
 {
   spritz_memzero(ctx->s, SPRITZ_N);
-  ctx->i = ctx->j = ctx->k = ctx->z = ctx->a = ctx->w = 0;
+  ctx->i = 0;
+  ctx->j = 0;
+  ctx->k = 0;
+  ctx->z = 0;
+  ctx->a = 0;
+  ctx->w = 0;
 #ifdef WIPE_AFTER_USAGE_PARANOID
   ctx->tmp1 = 0;
   ctx->tmp2 = 0;
