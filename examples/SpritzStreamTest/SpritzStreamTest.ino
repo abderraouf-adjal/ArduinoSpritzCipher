@@ -49,16 +49,17 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
 {
   byte buf[32]; /* Output buffer */
   spritz_ctx s_ctx;
+  unsigned int i;
 
   /* Print key */
-  for (byte i = 0; i < dataLen; i++) {
+  for (i = 0; i < dataLen; i++) {
     Serial.write(data[i]);
   }
   Serial.println();
 
   spritz_setup(&s_ctx, data, dataLen);
 
-  for (byte i = 0; i < sizeof(buf); i++) {
+  for (i = 0; i < sizeof(buf); i++) {
     buf[i] = spritz_random_byte(&s_ctx);
     if (buf[i] < 0x10) { /* To print "0F" not "F" */
       Serial.write('0');
@@ -88,7 +89,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Spritz spritz_random_byte() test\n");
+  Serial.println("[Spritz spritz_random_byte() test]\n");
 
   /* Key: ABC */
   testFunc(testVector1, testKey1, sizeof(testKey1));

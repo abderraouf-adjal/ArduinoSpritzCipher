@@ -175,17 +175,14 @@ void spritz_mac_final(spritz_ctx *mac_ctx,
   An embedded entropy/seed for the pseudo-random number generator is used.
   ./examples/SpritzBestPracticePassword/SpritzBestPracticePassword.ino
 
-* Generate random bytes (Spritz stream test):
-  ./examples/SpritzStreamTest/SpritzStreamTest.ino
-
 * Test the library encryption/decryption function:
   ./examples/SpritzCryptTest/SpritzCryptTest.ino
 
-* Hash data:
-  ./examples/SpritzHashTest/SpritzHashTest.ino
+* Generate random bytes (Spritz stream) test:
+  ./examples/SpritzStreamTest/SpritzStreamTest.ino
 
-* Hash data chunk by chunk:
-  ./examples/SpritzHashChunksTest/SpritzHashChunksTest.ino
+* Hash test:
+  ./examples/SpritzHashTest/SpritzHashTest.ino
 
 * MAC test:
   ./examples/SpritzMACTest/SpritzMACTest.ino

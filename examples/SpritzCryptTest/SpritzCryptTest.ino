@@ -23,15 +23,16 @@ void testFunc(const byte *msg, byte msgLen, const byte *key, byte keyLen)
 {
   spritz_ctx s_ctx;
   byte buf[8]; /* Output buffer */
+  unsigned int i;
 
   /* Print MSG */
-  for (byte i = 0; i < msgLen; i++) {
+  for (i = 0; i < msgLen; i++) {
     Serial.write(msg[i]);
   }
   Serial.println();
 
   /* Print KEY */
-  for (byte i = 0; i < keyLen; i++) {
+  for (i = 0; i < keyLen; i++) {
     if (key[i] < 0x10) { /* To print "0F" not "F" */
       Serial.write('0');
     }
@@ -43,7 +44,7 @@ void testFunc(const byte *msg, byte msgLen, const byte *key, byte keyLen)
   spritz_crypt(&s_ctx, msg, msgLen, buf);
 
   /* Print Ciphertext */
-  for (byte i = 0; i < msgLen; i++) {
+  for (i = 0; i < msgLen; i++) {
     if (buf[i] < 0x10) { /* To print "0F" not "F" */
       Serial.write('0');
     }
@@ -55,7 +56,7 @@ void testFunc(const byte *msg, byte msgLen, const byte *key, byte keyLen)
   spritz_crypt(&s_ctx, buf, msgLen, buf);
 
   /* Print MSG after decryption */
-  for (byte i = 0; i < msgLen; i++) {
+  for (i = 0; i < msgLen; i++) {
     Serial.write(buf[i]);
   }
   Serial.println();
@@ -82,7 +83,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Spritz library encryption/decryption function test\n");
+  Serial.println("[Spritz library encryption/decryption function test]\n");
 
   /* MSG='ABC' KEY=0x00,0x01,0x02 */
   testFunc(testMsg, sizeof(testMsg), testKey, sizeof(testKey));

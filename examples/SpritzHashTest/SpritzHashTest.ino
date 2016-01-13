@@ -49,16 +49,26 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
 {
   byte hashLen = 32; /* 256-bit */
   byte digest[hashLen]; /* Output buffer */
+  byte digest_2[hashLen]; /* Output buffer for chunk by chunk API */
+  spritz_ctx hash_ctx; /* the CTX for chunk by chunk API */
+  unsigned int i;
 
   /* Print input */
-  for (byte i = 0; i < dataLen; i++) {
+  for (i = 0; i < dataLen; i++) {
     Serial.write(data[i]);
   }
   Serial.println();
 
+  spritz_hash_setup(&hash_ctx);
+  /* For easy test: code add a byte each time */
+  for (i = 0; i < dataLen; i++) {
+    spritz_hash_update(&hash_ctx, data + i, 1);
+  }
+  spritz_hash_final(&hash_ctx, digest_2, hashLen);
+
   spritz_hash(digest, hashLen, data, dataLen);
 
-  for (byte i = 0; i < sizeof(digest); i++) {
+  for (i = 0; i < sizeof(digest); i++) {
     if (digest[i] < 0x10) { /* To print "0F" not "F" */
       Serial.write('0');
     }
@@ -66,7 +76,7 @@ void testFunc(const byte ExpectedOutput[32], const byte *data, byte dataLen)
   }
 
   /* Check the output */
-  if (spritz_compare(digest, ExpectedOutput, sizeof(digest))) {
+  if (spritz_compare(digest, ExpectedOutput, sizeof(digest)) || spritz_compare(digest_2, ExpectedOutput, sizeof(digest_2))) {
     /* If the output is wrong "Alert" */
     digitalWrite(LED_BUILTIN, HIGH); /* Turn pin LED_BUILTIN On (Most boards have this LED connected to digital pin 13) */
     Serial.println("\n** WARNING: Output != Test_Vector **");
@@ -87,7 +97,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Spritz spritz_hash() test\n");
+  Serial.println("[Spritz spritz_hash*() test]\n");
 
   /* Data: ABC */
   testFunc(testVector1, testData1, sizeof(testData1));

@@ -32,10 +32,11 @@ void testFunc(const byte ExpectedOutput[32], const byte *msg, byte msgLen, const
 {
   byte macLen = 32; /* 256-bit */
   byte digest[macLen]; /* Output buffer */
+  unsigned int i;
 
   spritz_mac(digest, macLen, msg, msgLen, key, keyLen);
 
-  for (byte i = 0; i < sizeof(digest); i++) {
+  for (i = 0; i < sizeof(digest); i++) {
     if (digest[i] < 0x10) { /* To print "0F" not "F" */
       Serial.write('0');
     }
@@ -64,7 +65,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Spritz spritz_mac(MSG='ABC' KEY=0x00,0x01,0x02) test\n");
+  Serial.println("[Spritz spritz_mac(MSG='ABC' KEY=0x00,0x01,0x02) test]\n");
 
   /* MSG='ABC' KEY=0x00,0x01,0x02 MAC test vectors */
   testFunc(MACtestVector, testMsg, sizeof(testMsg), testKey, sizeof(testKey));
