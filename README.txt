@@ -112,6 +112,7 @@ uint32_t spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
   This guarantees the selected random number will be inside
   [2**32 % upper_bound, 2**32) which maps back to [0, upper_bound)
   after reduction modulo upper_bound.
+  So use "spritz_random_uniform(ctx, m)", Not "spritz_random_u32(ctx) % m".
   spritz_random_uniform() usable after spritz_setup() or spritz_setupWithIV().
 
 void spritz_add_entropy(spritz_ctx *ctx,
