@@ -15,11 +15,6 @@
 #include <SpritzCipher.h>
 
 
-spritz_ctx rng_ctx; /* For the random bytes generator */
-uint8_t password_len = 28; /* ~160-bit of entropy password; ceil(160/log2(26*2+10)) */
-uint8_t password[32];
-
-
 /* The RNG seed (64 digits of Pi) */
 uint8_t entropy[64] =
 { '3', '1', '4', '1', '5', '9', '2', '6',
@@ -40,6 +35,9 @@ const uint8_t alphanumeric_table[62] =
   'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
   'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
 };
+
+
+spritz_ctx rng_ctx; /* For the random bytes generator */
 
 
 void setup() {
@@ -66,6 +64,9 @@ void setup() {
 
 
 void loop() {
+  uint8_t password_len = 28; /* ~160-bit of entropy password; ceil(160/log2(26*2+10)) */
+  uint8_t password[password_len];
+
   /* Fill the buffer with random uniformly distributed random alphanumeric characters */
   for (uint8_t i = 0; i < password_len; i++) {
     password[i] = alphanumeric_table[spritz_random_uniform(&rng_ctx, (uint32_t)(sizeof(alphanumeric_table)))];
