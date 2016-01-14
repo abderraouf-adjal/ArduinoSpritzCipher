@@ -37,47 +37,52 @@ const uint8_t alphanumeric_table[62] =
 };
 
 
-spritz_ctx rng_ctx; /* For the random bytes generator */
-
-
 void setup() {
   /* Initialize serial and wait for port to open */
   Serial.begin(9600);
   while (!Serial) {
     ; /* Wait for serial port to connect. Needed for Leonardo only */
   }
-
-  uint8_t buf[64];
-
-  /* Make a 512-bit hash of the entropy in "buf" using one function */
-  spritz_hash(buf, (uint8_t)(sizeof(buf)), entropy, (uint8_t)(sizeof(entropy)));
-  /* Initialize/Seed the RNG with the hash of entropy */
-  spritz_setup(&rng_ctx, buf, (uint8_t)(sizeof(buf)));
-
-  /* wipe "entropy" data by replacing it with zeros (0x00) */
-  spritz_memzero(entropy, (uint16_t)(sizeof(entropy)));
-  /* wipe "buf" data by replacing it with zeros (0x00) */
-  spritz_memzero(buf, (uint16_t)(sizeof(buf)));
-
-  Serial.println("\n[Make strong Alphanumeric passwords]\n");
 }
 
 
 void loop() {
   uint8_t password_len = 28; /* ~160-bit of entropy password; ceil(160/log2(26*2+10)) */
-  uint8_t password[password_len];
+  uint8_t buf[32];
+  spritz_ctx the_ctx;
+  /* One spritz_ctx, One buffer.
+   * For both, hash function and the random numbers generator (Memory saving)
+   */
 
-  /* Fill the buffer with random uniformly distributed random alphanumeric characters */
-  for (uint8_t i = 0; i < password_len; i++) {
-    password[i] = alphanumeric_table[spritz_random_uniform(&rng_ctx, (uint32_t)(sizeof(alphanumeric_table)))];
+  /* We did NOT use spritz_hash() cause it will have its own spritz_ctx,
+   * And we like to save memory
+   */
+  /* Make a 256-bit hash of the entropy in "buf" using one function */
+  spritz_hash_setup(&the_ctx); /* Initialize */
+  spritz_hash_update(&the_ctx, entropy, (uint16_t)(sizeof(entropy))); /* Add data */
+  spritz_hash_final(&the_ctx, buf, (uint8_t)(sizeof(buf))); /* Output the final hash */
+
+  /* Initialize/Seed the RNG with the hash of entropy */
+  spritz_setup(&the_ctx, buf, (uint8_t)(sizeof(buf)));
+
+  spritz_memzero(entropy, (uint16_t)(sizeof(entropy))); /* wipe "entropy" data by replacing it with zeros (0x00) */
+  spritz_memzero(buf, (uint16_t)(sizeof(buf))); /* wipe "buf" data by replacing it with zeros (0x00) */
+
+
+  Serial.println("\n[Make strong Alphanumeric passwords]\n");
+
+  while (1)
+  {
+    /* Fill the buffer with random uniformly distributed alphanumeric characters */
+    for (uint8_t i = 0; i < password_len; i++) {
+      /* Like: buf[i] = charactersTable[random() % number_Of_elements_In_charactersTable] */
+      buf[i] = alphanumeric_table[spritz_random_uniform(&the_ctx, (uint32_t)(sizeof(alphanumeric_table)))];
+    }
+
+    /* Print the password */
+    Serial.write(buf, password_len);
+    Serial.println();
+
+    delay(1000); /* Wait 1s */
   }
-
-  /* Print the password */
-  Serial.write(password, password_len);
-
-  /* wipe "password" data by replacing it with zeros (0x00) */
-  spritz_memzero(password, (uint16_t)(sizeof(password)));
-  Serial.println();
-
-  delay(1000); /* Wait 1s */
 }
