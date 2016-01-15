@@ -15,6 +15,8 @@ This C Spritz library can be used to:
 
 [This library GitHub repository](https://github.com/abderraouf-adjal/ArduinoSpritzCipher).
 
+[This library Bitbucket repository](https://bitbucket.org/abderraouf-adjal/arduinospritzcipher) (Backup).
+
 **Spritz paper:** https://people.csail.mit.edu/rivest/pubs/RS14.pdf
 
 
