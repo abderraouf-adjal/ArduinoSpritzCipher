@@ -94,10 +94,8 @@ void loop() {
     Serial.println("\n** WARNING: hash != expected hash **");
   }
 
-/* If SPRITZ_WIPE_TRACES is NOT defined, spritz_hash_final() will not wipe hash_ctx data. */
-#ifndef SPRITZ_WIPE_TRACES
+  /* wipe "hash_ctx" data by replacing it with zeros (0x00) */
   spritz_ctx_memzero(&hash_ctx);
-#endif
 
   /* wipe "digest" data by replacing it with zeros (0x00) */
   spritz_memzero(digest, (uint16_t)(sizeof(digest)));

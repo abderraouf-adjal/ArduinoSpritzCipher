@@ -62,15 +62,12 @@ void loop() {
   spritz_hash_update(&the_ctx, entropy, (uint16_t)(sizeof(entropy))); /* Add data */
   spritz_hash_final(&the_ctx, buf, (uint8_t)(sizeof(buf))); /* Output the final hash */
 
-  /* If SPRITZ_WIPE_TRACES is NOT defined, spritz_hash_final() will not wipe "the_ctx" data. */
-#ifndef SPRITZ_WIPE_TRACES
-    spritz_ctx_memzero(&the_ctx); /* wipe "the_ctx" data by replacing it with zeros (0x00) */
-#endif
+  spritz_ctx_memzero(&the_ctx); /* wipe "the_ctx" data by replacing it with zeros (0x00) */
+  spritz_memzero(entropy, (uint16_t)(sizeof(entropy))); /* wipe "entropy" data by replacing it with zeros (0x00) */
 
   /* Initialize/Seed the RNG with the hash of entropy */
   spritz_setup(&the_ctx, buf, (uint8_t)(sizeof(buf)));
 
-  spritz_memzero(entropy, (uint16_t)(sizeof(entropy))); /* wipe "entropy" data by replacing it with zeros (0x00) */
   spritz_memzero(buf, (uint16_t)(sizeof(buf))); /* wipe "buf" data by replacing it with zeros (0x00) */
 
 

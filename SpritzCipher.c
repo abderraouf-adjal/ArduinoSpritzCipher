@@ -437,9 +437,6 @@ spritz_hash_final(spritz_ctx *hash_ctx,
   for (i = 0; i < digestLen; i++) {
     digest[i] = drip(hash_ctx);
   }
-#ifdef SPRITZ_WIPE_TRACES
-  spritz_ctx_memzero(hash_ctx);
-#endif
 }
 
 /* Cryptographic hash function */
@@ -452,7 +449,11 @@ spritz_hash(uint8_t *digest, uint8_t digestLen,
   spritz_hash_setup(&hash_ctx); /* stateInit() */
   spritz_hash_update(&hash_ctx, data, dataLen); /* absorbBytes() */
   spritz_hash_final(&hash_ctx, digest, digestLen);
-  /* hash_ctx data will be wiped if SPRITZ_WIPE_TRACES is defined */
+
+  /* "hash_ctx" data will be replaced with 0x00 if SPRITZ_WIPE_TRACES is defined */
+#ifdef SPRITZ_WIPE_TRACES
+  spritz_ctx_memzero(&hash_ctx);
+#endif
 }
 
 
@@ -480,7 +481,6 @@ spritz_mac_final(spritz_ctx *mac_ctx,
                  uint8_t *digest, uint8_t digestLen)
 {
   spritz_hash_final(mac_ctx, digest, digestLen);
-  /* mac_ctx data will be wiped if SPRITZ_WIPE_TRACES is defined */
 }
 
 /* Message Authentication Code (MAC) function */
@@ -494,5 +494,9 @@ spritz_mac(uint8_t *digest, uint8_t digestLen,
   spritz_mac_setup(&mac_ctx, key, keyLen);
   spritz_mac_update(&mac_ctx, msg, msgLen); /* absorbBytes() */
   spritz_mac_final(&mac_ctx, digest, digestLen);
-  /* mac_ctx data will be wiped if SPRITZ_WIPE_TRACES is defined */
+
+  /* "mac_ctx" data will be replaced with 0x00 if SPRITZ_WIPE_TRACES is defined */
+#ifdef SPRITZ_WIPE_TRACES
+  spritz_ctx_memzero(&mac_ctx);
+#endif
 }

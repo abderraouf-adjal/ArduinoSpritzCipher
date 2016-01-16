@@ -177,9 +177,12 @@ void spritz_mac_final(spritz_ctx *mac_ctx,
 Output MAC digest.
 
 
-##### Note:
+##### Notes:
 `spritz_random_byte()`, `spritz_random_u32()`, `spritz_random_uniform()`, `spritz_add_entropy()`, `spritz_crypt()`.
 Are usable after `spritz_setup()` or `spritz_setupWithIV()`.
+
+Use `spritz_ctx_memzero()` after `spritz_hash_final()` or `spritz_mac_final()`
+if you need to wipe the used `spritz_ctx` data.
 
 ### Constants
 **SPRITZ_TIMING_SAFE_CRUSH**
@@ -191,7 +194,7 @@ If defined, equal time `crush()` will be used.
 **SPRITZ_WIPE_TRACES**
 
 If defined, sensitive data like `spritz_ctx` will be wiped when they are
-no longer needed in the functions: `spritz_hash()`, `spritz_mac()`, `spritz_hash_final()`, `spritz_mac_final()`.
+no longer needed in the functions: `spritz_hash()`, `spritz_mac()`.
 
 `SPRITZ_WIPE_TRACES` is defined by default.
 
