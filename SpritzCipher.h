@@ -44,7 +44,7 @@ extern "C" {
  * if defined, Sensitive data (like spritz_ctx) when they are
  * no longer needed in functions such as hash and mac will be wiped
  * functions that SPRITZ_WIPE_TRACES is involved with:
- * {spritz_hash, spritz_mac, spritz_hash_final, spritz_mac_final}
+ * {spritz_hash, spritz_mac}
  */
 #define SPRITZ_WIPE_TRACES
 
