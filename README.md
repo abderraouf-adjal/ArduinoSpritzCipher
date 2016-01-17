@@ -213,7 +213,7 @@ be defined automatically.
 **SPRITZ_N** = `256` - Present the value of N in this spritz implementation.
 
 **SPRITZ_LIBRARY_VERSION_STRING** = `"0.5.3"` - Present the version of this
-spritz library (MAJOR . MINOR . PATCH) using [Semantic Versioning](semver.org).
+spritz library (MAJOR . MINOR . PATCH) using Semantic Versioning.
 
 **SPRITZ_LIBRARY_VERSION_MAJOR** = `0` - The MAJOR version of the library.
 
