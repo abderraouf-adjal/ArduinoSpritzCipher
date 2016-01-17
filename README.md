@@ -29,11 +29,11 @@ See the source code and header file for the details.
 **spritz_ctx** - The context/ctx (contain the state). The state consists of byte registers
 {i, j, k, z, w, a}, And an array {s} containing a permutation of {0, 1, ... , SPRITZ_N-1}.
 
-**uint8_t**  - unsigned integer type with width of 8-bit, MAX=255.
+**uint8_t**  - unsigned integer type with width of 8-bit, MIN=0;MAX=255.
 
-**uint16_t** - unsigned integer type with width of 16-bit, MAX=65,535.
+**uint16_t** - unsigned integer type with width of 16-bit, MIN=0;MAX=65,535.
 
-**uint32_t** - unsigned integer type with width of 32-bit, MAX=4,294,967,295.
+**uint32_t** - unsigned integer type with width of 32-bit, MIN=0;MAX=4,294,967,295.
 
 
 ### Functions
@@ -187,23 +187,22 @@ if you need to wipe the used `spritz_ctx` data.
 ### Constants
 **SPRITZ_TIMING_SAFE_CRUSH**
 
-If defined, equal time `crush()` will be used.
+If defined, Equal time `crush()` will be used.
 
 `SPRITZ_TIMING_SAFE_CRUSH` is defined by default.
 
 **SPRITZ_WIPE_TRACES**
 
-If defined, sensitive data like `spritz_ctx` will be wiped when they are
+If defined, Sensitive data like `spritz_ctx` will be wiped when they are
 no longer needed in the functions: `spritz_hash()`, `spritz_mac()`.
 
 `SPRITZ_WIPE_TRACES` is defined by default.
 
 **SPRITZ_WIPE_TRACES_PARANOID**
 
-If defined, any variable will be wiped if it contains a bit or more of
-spritz state such as temporary variables in a swap function or user data.
-
-Internal variables that contain data length will not be wiped.
+If defined, Library functions internal variables will be wiped if it contains
+a bit or more of spritz state such as temporary variables in a swap function
+or user data. Variables that contain data length will not be wiped.
 
 If defined, `SPRITZ_WIPE_TRACES` and `SPRITZ_TIMING_SAFE_CRUSH` will
 be defined automatically.

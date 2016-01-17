@@ -49,10 +49,9 @@ extern "C" {
 #define SPRITZ_WIPE_TRACES
 
 /** \def SPRITZ_WIPE_TRACES_PARANOID
- * if defined, any variable will be wiped if it contains a bit or more
+ * if defined, library functions internal variables will be wiped if it contains a bit or more
  * of spritz state such as temporary variables in a swap function or an user data
- * be wiped when they are no longer needed
- * internal variables that contain data length will not be wiped
+ * be wiped when they are no longer needed. Variables that contain data length will not be wiped.
  * if defined, SPRITZ_WIPE_TRACES and SPRITZ_TIMING_SAFE_CRUSH will be defined automatically
  */
 #define SPRITZ_WIPE_TRACES_PARANOID
