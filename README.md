@@ -211,14 +211,14 @@ be defined automatically.
 
 **SPRITZ_N** = `256` - Present the value of N in this spritz implementation.
 
-**SPRITZ_LIBRARY_VERSION_STRING** = `"0.5.3"` - Present the version of this
+**SPRITZ_LIBRARY_VERSION_STRING** = `"0.9.0"` - Present the version of this
 spritz library (MAJOR . MINOR . PATCH) using Semantic Versioning.
 
 **SPRITZ_LIBRARY_VERSION_MAJOR** = `0` - The MAJOR version of the library.
 
-**SPRITZ_LIBRARY_VERSION_MINOR** = `5` - The MINOR version of the library.
+**SPRITZ_LIBRARY_VERSION_MINOR** = `9` - The MINOR version of the library.
 
-**SPRITZ_LIBRARY_VERSION_PATCH** = `3` - The PATCH version of the library.
+**SPRITZ_LIBRARY_VERSION_PATCH** = `0` - The PATCH version of the library.
 
 
 ## Examples
