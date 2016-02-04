@@ -66,7 +66,7 @@ extern "C" {
 #endif
 
 /** \def SPRITZ_N
- * present the value of N in this spritz implementation
+ * present the value of N in this spritz implementation, do not change SPRITZ_N value
  */
 #define SPRITZ_N 256
 

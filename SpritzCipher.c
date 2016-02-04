@@ -34,11 +34,11 @@ static void
 spritz_ctx_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
 {
 #ifdef SPRITZ_WIPE_TRACES_PARANOID
-  ctx->tmp1 = ctx->s[index_a];
+  ctx->tmp1       = ctx->s[index_a];
   ctx->s[index_a] = ctx->s[index_b];
   ctx->s[index_b] = ctx->tmp1;
 #else
-  uint8_t tmp = ctx->s[index_a];
+  uint8_t tmp     = ctx->s[index_a];
   ctx->s[index_a] = ctx->s[index_b];
   ctx->s[index_b] = tmp;
 #endif /* SPRITZ_WIPE_TRACES_PARANOID */
@@ -50,16 +50,17 @@ stateInit(spritz_ctx *ctx)
 {
   uint8_t i;
 
+  for (i = 0; i < SPRITZ_N_MINUS_1; i++) {
+    ctx->s[i] = i;
+  }
+  ctx->s[SPRITZ_N_MINUS_1] = SPRITZ_N_MINUS_1;
+
   ctx->i = 0;
   ctx->j = 0;
   ctx->k = 0;
   ctx->z = 0;
   ctx->a = 0;
   ctx->w = 1;
-  for (i = 0; i < SPRITZ_N_MINUS_1; i++) {
-    ctx->s[i] = i;
-  }
-  ctx->s[255] = 255;
 }
 
 static void
@@ -82,6 +83,7 @@ whip(spritz_ctx *ctx)
     update(ctx);
     update(ctx);
   }
+
   ctx->w = (uint8_t)(ctx->w + 2);
 }
 
@@ -96,9 +98,9 @@ __attribute__ ((optnone))
 # endif
 crush(spritz_ctx *ctx)
 {
+  uint8_t i = 0, j = SPRITZ_N_MINUS_1;
 # ifdef SPRITZ_WIPE_TRACES_PARANOID
-  uint8_t i, j;
-  for (i = 0, j = SPRITZ_N_MINUS_1; i < SPRITZ_N_HALF; i++, j--) {
+  for (; i < SPRITZ_N_HALF; i++, j--) {
     ctx->tmp1 = ctx->s[i]; /* s_i=ctx->s[i] */
     ctx->tmp2 = ctx->s[j]; /* s_j=ctx->s[j] */
     if (ctx->tmp1 > ctx->tmp2) { /* if(s_i>s_j) */
@@ -111,8 +113,8 @@ crush(spritz_ctx *ctx)
     }
   }
 # else
-  uint8_t i, j, s_i, s_j;
-  for (i = 0, j = SPRITZ_N_MINUS_1; i < SPRITZ_N_HALF; i++, j--) {
+  uint8_t s_i, s_j;
+  for (; i < SPRITZ_N_HALF; i++, j--) {
     s_i = ctx->s[i];
     s_j = ctx->s[j];
     if (s_i > s_j) {
@@ -131,8 +133,8 @@ crush(spritz_ctx *ctx)
 static void
 crush(spritz_ctx *ctx)
 {
-  uint8_t i, j;
-  for (i = 0, j = SPRITZ_N_MINUS_1; i < SPRITZ_N_HALF; i++, j--) {
+  uint8_t i = 0, j = SPRITZ_N_MINUS_1;
+  for (; i < SPRITZ_N_HALF; i++, j--) {
     if (ctx->s[i] > ctx->s[j]) {
       spritz_ctx_s_swap(ctx, i, j);
     }
@@ -183,15 +185,17 @@ absorbStop(spritz_ctx *ctx)
   if (ctx->a == SPRITZ_N_HALF) {
     shuffle(ctx);
   }
+
   ctx->a++;
 }
 
 static uint8_t
 output(spritz_ctx *ctx)
 {
-  ctx->z = ctx->s[(uint8_t)(ctx->s[(uint8_t)(ctx->s[(uint8_t)(ctx->z + ctx->k)] + ctx->i)] + ctx->j)];
+  ctx->z = ctx->s[(ctx->s[(ctx->s[(ctx->z + ctx->k) % SPRITZ_N] + ctx->i) % SPRITZ_N] + ctx->j) % SPRITZ_N];
   return ctx->z;
 }
+
 static uint8_t
 drip(spritz_ctx *ctx)
 {
@@ -253,6 +257,7 @@ __attribute__ ((optnone))
 spritz_memzero(uint8_t *buf, uint16_t len)
 {
   uint16_t i;
+
   for (i = 0; i < len; i++) {
     buf[i] = 0;
   }
@@ -354,7 +359,7 @@ spritz_random_u32(spritz_ctx *ctx)
 uint32_t
 spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
 {
-  uint32_t r = 0, min;
+  uint32_t r, min;
 
   if (upper_bound < 2)
   {
@@ -373,11 +378,9 @@ spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
     r = spritz_random_u32(ctx);
     if (r >= min)
     {
-      break;
+      return (uint32_t)(r % upper_bound);
     }
   }
-
-  return (uint32_t)(r % upper_bound);
 }
 
 /* Add entropy to spritz state (spritz_ctx) using absorb().

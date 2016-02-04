@@ -209,7 +209,7 @@ be defined automatically.
 
 `SPRITZ_WIPE_TRACES_PARANOID` is defined by default.
 
-**SPRITZ_N** = `256` - Present the value of N in this spritz implementation.
+**SPRITZ_N** = `256` - Present the value of N in this spritz implementation, *Do NOT change `SPRITZ_N` value*.
 
 **SPRITZ_LIBRARY_VERSION_STRING** = `"0.9.0"` - Present the version of this
 spritz library (MAJOR . MINOR . PATCH) using Semantic Versioning.
