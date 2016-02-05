@@ -56,7 +56,7 @@ void spritz_memzero(uint8_t *buf, uint16_t len)
 Wipe `buf` data by replacing it with `len` zeros (0x00).
 
 ```c
-void spritz_ctx_memzero(spritz_ctx *ctx)
+void spritz_state_memzero(spritz_ctx *ctx)
 ```
 
 Wipe `spritz_ctx` data by replacing its data with zeros (0x00).
@@ -72,7 +72,7 @@ void spritz_setup(spritz_ctx *ctx,
 Setup spritz state `spritz_ctx` with a `key` of length `keyLen`.
 
 ```c
-void spritz_setupWithIV(spritz_ctx *ctx,
+void spritz_setup_withIV(spritz_ctx *ctx,
                         const uint8_t *key, uint8_t keyLen,
                         const uint8_t *nonce, uint8_t nonceLen)
 ```
@@ -179,9 +179,9 @@ Output MAC digest.
 
 ##### Notes:
 `spritz_random_byte()`, `spritz_random_u32()`, `spritz_random_uniform()`, `spritz_add_entropy()`, `spritz_crypt()`.
-Are usable after `spritz_setup()` or `spritz_setupWithIV()`.
+Are usable after `spritz_setup()` or `spritz_setup_withIV()`.
 
-Use `spritz_ctx_memzero()` after `spritz_hash_final()` or `spritz_mac_final()`
+Use `spritz_state_memzero()` after `spritz_hash_final()` or `spritz_mac_final()`
 if you need to wipe the used `spritz_ctx` data.
 
 ### Constants

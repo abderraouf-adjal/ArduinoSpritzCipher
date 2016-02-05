@@ -2,9 +2,9 @@ spritz_ctx	KEYWORD1
 
 spritz_compare	KEYWORD2
 spritz_memzero	KEYWORD2
-spritz_ctx_memzero	KEYWORD2
+spritz_state_memzero	KEYWORD2
 spritz_setup	KEYWORD2
-spritz_setupWithIV	KEYWORD2
+spritz_setup_withIV	KEYWORD2
 spritz_random_byte	KEYWORD2
 spritz_random_u32	KEYWORD2
 spritz_random_uniform	KEYWORD2

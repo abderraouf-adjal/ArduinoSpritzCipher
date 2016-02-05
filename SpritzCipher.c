@@ -31,7 +31,7 @@
 
 
 static void
-spritz_ctx_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
+spritz_state_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
 {
 #ifdef SPRITZ_WIPE_TRACES_PARANOID
   ctx->tmp1       = ctx->s[index_a];
@@ -46,7 +46,7 @@ spritz_ctx_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
 
 
 static void
-stateInit(spritz_ctx *ctx)
+spritz_state_init(spritz_ctx *ctx)
 {
   uint8_t i;
 
@@ -69,7 +69,7 @@ update(spritz_ctx *ctx)
   ctx->i = (uint8_t)(ctx->i + ctx->w);
   ctx->j = (uint8_t)(ctx->s[(uint8_t)(ctx->s[ctx->i] + ctx->j)] + ctx->k);
   ctx->k = (uint8_t)(ctx->s[ctx->j] + ctx->k + ctx->i);
-  spritz_ctx_s_swap(ctx, ctx->i, ctx->j);
+  spritz_state_s_swap(ctx, ctx->i, ctx->j);
 }
 
 static void
@@ -136,7 +136,7 @@ crush(spritz_ctx *ctx)
   uint8_t i = 0, j = SPRITZ_N_MINUS_1;
   for (; i < SPRITZ_N_HALF; i++, j--) {
     if (ctx->s[i] > ctx->s[j]) {
-      spritz_ctx_s_swap(ctx, i, j);
+      spritz_state_s_swap(ctx, i, j);
     }
   }
 }
@@ -160,7 +160,7 @@ absorbNibble(spritz_ctx *ctx, const uint8_t nibble)
   if (ctx->a == SPRITZ_N_HALF) {
     shuffle(ctx);
   }
-  spritz_ctx_s_swap(ctx, ctx->a, (uint8_t)(SPRITZ_N_HALF + nibble));
+  spritz_state_s_swap(ctx, ctx->a, (uint8_t)(SPRITZ_N_HALF + nibble));
   ctx->a++;
 }
 static void
@@ -272,15 +272,17 @@ __attribute__ ((optimize("O0")))
 #elif defined(__clang__)
 __attribute__ ((optnone))
 #endif
-spritz_ctx_memzero(spritz_ctx *ctx)
+spritz_state_memzero(spritz_ctx *ctx)
 {
   spritz_memzero(ctx->s, SPRITZ_N);
+
   ctx->i = 0;
   ctx->j = 0;
   ctx->k = 0;
   ctx->z = 0;
   ctx->a = 0;
   ctx->w = 0;
+
 #ifdef SPRITZ_WIPE_TRACES_PARANOID
   ctx->tmp1 = 0;
   ctx->tmp2 = 0;
@@ -293,7 +295,7 @@ void
 spritz_setup(spritz_ctx *ctx,
              const uint8_t *key, uint8_t keyLen)
 {
-  stateInit(ctx);
+  spritz_state_init(ctx);
   absorbBytes(ctx, key, keyLen);
   if (ctx->a) {
     shuffle(ctx);
@@ -302,11 +304,11 @@ spritz_setup(spritz_ctx *ctx,
 
 /* Setup spritz state (spritz_ctx) with a key and nonce/Salt/IV */
 void
-spritz_setupWithIV(spritz_ctx *ctx,
+spritz_setup_withIV(spritz_ctx *ctx,
                    const uint8_t *key, uint8_t keyLen,
                    const uint8_t *nonce, uint8_t nonceLen)
 {
-  stateInit(ctx);
+  spritz_state_init(ctx);
   absorbBytes(ctx, key, keyLen);
   absorbStop(ctx);
   absorbBytes(ctx, nonce, nonceLen);
@@ -316,7 +318,7 @@ spritz_setupWithIV(spritz_ctx *ctx,
 }
 
 /* Generates a random byte of keystream from spritz state (spritz_ctx).
- * spritz_random_byte() usable after spritz_setup() or spritz_setupWithIV().
+ * spritz_random_byte() usable after spritz_setup() or spritz_setup_withIV().
  */
 uint8_t
 spritz_random_byte(spritz_ctx *ctx)
@@ -325,7 +327,7 @@ spritz_random_byte(spritz_ctx *ctx)
 }
 
 /* Generates a random 32-bit (4 bytes) of keystream from spritz state (spritz_ctx).
- * spritz_random_u32() usable after spritz_setup() or spritz_setupWithIV().
+ * spritz_random_u32() usable after spritz_setup() or spritz_setup_withIV().
  */
 uint32_t
 spritz_random_u32(spritz_ctx *ctx)
@@ -354,7 +356,7 @@ spritz_random_u32(spritz_ctx *ctx)
  * This guarantees the selected random number will be inside
  * [2**32 % upper_bound, 2**32) which maps back to [0, upper_bound)
  * after reduction modulo upper_bound.
- * spritz_random_uniform() usable after spritz_setup() or spritz_setupWithIV().
+ * spritz_random_uniform() usable after spritz_setup() or spritz_setup_withIV().
  */
 uint32_t
 spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
@@ -384,7 +386,7 @@ spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
 }
 
 /* Add entropy to spritz state (spritz_ctx) using absorb().
- * spritz_add_entropy() usable after spritz_setup() or spritz_setupWithIV().
+ * spritz_add_entropy() usable after spritz_setup() or spritz_setup_withIV().
  */
 void
 spritz_add_entropy(spritz_ctx *ctx,
@@ -394,7 +396,7 @@ spritz_add_entropy(spritz_ctx *ctx,
 }
 
 /* Encrypt or decrypt data chunk by XOR-ing it with spritz keystream.
- * spritz_crypt() usable after spritz_setup() or spritz_setupWithIV().
+ * spritz_crypt() usable after spritz_setup() or spritz_setup_withIV().
  */
 void
 spritz_crypt(spritz_ctx *ctx,
@@ -413,7 +415,7 @@ spritz_crypt(spritz_ctx *ctx,
 void
 spritz_hash_setup(spritz_ctx *hash_ctx)
 {
-  stateInit(hash_ctx);
+  spritz_state_init(hash_ctx);
 }
 
 /* Add data chunk to hash */
@@ -449,13 +451,13 @@ spritz_hash(uint8_t *digest, uint8_t digestLen,
 {
   spritz_ctx hash_ctx;
 
-  spritz_hash_setup(&hash_ctx); /* stateInit() */
+  spritz_hash_setup(&hash_ctx); /* spritz_state_init() */
   spritz_hash_update(&hash_ctx, data, dataLen); /* absorbBytes() */
   spritz_hash_final(&hash_ctx, digest, digestLen);
 
   /* "hash_ctx" data will be replaced with 0x00 if SPRITZ_WIPE_TRACES is defined */
 #ifdef SPRITZ_WIPE_TRACES
-  spritz_ctx_memzero(&hash_ctx);
+  spritz_state_memzero(&hash_ctx);
 #endif
 }
 
@@ -465,7 +467,7 @@ void
 spritz_mac_setup(spritz_ctx *mac_ctx,
                  const uint8_t *key, uint16_t keyLen)
 {
-  spritz_hash_setup(mac_ctx); /* stateInit() */
+  spritz_hash_setup(mac_ctx); /* spritz_state_init() */
   spritz_hash_update(mac_ctx, key, keyLen); /* absorbBytes() */
   absorbStop(mac_ctx);
 }
@@ -500,6 +502,6 @@ spritz_mac(uint8_t *digest, uint8_t digestLen,
 
   /* "mac_ctx" data will be replaced with 0x00 if SPRITZ_WIPE_TRACES is defined */
 #ifdef SPRITZ_WIPE_TRACES
-  spritz_ctx_memzero(&mac_ctx);
+  spritz_state_memzero(&mac_ctx);
 #endif
 }

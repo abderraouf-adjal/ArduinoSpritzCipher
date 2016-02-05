@@ -95,7 +95,7 @@ void loop() {
   }
 
   /* wipe "hash_ctx" data by replacing it with zeros (0x00) */
-  spritz_ctx_memzero(&hash_ctx);
+  spritz_state_memzero(&hash_ctx);
 
   /* wipe "digest" data by replacing it with zeros (0x00) */
   spritz_memzero(digest, (uint16_t)(sizeof(digest)));
@@ -103,6 +103,6 @@ void loop() {
   /* Keys, RNG seed & buffer should be wiped in realworld.
    * In this example we should not wipe "entropy"
    * cause it is embedded in the code */
-  spritz_ctx_memzero(&rng_ctx);
+  spritz_state_memzero(&rng_ctx);
   spritz_memzero(buf, (uint16_t)(sizeof(buf)));
 }

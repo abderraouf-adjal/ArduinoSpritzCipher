@@ -84,7 +84,7 @@ typedef struct
 {
   uint8_t s[SPRITZ_N], i, j, k, z, a, w;
 #ifdef SPRITZ_WIPE_TRACES_PARANOID
-  /* tmp1: spritz_ctx_s_swap(), safe timing crush();
+  /* tmp1: spritz_state_s_swap(), safe timing crush();
    * tmp2: safe timing crush() */
   uint8_t tmp1, tmp2;
 #endif
@@ -108,12 +108,12 @@ spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len);
 void
 spritz_memzero(uint8_t *buf, uint16_t len);
 
-/** \fn void spritz_ctx_memzero(spritz_ctx *ctx)
+/** \fn void spritz_state_memzero(spritz_ctx *ctx)
  * \brief wipe spritz_ctx data by replacing its data with zeros (0x00)
  * \param ctx the context
  */
 void
-spritz_ctx_memzero(spritz_ctx *ctx);
+spritz_state_memzero(spritz_ctx *ctx);
 
 
 /** \fn void spritz_setup(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen)
@@ -126,7 +126,7 @@ void
 spritz_setup(spritz_ctx *ctx,
              const uint8_t *key, uint8_t keyLen);
 
-/** \fn void spritz_setupWithIV(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen, const uint8_t *nonce, uint8_t nonceLen)
+/** \fn void spritz_setup_withIV(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen, const uint8_t *nonce, uint8_t nonceLen)
  * \brief setup spritz state (spritz_ctx) with a key and nonce/Salt/IV
  * \param ctx the context
  * \param key the key
@@ -135,12 +135,12 @@ spritz_setup(spritz_ctx *ctx,
  * \param nonceLen length of the nonce in bytes
  */
 void
-spritz_setupWithIV(spritz_ctx *ctx,
+spritz_setup_withIV(spritz_ctx *ctx,
                    const uint8_t *key, uint8_t keyLen,
                    const uint8_t *nonce, uint8_t nonceLen);
 
 /** \fn uint8_t spritz_random_byte(spritz_ctx *ctx)
- * \brief generates a random byte of keystream from spritz state (spritz_ctx). Usable after spritz_setup() or spritz_setupWithIV()
+ * \brief generates a random byte of keystream from spritz state (spritz_ctx). Usable after spritz_setup() or spritz_setup_withIV()
  * \param ctx the context
  * \return byte of keystream
  */
@@ -148,7 +148,7 @@ uint8_t
 spritz_random_byte(spritz_ctx *ctx);
 
 /** \fn uint32_t spritz_random_u32(spritz_ctx *ctx)
- * \brief generates a random 32-bit (4 bytes) of keystream from spritz state (spritz_ctx). Usable after spritz_setup() or spritz_setupWithIV()
+ * \brief generates a random 32-bit (4 bytes) of keystream from spritz state (spritz_ctx). Usable after spritz_setup() or spritz_setup_withIV()
  * \param ctx the context
  * \return 32-bit (4 bytes) of keystream
  */
@@ -156,7 +156,7 @@ uint32_t
 spritz_random_u32(spritz_ctx *ctx);
 
 /** \fn uint32_t spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
- * \brief calculate a uniformly distributed random number less than upper_bound avoiding modulo bias. Usable after spritz_setup() or spritz_setupWithIV()
+ * \brief calculate a uniformly distributed random number less than upper_bound avoiding modulo bias. Usable after spritz_setup() or spritz_setup_withIV()
  * \param ctx the context
  * \param upper_bound The roof, (upper_bound - 1) is the largest random number that can be returned
  * \return random number less than upper_bound, 0 if upper_bound<2
@@ -165,7 +165,7 @@ uint32_t
 spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound);
 
 /** \fn void spritz_add_entropy(spritz_ctx *ctx, const uint8_t *entropy, uint16_t len)
- * \brief Add entropy to spritz state (spritz_ctx) using absorb(). Usable after spritz_setup() or spritz_setupWithIV().
+ * \brief Add entropy to spritz state (spritz_ctx) using absorb(). Usable after spritz_setup() or spritz_setup_withIV().
  * \param ctx the context
  * \param entropy the entropy array
  * \param len length of the entropy array in bytes
@@ -175,7 +175,7 @@ spritz_add_entropy(spritz_ctx *ctx,
                    const uint8_t *entropy, uint16_t len);
 
 /** \fn void spritz_crypt(spritz_ctx *ctx, uint16_t dataLen, const uint8_t *data, uint8_t *dataOut)
- * \brief encrypt or decrypt data chunk by XOR-ing it with spritz keystream. Usable after spritz_setup() or spritz_setupWithIV()
+ * \brief encrypt or decrypt data chunk by XOR-ing it with spritz keystream. Usable after spritz_setup() or spritz_setup_withIV()
  * \param ctx the context
  * \param data the data to encrypt or decrypt
  * \param dataLen length of the data in bytes
