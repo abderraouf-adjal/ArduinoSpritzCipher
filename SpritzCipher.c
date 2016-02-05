@@ -48,12 +48,12 @@ spritz_state_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
 static void
 spritz_state_init(spritz_ctx *ctx)
 {
-  uint8_t i;
+  uint8_t i = 0;
 
-  for (i = 0; i < SPRITZ_N_MINUS_1; i++) {
+  /* Work if size(s)=256 */
+  do {
     ctx->s[i] = i;
-  }
-  ctx->s[SPRITZ_N_MINUS_1] = SPRITZ_N_MINUS_1;
+  } while (++i);
 
   ctx->i = 0;
   ctx->j = 0;
@@ -274,7 +274,12 @@ __attribute__ ((optnone))
 #endif
 spritz_state_memzero(spritz_ctx *ctx)
 {
-  spritz_memzero(ctx->s, SPRITZ_N);
+  uint8_t i = 0;
+
+  /* Work if size(s)=256 */
+  do {
+    ctx->s[i] = 0;
+  } while (++i);
 
   ctx->i = 0;
   ctx->j = 0;
