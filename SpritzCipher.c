@@ -232,7 +232,10 @@ spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
   }
 
 #ifdef SPRITZ_WIPE_TRACES_PARANOID
-  d |= d >> 1; /* |_|_|_|_|_|_|S|D| D = D | S; S=source,D=destination */
+  /* It may be possible to use `d=!!d;` for performnce,
+   * But audit the assembly code first.
+   */
+  d |= d >> 1; /* |_|_|_|_|_|_|S|D| `D |= S` */
   d |= d >> 2; /* |_|_|_|_|_|S|_|D| */
   d |= d >> 3; /* |_|_|_|_|S|_|_|D| */
   d |= d >> 4; /* |_|_|_|S|_|_|_|D| */
