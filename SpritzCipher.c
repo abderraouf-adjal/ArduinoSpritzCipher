@@ -209,10 +209,10 @@ drip(spritz_ctx *ctx)
 
 /* |====================|| User Functions ||====================| */
 
-/* Timing-safe comparison for "data_a" and "data_b" equality.
- * This function can be used to compare passwords hash safely.
- * Return zero (0x00) if "data_a" equal "data_b" or "len" is zero,
- * non-zero value if they are not equal.
+/* Timing-safe comparison for `data_a` and `data_b` equality.
+ * This function can be used to compare the password's hash safely.
+ * Return zero (0x00) if `data_a` equals `data_b` or if `len` is zero,
+ * and a non-zero value if they are not equal.
  */
 uint8_t
 /* Disable optimization for this function if compiler is GCC */
@@ -248,7 +248,7 @@ spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
   return d;
 }
 
-/* Wipe "buf" data by replacing it with zeros (0x00). */
+/* Wipe `buf` data by replacing it with zeros (0x00). */
 void
 /* Disable optimization for this function if compiler is GCC */
 #if defined(__GNUC__) && !defined(__clang__)
@@ -266,7 +266,7 @@ spritz_memzero(uint8_t *buf, uint16_t len)
   }
 }
 
-/* Wipe spritz_ctx data by replacing its data with zeros (0x00) */
+/* Wipe `spritz_ctx`'s data by replacing its data with zeros (0x00). */
 void
 /* Disable optimization for this function if compiler is GCC */
 #if defined(__GNUC__) && !defined(__clang__)
@@ -298,7 +298,7 @@ spritz_state_memzero(spritz_ctx *ctx)
 }
 
 
-/* Setup spritz state (spritz_ctx) with a key */
+/* Setup the spritz state `spritz_ctx` with a key */
 void
 spritz_setup(spritz_ctx *ctx,
              const uint8_t *key, uint8_t keyLen)
@@ -310,7 +310,7 @@ spritz_setup(spritz_ctx *ctx,
   }
 }
 
-/* Setup spritz state (spritz_ctx) with a key and nonce/Salt/IV */
+/* Setup the spritz state `spritz_ctx` with a key and nonce/Salt/IV */
 void
 spritz_setup_withIV(spritz_ctx *ctx,
                     const uint8_t *key, uint8_t keyLen,
@@ -325,7 +325,7 @@ spritz_setup_withIV(spritz_ctx *ctx,
   }
 }
 
-/* Generates a random byte of keystream from spritz state (spritz_ctx).
+/* Generates a random byte from the spritz state `spritz_ctx`.
  * spritz_random_byte() usable after spritz_setup() or spritz_setup_withIV().
  */
 uint8_t
@@ -334,7 +334,7 @@ spritz_random_byte(spritz_ctx *ctx)
   return drip(ctx);
 }
 
-/* Generates a random 32-bit (4 bytes) of keystream from spritz state (spritz_ctx).
+/* Generates a random 32-bit (4 bytes) from the spritz state `spritz_ctx`.
  * spritz_random_u32() usable after spritz_setup() or spritz_setup_withIV().
  */
 uint32_t
@@ -355,7 +355,7 @@ spritz_random_u32(spritz_ctx *ctx)
 }
 
 /* Calculate a uniformly distributed random number less than upper_bound
- * avoiding "modulo bias".
+ * avoiding `modulo bias`.
  * Uniformity is achieved by generating new random numbers until the one
  * returned is outside the range [0, 2**32 % upper_bound).
  * This guarantees the selected random number will be inside
@@ -391,7 +391,7 @@ spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
   }
 }
 
-/* Add entropy to spritz state (spritz_ctx) using absorb().
+/* Add entropy to the spritz state `spritz_ctx` using the internal function absorb().
  * spritz_add_entropy() usable after spritz_setup() or spritz_setup_withIV().
  */
 void
@@ -401,7 +401,7 @@ spritz_add_entropy(spritz_ctx *ctx,
   absorbBytes(ctx, entropy, len);
 }
 
-/* Encrypt or decrypt data chunk by XOR-ing it with spritz keystream.
+/* Encrypt or decrypt data chunk by XOR-ing it with the spritz keystream.
  * spritz_crypt() usable after spritz_setup() or spritz_setup_withIV().
  */
 void
@@ -417,14 +417,14 @@ spritz_crypt(spritz_ctx *ctx,
 }
 
 
-/* Setup spritz hash state (spritz_ctx) */
+/* Setup the spritz hash state `spritz_ctx` */
 void
 spritz_hash_setup(spritz_ctx *hash_ctx)
 {
   spritz_state_init(hash_ctx);
 }
 
-/* Add data chunk to hash */
+/* Add a message/data chunk `data` to hash. */
 void
 spritz_hash_update(spritz_ctx *hash_ctx,
                    const uint8_t *data, uint16_t dataLen)
@@ -432,7 +432,7 @@ spritz_hash_update(spritz_ctx *hash_ctx,
   absorbBytes(hash_ctx, data, dataLen);
 }
 
-/* Output hash digest */
+/* Output the hash digest */
 void
 spritz_hash_final(spritz_ctx *hash_ctx,
                   uint8_t *digest, uint8_t digestLen)
@@ -461,14 +461,14 @@ spritz_hash(uint8_t *digest, uint8_t digestLen,
   spritz_hash_update(&hash_ctx, data, dataLen); /* absorbBytes() */
   spritz_hash_final(&hash_ctx, digest, digestLen);
 
-  /* "hash_ctx" data will be replaced with 0x00 if SPRITZ_WIPE_TRACES is defined */
+  /* `hash_ctx` data will be replaced with 0x00 if SPRITZ_WIPE_TRACES is defined */
 #ifdef SPRITZ_WIPE_TRACES
   spritz_state_memzero(&hash_ctx);
 #endif
 }
 
 
-/* Setup spritz MAC state (spritz_ctx) */
+/* Setup the spritz message authentication code (MAC) state `spritz_ctx` */
 void
 spritz_mac_setup(spritz_ctx *mac_ctx,
                  const uint8_t *key, uint16_t keyLen)
@@ -478,7 +478,7 @@ spritz_mac_setup(spritz_ctx *mac_ctx,
   absorbStop(mac_ctx);
 }
 
-/* Add message/data chunk to MAC */
+/* Add a message/data chunk to message authentication code (MAC) */
 void
 spritz_mac_update(spritz_ctx *mac_ctx,
                   const uint8_t *msg, uint16_t msgLen)
@@ -486,7 +486,7 @@ spritz_mac_update(spritz_ctx *mac_ctx,
   spritz_hash_update(mac_ctx, msg, msgLen); /* absorbBytes() */
 }
 
-/* Output MAC digest */
+/* Output the message authentication code (MAC) digest */
 void
 spritz_mac_final(spritz_ctx *mac_ctx,
                  uint8_t *digest, uint8_t digestLen)
@@ -494,7 +494,7 @@ spritz_mac_final(spritz_ctx *mac_ctx,
   spritz_hash_final(mac_ctx, digest, digestLen);
 }
 
-/* Message Authentication Code (MAC) function */
+/* message authentication code (MAC) function */
 void
 spritz_mac(uint8_t *digest, uint8_t digestLen,
            const uint8_t *msg, uint16_t msgLen,
@@ -506,7 +506,7 @@ spritz_mac(uint8_t *digest, uint8_t digestLen,
   spritz_mac_update(&mac_ctx, msg, msgLen); /* absorbBytes() */
   spritz_mac_final(&mac_ctx, digest, digestLen);
 
-  /* "mac_ctx" data will be replaced with 0x00 if SPRITZ_WIPE_TRACES is defined */
+  /* `mac_ctx` data will be replaced with 0x00 if SPRITZ_WIPE_TRACES is defined */
 #ifdef SPRITZ_WIPE_TRACES
   spritz_state_memzero(&mac_ctx);
 #endif

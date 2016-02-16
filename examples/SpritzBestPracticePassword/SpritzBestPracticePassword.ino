@@ -1,7 +1,7 @@
 /**
- * Make strong Alphanumeric passwords then print it
+ * Generate a strong Alphanumeric passwords, and then print it
  *
- * This code show what can ArduinoSpritzCipher library do (ShowOff API).
+ * This code show what the library can do (show off the API).
  * An embedded entropy/seed for the RNG is used.
  *
  * The circuit:  No external hardware needed.

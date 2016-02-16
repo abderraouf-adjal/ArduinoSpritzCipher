@@ -35,13 +35,13 @@ extern "C" {
 
 
 /** \def SPRITZ_TIMING_SAFE_CRUSH
- * if defined, equal time crush() will be used.
+ * if defined, the equal time crush() will be used.
  * this may not be useful in some compilers with optimization (except GCC and Clang)
  */
 #define SPRITZ_TIMING_SAFE_CRUSH
 
 /** \def SPRITZ_WIPE_TRACES
- * if defined, Sensitive data (like spritz_ctx) when they are
+ * if defined, sensitive data (like spritz_ctx) when they are
  * no longer needed in functions such as hash and mac will be wiped
  * functions that SPRITZ_WIPE_TRACES is involved with:
  * {spritz_hash, spritz_mac}
@@ -49,10 +49,10 @@ extern "C" {
 #define SPRITZ_WIPE_TRACES
 
 /** \def SPRITZ_WIPE_TRACES_PARANOID
- * if defined, library functions internal variables will be wiped if it contains a bit or more
+ * if defined, the library functions internal variables will be wiped if it contains a bit or more
  * of spritz state such as temporary variables in a swap function or an user data
  * be wiped when they are no longer needed. Variables that contain data length will not be wiped.
- * if defined, SPRITZ_WIPE_TRACES and SPRITZ_TIMING_SAFE_CRUSH will be defined automatically
+ * if defined, then SPRITZ_WIPE_TRACES and SPRITZ_TIMING_SAFE_CRUSH will be assumed and defined automatically.
  */
 #define SPRITZ_WIPE_TRACES_PARANOID
 
@@ -78,7 +78,7 @@ extern "C" {
 
 
 /** \typedef spritz_ctx
- * \brief the context (contain the state), holds indices and S-Box.
+ * \brief the context (contains the state), holds indices and s-box.
  */
 typedef struct
 {
@@ -91,17 +91,17 @@ typedef struct
 } spritz_ctx;
 
 /** \fn uint8_t spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
- * \brief Timing-safe equality comparison for "data_a" and "data_b"
- * \param data_a data A to compare with B
- * \param data_b data B to compare with A
+ * \brief timing-safe equality comparison for `data_a` and `data_b`. this function can be used to compare the password's hash safely.
+ * \param data_a data a to compare with b
+ * \param data_b data b to compare with a
  * \param len length of the array in bytes
- * \return equality result, zero (0x00) if "data_a" equal "data_b" or "len" is zero, non-zero value if they are not equal
+ * \return equality result, return zero (0x00) if `data_a` equals `data_b` or if `len` is zero, and a non-zero value if they are not equal.
  */
 uint8_t
 spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len);
 
 /** \fn void spritz_memzero(uint8_t *buf, uint16_t len)
- * \brief wipe "buf" data by replacing it with zeros (0x00)
+ * \brief wipe `buf` data by replacing it with zeros (0x00)
  * \param buf data to replace it with zeros (0x00)
  * \param len length of array in bytes
  */
@@ -109,30 +109,30 @@ void
 spritz_memzero(uint8_t *buf, uint16_t len);
 
 /** \fn void spritz_state_memzero(spritz_ctx *ctx)
- * \brief wipe spritz_ctx data by replacing its data with zeros (0x00)
+ * \brief wipe `spritz_ctx`'s data by replacing its data with zeros (0x00)
  * \param ctx the context
  */
 void
 spritz_state_memzero(spritz_ctx *ctx);
 
 
-/** \fn void spritz_setup(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen)
- * \brief setup spritz state (spritz_ctx) with a key
+/** \fn void spritz_setup(spritz_ctx *ctx, const uint8_t *key, uint8_t keylen)
+ * \brief setup the spritz state `spritz_ctx` with a key
  * \param ctx the context
  * \param key the key
- * \param keyLen length of the key in bytes
+ * \param keylen length of the key in bytes
  */
 void
 spritz_setup(spritz_ctx *ctx,
              const uint8_t *key, uint8_t keyLen);
 
-/** \fn void spritz_setup_withIV(spritz_ctx *ctx, const uint8_t *key, uint8_t keyLen, const uint8_t *nonce, uint8_t nonceLen)
- * \brief setup spritz state (spritz_ctx) with a key and nonce/Salt/IV
+/** \fn void spritz_setup_withiv(spritz_ctx *ctx, const uint8_t *key, uint8_t keylen, const uint8_t *nonce, uint8_t noncelen)
+ * \brief setup the spritz state `spritz_ctx` with a key and nonce/salt/iv
  * \param ctx the context
  * \param key the key
- * \param keyLen length of the key in bytes
+ * \param keylen length of the key in bytes
  * \param nonce the nonce (salt)
- * \param nonceLen length of the nonce in bytes
+ * \param noncelen length of the nonce in bytes
  */
 void
 spritz_setup_withIV(spritz_ctx *ctx,
@@ -140,7 +140,7 @@ spritz_setup_withIV(spritz_ctx *ctx,
                     const uint8_t *nonce, uint8_t nonceLen);
 
 /** \fn uint8_t spritz_random_byte(spritz_ctx *ctx)
- * \brief generates a random byte of keystream from spritz state (spritz_ctx). Usable after spritz_setup() or spritz_setup_withIV()
+ * \brief generates a random byte from the spritz state `spritz_ctx`. usable after spritz_setup() or spritz_setup_withiv()
  * \param ctx the context
  * \return byte of keystream
  */
@@ -148,7 +148,7 @@ uint8_t
 spritz_random_byte(spritz_ctx *ctx);
 
 /** \fn uint32_t spritz_random_u32(spritz_ctx *ctx)
- * \brief generates a random 32-bit (4 bytes) of keystream from spritz state (spritz_ctx). Usable after spritz_setup() or spritz_setup_withIV()
+ * \brief generates a random 32-bit (4 bytes) from the spritz state `spritz_ctx`. usable after spritz_setup() or spritz_setup_withiv()
  * \param ctx the context
  * \return 32-bit (4 bytes) of keystream
  */
@@ -156,16 +156,16 @@ uint32_t
 spritz_random_u32(spritz_ctx *ctx);
 
 /** \fn uint32_t spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
- * \brief calculate a uniformly distributed random number less than upper_bound avoiding modulo bias. Usable after spritz_setup() or spritz_setup_withIV()
+ * \brief calculate a uniformly distributed random number less than upper_bound avoiding modulo bias. usable after spritz_setup() or spritz_setup_withiv()
  * \param ctx the context
- * \param upper_bound The roof, (upper_bound - 1) is the largest random number that can be returned
+ * \param upper_bound the roof, (upper_bound - 1) is the largest random number that can be returned
  * \return random number less than upper_bound, 0 if upper_bound<2
  */
 uint32_t
 spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound);
 
 /** \fn void spritz_add_entropy(spritz_ctx *ctx, const uint8_t *entropy, uint16_t len)
- * \brief Add entropy to spritz state (spritz_ctx) using absorb(). Usable after spritz_setup() or spritz_setup_withIV().
+ * \brief add entropy to the spritz state `spritz_ctx` using absorb(). usable after spritz_setup() or spritz_setup_withiv().
  * \param ctx the context
  * \param entropy the entropy array
  * \param len length of the entropy array in bytes
@@ -174,12 +174,12 @@ void
 spritz_add_entropy(spritz_ctx *ctx,
                    const uint8_t *entropy, uint16_t len);
 
-/** \fn void spritz_crypt(spritz_ctx *ctx, uint16_t dataLen, const uint8_t *data, uint8_t *dataOut)
- * \brief encrypt or decrypt data chunk by XOR-ing it with spritz keystream. Usable after spritz_setup() or spritz_setup_withIV()
+/** \fn void spritz_crypt(spritz_ctx *ctx, uint16_t datalen, const uint8_t *data, uint8_t *dataout)
+ * \brief encrypt or decrypt data chunk by xor-ing it with the spritz keystream. usable after spritz_setup() or spritz_setup_withiv()
  * \param ctx the context
  * \param data the data to encrypt or decrypt
- * \param dataLen length of the data in bytes
- * \param dataOut the output
+ * \param datalen length of the data in bytes
+ * \param dataout the output
  */
 void
 spritz_crypt(spritz_ctx *ctx,
@@ -188,82 +188,82 @@ spritz_crypt(spritz_ctx *ctx,
 
 
 /** \fn void spritz_hash_setup(spritz_ctx *hash_ctx)
- * \brief Setup spritz hash state (spritz_ctx)
+ * \brief setup the spritz hash state `spritz_ctx`
  * \param hash_ctx the hash context (ctx)
  */
 void
 spritz_hash_setup(spritz_ctx *hash_ctx);
 
-/** \fn void spritz_hash_update(spritz_ctx *hash_ctx, const uint8_t *data, uint16_t dataLen)
- * \brief Add data chunk to hash
+/** \fn void spritz_hash_update(spritz_ctx *hash_ctx, const uint8_t *data, uint16_t datalen)
+ * \brief add a message/data chunk `data` to hash.
  * \param hash_ctx the hash context (ctx)
  * \param data the data chunk to hash
- * \param dataLen length of the data in bytes
+ * \param datalen length of the data in bytes
  */
 void
 spritz_hash_update(spritz_ctx *hash_ctx,
                    const uint8_t *data, uint16_t dataLen);
 
-/** \fn void spritz_hash_final(spritz_ctx *hash_ctx, uint8_t *digest, uint8_t digestLen)
- * \brief Output hash digest
+/** \fn void spritz_hash_final(spritz_ctx *hash_ctx, uint8_t *digest, uint8_t digestlen)
+ * \brief output the hash digest
  * \param hash_ctx the hash context (ctx)
- * \param digest the digest (Hash) output
- * \param digestLen length of the digest in bytes
+ * \param digest the digest (hash) output
+ * \param digestlen length of the digest in bytes
  */
 void
 spritz_hash_final(spritz_ctx *hash_ctx,
                   uint8_t *digest, uint8_t digestLen);
 
-/** \fn void spritz_hash(uint8_t *digest, uint8_t digestLen, const uint8_t *data, uint16_t dataLen)
+/** \fn void spritz_hash(uint8_t *digest, uint8_t digestlen, const uint8_t *data, uint16_t datalen)
  * \brief cryptographic hash function
- * \param digest the digest (Hash) output
- * \param digestLen length of the digest in bytes
+ * \param digest the digest (hash) output
+ * \param digestlen length of the digest in bytes
  * \param data the data to hash
- * \param dataLen length of the data in bytes
+ * \param datalen length of the data in bytes
  */
 void
 spritz_hash(uint8_t *digest, uint8_t digestLen,
             const uint8_t *data, uint16_t dataLen);
 
 
-/** \fn void spritz_mac_setup(spritz_ctx *mac_ctx, const uint8_t *key, uint16_t keyLen)
- * \brief Setup spritz MAC state (spritz_ctx)
- * \param mac_ctx the MAC context (ctx)
+/** \fn void spritz_mac_setup(spritz_ctx *mac_ctx, const uint8_t *key, uint16_t keylen)
+ * \brief setup the spritz message authentication code (mac) state `spritz_ctx`
+ * \param mac_ctx the message authentication code (mac) context (ctx)
  * \param key the secret key
- * \param keyLen length of the key in bytes
+ * \param keylen length of the key in bytes
  */
 void
 spritz_mac_setup(spritz_ctx *mac_ctx,
                  const uint8_t *key, uint16_t keyLen);
 
-/** \fn void spritz_mac_update(spritz_ctx *mac_ctx, const uint8_t *msg, uint16_t msgLen)
- * \brief Add message/data chunk to MAC
+/** \fn void spritz_mac_update(spritz_ctx *mac_ctx, const uint8_t *msg, uint16_t msglen)
+ * \brief add a message/data chunk to message authentication code (mac)
  * \param hash_ctx the hash context (ctx)
  * \param msg the message chunk to be authenticated
- * \param msgLen length of the message in bytes
+ * \param msglen length of the message in bytes
  */
 void
 spritz_mac_update(spritz_ctx *mac_ctx,
                   const uint8_t *msg, uint16_t msgLen);
 
-/** \fn void spritz_mac_final(spritz_ctx *mac_ctx, uint8_t *digest, uint8_t digestLen)
- * \brief Output MAC digest
- * \param mac_ctx the MAC context (ctx)
- * \param digest MAC digest output.
- * \param digestLen length of the digest in bytes
+/** \fn void spritz_mac_final(spritz_ctx *mac_ctx, uint8_t *digest, uint8_t digestlen)
+ * \brief output the message authentication code (mac) digest
+ * \param mac_ctx the message authentication code (mac) context (ctx)
+ * \param digest message authentication code (mac) digest output.
+ * \param digestlen length of the digest in bytes
  */
 void
 spritz_mac_final(spritz_ctx *mac_ctx,
                  uint8_t *digest, uint8_t digestLen);
 
-/** \fn void spritz_mac(uint8_t *digest, uint8_t digestLen, const uint8_t *msg, uint16_t msgLen, const uint8_t *key, uint16_t keyLen)
- * \brief message authentication code (MAC) function
- * \param digest MAC digest output.
- * \param digestLen length of the digest in bytes
+/** \fn void spritz_mac(uint8_t *digest, uint8_t digestlen, const uint8_t *msg, uint16_t msglen, const uint8_t *key, uint16_t keylen)
+ * \brief message authentication code (mac) function
+ * \param digest message authentication code (mac) digest output.
+ * \param digestlen length of the digest in bytes
  * \param msg the message to be authenticated
- * \param msgLen length of the message in bytes
+ * \param msglen length of the message in bytes
  * \param key the secret key
- * \param keyLen length of the key in bytes
+ * \param keylen length of the key in bytes
  */
 void
 spritz_mac(uint8_t *digest, uint8_t digestLen,

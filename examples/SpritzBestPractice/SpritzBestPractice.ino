@@ -1,8 +1,8 @@
 /**
- * Hash 32 KB of Spritz stream (random bytes generator output)
+ * Hash 32 KB of a Spritz stream (random bytes generator output)
  * then print the result.
  *
- * This code show what can ArduinoSpritzCipher library do (ShowOff API).
+ * This code show what the library can do (show off the API).
  * An embedded entropy/seed for the RNG is used.
  *
  * The circuit:  No external hardware needed.
