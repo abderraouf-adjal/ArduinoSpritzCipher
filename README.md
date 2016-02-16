@@ -252,7 +252,7 @@ Message Authentication Code function test.
 [Arduino IDE](https://www.arduino.cc/en/Main/Software) -
 [Additional libraries installation guide](https://www.arduino.cc/en/Guide/Libraries).
 
-Compiling this library using *GCC* or *Clang* will guarantee **zero optimization** for functions should be compiled with zero optimization like `spritz_compare()`.
+Compiling this library using *GCC* or *Clang* will give more security for functions that should be compiled with *zero optimization* (`-O0`) like `spritz_compare()`.
 
 
 ## Reporting bugs
