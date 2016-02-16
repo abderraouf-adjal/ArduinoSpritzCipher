@@ -354,9 +354,6 @@ spritz_random_u32(spritz_ctx *ctx)
     | ((uint32_t)(spritz_random_byte(ctx)) << 24));
 }
 
-/* spritz_random_uniform() derives from OpenBSD's arc4random_uniform()
- * Copyright (c) 2008, Damien Miller <djm@openbsd.org>
- */
 /* Calculate a uniformly distributed random number less than upper_bound
  * avoiding "modulo bias".
  * Uniformity is achieved by generating new random numbers until the one
@@ -366,6 +363,7 @@ spritz_random_u32(spritz_ctx *ctx)
  * after reduction modulo upper_bound.
  * spritz_random_uniform() usable after spritz_setup() or spritz_setup_withIV().
  */
+ /* spritz_random_uniform() derives from OpenBSD's arc4random_uniform() */
 uint32_t
 spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
 {
