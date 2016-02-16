@@ -313,8 +313,8 @@ spritz_setup(spritz_ctx *ctx,
 /* Setup spritz state (spritz_ctx) with a key and nonce/Salt/IV */
 void
 spritz_setup_withIV(spritz_ctx *ctx,
-                   const uint8_t *key, uint8_t keyLen,
-                   const uint8_t *nonce, uint8_t nonceLen)
+                    const uint8_t *key, uint8_t keyLen,
+                    const uint8_t *nonce, uint8_t nonceLen)
 {
   spritz_state_init(ctx);
   absorbBytes(ctx, key, keyLen);

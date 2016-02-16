@@ -136,8 +136,8 @@ spritz_setup(spritz_ctx *ctx,
  */
 void
 spritz_setup_withIV(spritz_ctx *ctx,
-                   const uint8_t *key, uint8_t keyLen,
-                   const uint8_t *nonce, uint8_t nonceLen);
+                    const uint8_t *key, uint8_t keyLen,
+                    const uint8_t *nonce, uint8_t nonceLen);
 
 /** \fn uint8_t spritz_random_byte(spritz_ctx *ctx)
  * \brief generates a random byte of keystream from spritz state (spritz_ctx). Usable after spritz_setup() or spritz_setup_withIV()

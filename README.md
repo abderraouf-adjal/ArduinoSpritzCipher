@@ -73,8 +73,8 @@ Setup spritz state `spritz_ctx` with a `key` of length `keyLen`.
 
 ```c
 void spritz_setup_withIV(spritz_ctx *ctx,
-                        const uint8_t *key, uint8_t keyLen,
-                        const uint8_t *nonce, uint8_t nonceLen)
+                         const uint8_t *key, uint8_t keyLen,
+                         const uint8_t *nonce, uint8_t nonceLen)
 ```
 
 Setup spritz state `spritz_ctx` with a `key` and `nonce`/Salt/IV.
@@ -101,9 +101,7 @@ returned is outside the range [0, 2\*\*32 % `upper_bound`).
 This guarantees the selected random number will be inside
 [2\*\*32 % `upper_bound`, 2\*\*32) which maps back to [0, `upper_bound`)
 after reduction modulo `upper_bound`.
-> `spritz_random_uniform()` derives from OpenBSD's `arc4random_uniform()`, Copyright (c) 2008, Damien Miller
-
-Use `spritz_random_uniform(ctx, m)`, Not `spritz_random_u32(ctx) % m`.
+> `spritz_random_uniform()` derives from OpenBSD's `arc4random_uniform()`.
 
 ```c
 void spritz_add_entropy(spritz_ctx *ctx,
@@ -184,6 +182,9 @@ Are usable after `spritz_setup()` or `spritz_setup_withIV()`.
 Use `spritz_state_memzero()` after `spritz_hash_final()` or `spritz_mac_final()`
 if you need to wipe the used `spritz_ctx` data.
 
+To generate random number in a range [k, m) use `k + spritz_random_uniform(ctx, m)`, Not `k + (spritz_random_byte(ctx) % m)` or `k + (spritz_random_u32(ctx) % m)`.
+
+
 ### Constants
 **SPRITZ_TIMING_SAFE_CRUSH**
 
@@ -251,8 +252,7 @@ Message Authentication Code function test.
 [Arduino IDE](https://www.arduino.cc/en/Main/Software) -
 [Additional libraries installation guide](https://www.arduino.cc/en/Guide/Libraries).
 
-Compiling this library with GCC or Clang will guarantee zero optimization
-for functions should be compiled with zero optimization like `spritz_compare()`.
+Compiling this library using *GCC* or *Clang* will guarantee **zero optimization** for functions should be compiled with zero optimization like `spritz_compare()`.
 
 
 ## Reporting bugs
@@ -260,10 +260,12 @@ for functions should be compiled with zero optimization like `spritz_compare()`.
 [Create an issue on GitHub](https://github.com/abderraouf-adjal/ArduinoSpritzCipher/issues).
 
 
-## Copyright
+## Copyright and License
 
-Copyright (c) 2015-2016 Abderraouf Adjal
+> Copyright (c) 2015-2016 Abderraouf Adjal
 
-## License
+- The source-code: The MIT License.
 
-The MIT License.
+- Documentation (e.g. this): Licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0).
+
+- The examples: public domain.
