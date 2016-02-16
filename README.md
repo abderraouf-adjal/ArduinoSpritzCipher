@@ -2,31 +2,32 @@
 
 > Spritz - a spongy RC4-like stream cipher and hash function.
 
-This library contains cryptographic pseudo-random number generator,
-Cryptographic hash function, Message Authentication Code (MAC) function,
-Data encryption/decryption using Key and Nonce/Salt/IV, General purpose
-functions such as timing-safe comparison and data wiping from memory.
+This library contains a cryptographic pseudo-random number generator,
+a Cryptographic hash function, a Message Authentication Code (MAC) function,
+Data encryption/decryption using Key and Nonce/Salt/IV, and some
+general-purpose functions such as timing-safe comparison and data wiping from
+memory.
 
 This C Spritz library can be used to:
   - Hash data
-  - Data encryption
-  - Authenticated encryption
+  - Perform data encryption
+  - Perform authenticated encryption
   - Generate random numbers from entropy/seed
 
-[This library GitHub repository](https://github.com/abderraouf-adjal/ArduinoSpritzCipher).
+[This library’s GitHub repository](https://github.com/abderraouf-adjal/ArduinoSpritzCipher).
 
-[This library Bitbucket repository](https://bitbucket.org/abderraouf-adjal/arduinospritzcipher) (Backup).
+[This library’s Bitbucket repository](https://bitbucket.org/abderraouf-adjal/arduinospritzcipher) (Backup).
 
 **Spritz paper:** https://people.csail.mit.edu/rivest/pubs/RS14.pdf
 
 
 ## Library Content
 
-See the source code and header file for the details.
+See the source code and the header file for the details.
 
 ### Types
 
-**spritz_ctx** - The context/ctx (contain the state). The state consists of byte registers
+**spritz_ctx** - The context/ctx (contains the state). The state consists of byte registers
 {i, j, k, z, w, a}, And an array {s} containing a permutation of {0, 1, ... , SPRITZ_N-1}.
 
 **uint8_t**  - unsigned integer type with width of 8-bit, MIN=0;MAX=255.
@@ -44,10 +45,10 @@ uint8_t spritz_compare(const uint8_t *data_a, const uint8_t *data_b,
 ```
 
 Timing-safe comparison for `data_a` and `data_b` equality.
-This function compares passwords hash safely.
+This function compares the passwords’ hashes safely.
 
-Return zero (0x00) if `data_a` equals `data_b` or `len` is zero,
-non-zero value if they are not equal.
+Return zero (0x00) if `data_a` equals `data_b` or if `len` is zero,
+and a non-zero value if they are not equal.
 
 ```c
 void spritz_memzero(uint8_t *buf, uint16_t len)
@@ -59,7 +60,7 @@ Wipe `buf` data by replacing it with `len` zeros (0x00).
 void spritz_state_memzero(spritz_ctx *ctx)
 ```
 
-Wipe `spritz_ctx` data by replacing its data with zeros (0x00).
+Wipe `spritz_ctx`’s data by replacing its data with zeros (0x00).
 
 If `SPRITZ_WIPE_TRACES_PARANOID` is defined, This function will
 wipe the *sensitive* temporary variables in `spritz_ctx`.
@@ -69,7 +70,7 @@ void spritz_setup(spritz_ctx *ctx,
                   const uint8_t *key, uint8_t keyLen)
 ```
 
-Setup spritz state `spritz_ctx` with a `key` of length `keyLen`.
+Setup the spritz state `spritz_ctx` with a `key` of length `keyLen`.
 
 ```c
 void spritz_setup_withIV(spritz_ctx *ctx,
@@ -77,19 +78,19 @@ void spritz_setup_withIV(spritz_ctx *ctx,
                          const uint8_t *nonce, uint8_t nonceLen)
 ```
 
-Setup spritz state `spritz_ctx` with a `key` and `nonce`/Salt/IV.
+Setup the spritz state `spritz_ctx` with a `key` and `nonce`/Salt/IV.
 
 ```c
 uint8_t spritz_random_byte(spritz_ctx *ctx)
 ```
 
-Generates a random byte of keystream from spritz state `spritz_ctx`.
+Generates a random byte of a keystream from the spritz state `spritz_ctx`.
 
 ```c
 uint32_t spritz_random_u32(spritz_ctx *ctx)
 ```
 
-Generates a random 32-bit (4 bytes) of keystream from spritz state `spritz_ctx`.
+Generates a random 32-bit (4 bytes) of a keystream from the spritz state `spritz_ctx`.
 
 ```c
 uint32_t spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
@@ -108,7 +109,7 @@ void spritz_add_entropy(spritz_ctx *ctx,
                         const uint8_t *entropy, uint16_t len)
 ```
 
-Add `entropy` to spritz state `spritz_ctx` using internal function `absorb()`.
+Add `entropy` to the spritz state `spritz_ctx` using the internal function `absorb()`.
 
 ```c
 void spritz_crypt(spritz_ctx *ctx,
@@ -116,14 +117,14 @@ void spritz_crypt(spritz_ctx *ctx,
                   uint8_t *dataOut)
 ```
 
-Encrypt or decrypt `data` chunk by XOR-ing it with spritz keystream.
+Encrypt or decrypt `data` chunk by XOR-ing it with the spritz keystream.
 
 ```c
 void spritz_hash(uint8_t *digest, uint8_t digestLen,
                  const uint8_t *data, uint16_t dataLen)
 ```
 
-Spritz cryptographic hash function.
+A Spritz cryptographic hash function.
 
 ```c
 void spritz_mac(uint8_t *digest, uint8_t digestLen,
@@ -131,13 +132,13 @@ void spritz_mac(uint8_t *digest, uint8_t digestLen,
                 const uint8_t *key, uint16_t keyLen)
 ```
 
-Spritz MAC (Message Authentication Code) function.
+A Spritz MAC (Message Authentication Code) function.
 
 ```c
 void spritz_hash_setup(spritz_ctx *hash_ctx)
 ```
 
-Setup spritz hash state.
+Setup the spritz hash state.
 
 ```c
 void spritz_hash_update(spritz_ctx *hash_ctx,
@@ -151,62 +152,62 @@ void spritz_hash_final(spritz_ctx *hash_ctx,
                        uint8_t *digest, uint8_t digestLen)
 ```
 
-Output hash digest.
+Output the hash digest.
 
 ```c
 void spritz_mac_setup(spritz_ctx *mac_ctx,
                       const uint8_t *key, uint16_t keyLen)
 ```
 
-Setup spritz MAC state.
+Setup the spritz MAC state.
 
 ```c
 void spritz_mac_update(spritz_ctx *mac_ctx,
                        const uint8_t *msg, uint16_t msgLen)
 ```
 
-Add message/data chunk to MAC.
+Add a message/data chunk to MAC.
 
 ```c
 void spritz_mac_final(spritz_ctx *mac_ctx,
                       uint8_t *digest, uint8_t digestLen)
 ```
 
-Output MAC digest.
+Output the MAC digest.
 
 
 ##### Notes:
 `spritz_random_byte()`, `spritz_random_u32()`, `spritz_random_uniform()`, `spritz_add_entropy()`, `spritz_crypt()`.
-Are usable after `spritz_setup()` or `spritz_setup_withIV()`.
+Are usable only after calling `spritz_setup()` or `spritz_setup_withIV()`.
 
 Use `spritz_state_memzero()` after `spritz_hash_final()` or `spritz_mac_final()`
-if you need to wipe the used `spritz_ctx` data.
+if you need to wipe the used `spritz_ctx`’s data.
 
-To generate random number in a range [k, m) use `k + spritz_random_uniform(ctx, m)`, Not `k + (spritz_random_byte(ctx) % m)` or `k + (spritz_random_u32(ctx) % m)`.
+To generate a random number in a range [k, m) use `k + spritz_random_uniform(ctx, m)`, Not `k + (spritz_random_byte(ctx) % m)` or `k + (spritz_random_u32(ctx) % m)`.
 
 
 ### Constants
 **SPRITZ_TIMING_SAFE_CRUSH**
 
-If defined, Equal time `crush()` will be used.
+If defined, the equal time `crush()` will be used.
 
 `SPRITZ_TIMING_SAFE_CRUSH` is defined by default.
 
 **SPRITZ_WIPE_TRACES**
 
-If defined, Sensitive data like `spritz_ctx` will be wiped when they are
-no longer needed in the functions: `spritz_hash()`, `spritz_mac()`.
+If defined, sensitive data like `spritz_ctx` will be wiped, when they are
+no longer needed, in the functions: `spritz_hash()`, `spritz_mac()`.
 
 `SPRITZ_WIPE_TRACES` is defined by default.
 
 **SPRITZ_WIPE_TRACES_PARANOID**
 
-If defined, Library functions internal variables will be wiped if it contains
-a bit or more of spritz state such as temporary variables in a swap function
-or user data. Variables that contain data length will not be wiped.
+If defined, the Library functions internal variables will be wiped if they
+contain a bit or more of spritz state, such as temporary variables in a swap
+function or user data. Variables that contain data length will not be wiped.
 
-If defined, `SPRITZ_WIPE_TRACES` and `SPRITZ_TIMING_SAFE_CRUSH` will
-be defined automatically.
+If defined, then `SPRITZ_WIPE_TRACES` and `SPRITZ_TIMING_SAFE_CRUSH`, will
+be assumed and defined automatically.
 
 `SPRITZ_WIPE_TRACES_PARANOID` is defined by default.
 
@@ -225,17 +226,17 @@ spritz library (MAJOR . MINOR . PATCH) using Semantic Versioning.
 ## Examples
 
 * [SpritzBestPractice](examples/SpritzBestPractice/SpritzBestPractice.ino):
-Hash 32 KB of Spritz stream (pseudo-random number generator output) then print the result.
-This code show what can ArduinoSpritzCipher library do (ShowOff API).
+Hash 32 KB of a Spritz stream (pseudo-random number generator output) then print the result.
+This code show what the ArduinoSpritzCipher library can do (show off the API).
 An embedded entropy/seed for the pseudo-random number generator is used.
 
 * [SpritzBestPracticePassword](examples/SpritzBestPracticePassword/SpritzBestPracticePassword.ino):
-Make strong Alphanumeric passwords then print it.
-This code show what can ArduinoSpritzCipher library do (ShowOff API).
+Generate a strong Alphanumeric passwords, and then print it.
+This code show what the ArduinoSpritzCipher library can do (show off the API).
 An embedded entropy/seed for the pseudo-random number generator is used.
 
 * [SpritzCryptTest](examples/SpritzCryptTest/SpritzCryptTest.ino):
-Test the library encryption/decryption function.
+Test the library encryption/decryption functions.
 
 * [SpritzStreamTest](examples/SpritzStreamTest/SpritzStreamTest.ino):
 Generate random bytes (Spritz stream) test.
