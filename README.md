@@ -80,19 +80,19 @@ void spritz_setup_withIV(spritz_ctx *ctx,
 Setup the spritz state `spritz_ctx` with a `key` and `nonce`/Salt/IV.
 
 ```c
-uint8_t spritz_random_byte(spritz_ctx *ctx)
+uint8_t spritz_random8(spritz_ctx *ctx)
 ```
 
 Generates a random byte from the spritz state `spritz_ctx`.
 
 ```c
-uint32_t spritz_random_u32(spritz_ctx *ctx)
+uint32_t spritz_random32(spritz_ctx *ctx)
 ```
 
 Generates a random 32-bit (4 bytes) from the spritz state `spritz_ctx`.
 
 ```c
-uint32_t spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
+uint32_t spritz_random32_uniform(spritz_ctx *ctx, uint32_t upper_bound)
 ```
 
 Calculate a uniformly distributed random number less than `upper_bound` avoiding *modulo bias*.
@@ -101,7 +101,7 @@ returned is outside the range [0, 2\*\*32 % `upper_bound`).
 This guarantees the selected random number will be inside
 [2\*\*32 % `upper_bound`, 2\*\*32) which maps back to [0, `upper_bound`)
 after reduction modulo `upper_bound`.
-> `spritz_random_uniform()` derives from OpenBSD's `arc4random_uniform()`.
+> `spritz_random32_uniform()` derives from OpenBSD's `arc4random_uniform()`.
 
 ```c
 void spritz_add_entropy(spritz_ctx *ctx,
@@ -176,14 +176,14 @@ Output the Message Authentication Code (MAC) digest.
 
 
 ##### Notes:
-`spritz_random_byte()`, `spritz_random_u32()`, `spritz_random_uniform()`, `spritz_add_entropy()`, `spritz_crypt()`.
+`spritz_random8()`, `spritz_random32()`, `spritz_random32_uniform()`, `spritz_add_entropy()`, `spritz_crypt()`.
 Are usable only after calling `spritz_setup()` or `spritz_setup_withIV()`.
 
 Use `spritz_state_memzero()` after `spritz_hash_final()` or `spritz_mac_final()`
 if you need to wipe the used `spritz_ctx`'s data.
 
-To generate a random number in a range [k, m) use `k + spritz_random_uniform(ctx, m)`,
-Not `k + (spritz_random_byte(ctx) % m)` or `k + (spritz_random_u32(ctx) % m)`.
+To generate a random number in a range [k, m) use `k + spritz_random32_uniform(ctx, m)`,
+Not `k + (spritz_random8(ctx) % m)` or `k + (spritz_random32(ctx) % m)`.
 
 
 ### Constants

@@ -326,32 +326,32 @@ spritz_setup_withIV(spritz_ctx *ctx,
 }
 
 /* Generates a random byte from the spritz state `spritz_ctx`.
- * spritz_random_byte() usable after spritz_setup() or spritz_setup_withIV().
+ * spritz_random8() usable after spritz_setup() or spritz_setup_withIV().
  */
 uint8_t
-spritz_random_byte(spritz_ctx *ctx)
+spritz_random8(spritz_ctx *ctx)
 {
   return drip(ctx);
 }
 
 /* Generates a random 32-bit (4 bytes) from the spritz state `spritz_ctx`.
- * spritz_random_u32() usable after spritz_setup() or spritz_setup_withIV().
+ * spritz_random32() usable after spritz_setup() or spritz_setup_withIV().
  */
 uint32_t
-spritz_random_u32(spritz_ctx *ctx)
+spritz_random32(spritz_ctx *ctx)
 {
   /* Code with the same result:
    * uint32_t b;
-   * b = (uint32_t)(     (uint32_t)(spritz_random_byte(ctx)) <<  0);
-   * b = (uint32_t)(b | ((uint32_t)(spritz_random_byte(ctx)) <<  8));
-   * b = (uint32_t)(b | ((uint32_t)(spritz_random_byte(ctx)) << 16));
-   * b = (uint32_t)(b | ((uint32_t)(spritz_random_byte(ctx)) << 24));
+   * b = (uint32_t)(     (uint32_t)(spritz_random8(ctx)) <<  0);
+   * b = (uint32_t)(b | ((uint32_t)(spritz_random8(ctx)) <<  8));
+   * b = (uint32_t)(b | ((uint32_t)(spritz_random8(ctx)) << 16));
+   * b = (uint32_t)(b | ((uint32_t)(spritz_random8(ctx)) << 24));
    */
   return (uint32_t)(
-      ((uint32_t)(spritz_random_byte(ctx)) <<  0)
-    | ((uint32_t)(spritz_random_byte(ctx)) <<  8)
-    | ((uint32_t)(spritz_random_byte(ctx)) << 16)
-    | ((uint32_t)(spritz_random_byte(ctx)) << 24));
+      ((uint32_t)(spritz_random8(ctx)) <<  0)
+    | ((uint32_t)(spritz_random8(ctx)) <<  8)
+    | ((uint32_t)(spritz_random8(ctx)) << 16)
+    | ((uint32_t)(spritz_random8(ctx)) << 24));
 }
 
 /* Calculate a uniformly distributed random number less than upper_bound
@@ -361,11 +361,11 @@ spritz_random_u32(spritz_ctx *ctx)
  * This guarantees the selected random number will be inside
  * [2**32 % upper_bound, 2**32) which maps back to [0, upper_bound)
  * after reduction modulo upper_bound.
- * spritz_random_uniform() usable after spritz_setup() or spritz_setup_withIV().
+ * spritz_random32_uniform() usable after spritz_setup() or spritz_setup_withIV().
  */
- /* spritz_random_uniform() derives from OpenBSD's arc4random_uniform() */
+ /* spritz_random32_uniform() derives from OpenBSD's arc4random_uniform() */
 uint32_t
-spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
+spritz_random32_uniform(spritz_ctx *ctx, uint32_t upper_bound)
 {
   uint32_t r, min;
 
@@ -383,7 +383,7 @@ spritz_random_uniform(spritz_ctx *ctx, uint32_t upper_bound)
    * to re-roll.
    */
   for (;;) {
-    r = spritz_random_u32(ctx);
+    r = spritz_random32(ctx);
     if (r >= min)
     {
       return (uint32_t)(r % upper_bound);

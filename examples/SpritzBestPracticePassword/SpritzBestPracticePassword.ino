@@ -78,7 +78,7 @@ void loop() {
     /* Fill the buffer with random uniformly distributed alphanumeric characters */
     for (uint8_t i = 0; i < password_len; i++) {
       /* Like: buf[i] = charactersTable[random() % number_Of_elements_In_charactersTable] */
-      buf[i] = alphanumeric_table[spritz_random_uniform(&the_ctx, (uint32_t)(sizeof(alphanumeric_table)))];
+      buf[i] = alphanumeric_table[spritz_random32_uniform(&the_ctx, (uint32_t)(sizeof(alphanumeric_table)))];
     }
 
     /* Print the password */

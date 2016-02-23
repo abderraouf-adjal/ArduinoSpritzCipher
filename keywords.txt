@@ -5,9 +5,9 @@ spritz_memzero	KEYWORD2
 spritz_state_memzero	KEYWORD2
 spritz_setup	KEYWORD2
 spritz_setup_withIV	KEYWORD2
-spritz_random_byte	KEYWORD2
-spritz_random_u32	KEYWORD2
-spritz_random_uniform	KEYWORD2
+spritz_random8	KEYWORD2
+spritz_random32	KEYWORD2
+spritz_random32_uniform	KEYWORD2
 spritz_add_entropy	KEYWORD2
 spritz_crypt	KEYWORD2
 spritz_hash_setup	KEYWORD2

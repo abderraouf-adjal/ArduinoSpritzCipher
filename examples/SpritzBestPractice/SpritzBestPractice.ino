@@ -70,7 +70,7 @@ void loop() {
   for (j = 0; j < LOOP_ROUNDS; j++) {
     /* Fill buf with Spritz random bytes generator output */
     for (i = 0; i < (uint8_t)(sizeof(buf)); i++) {
-      buf[i] = spritz_random_byte(&rng_ctx);
+      buf[i] = spritz_random8(&rng_ctx);
     }
     /* Add buf data to hash_ctx */
     spritz_hash_update(&hash_ctx, buf, (uint16_t)(sizeof(buf)));
