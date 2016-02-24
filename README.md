@@ -4,7 +4,7 @@
 
 This library contains a cryptographic pseudo-random number generator,
 a cryptographic hash function, a message authentication code (MAC) function,
-Data encryption/decryption using Key and Nonce/Salt/IV, and some
+data encryption/decryption using Key and Nonce/Salt/IV, and some
 general-purpose functions such as timing-safe comparison and data wiping from memory.
 
 This C Spritz library can be used to:
