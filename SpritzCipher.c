@@ -23,7 +23,7 @@
  */
 
 
-#include "SpritzCipher.h"
+#include "SpritzCipher.h" /* Data types and constants */
 
 
 #define SPRITZ_N_MINUS_1 255 /* SPRITZ_N - 1 */
@@ -50,7 +50,7 @@ spritz_state_init(spritz_ctx *ctx)
 {
   uint8_t i = 0;
 
-  /* Work if size(s)=256 */
+  /* Loop for SPRITZ_N=256 */
   do {
     ctx->s[i] = i;
   } while (++i);
@@ -153,7 +153,7 @@ shuffle(spritz_ctx *ctx)
   ctx->a = 0;
 }
 
-/* Tip: nibble=4bit; octet=2*nibble=8bit; byte=octet in modern computers */
+/* Note: Nibble=4-bit; Octet=2*Nibble=8-bit; Byte=Octet (in modern/most computers) */
 static void
 absorbNibble(spritz_ctx *ctx, const uint8_t nibble)
 {
@@ -166,8 +166,8 @@ absorbNibble(spritz_ctx *ctx, const uint8_t nibble)
 static void
 absorb(spritz_ctx *ctx, const uint8_t octet)
 {
-  absorbNibble(ctx, octet % 16); /* Low */
-  absorbNibble(ctx, octet / 16); /* High */
+  absorbNibble(ctx, octet % 16); /* With the Right/Low nibble */
+  absorbNibble(ctx, octet / 16); /* With the Left/High nibble */
 }
 static void
 absorbBytes(spritz_ctx *ctx, const uint8_t *buf, uint16_t len)
@@ -212,7 +212,7 @@ drip(spritz_ctx *ctx)
 /* Timing-safe comparison for `data_a` and `data_b` equality.
  * This function can be used to compare the password's hash safely.
  * Return zero (0x00) if `data_a` equals `data_b` or if `len` is zero,
- * and a non-zero value if they are not equal.
+ *  if they are not equal, a non-zero value will be returned.
  */
 uint8_t
 /* Disable optimization for this function if compiler is GCC */
@@ -279,7 +279,7 @@ spritz_state_memzero(spritz_ctx *ctx)
 {
   uint8_t i = 0;
 
-  /* Work if size(s)=256 */
+  /* Loop for SPRITZ_N=256 */
   do {
     ctx->s[i] = 0;
   } while (++i);
@@ -325,28 +325,17 @@ spritz_setup_withIV(spritz_ctx *ctx,
   }
 }
 
-/* Generates a random byte from the spritz state `spritz_ctx`.
- * spritz_random8() usable after spritz_setup() or spritz_setup_withIV().
- */
+/* Generates a random byte from the spritz state `spritz_ctx`. */
 uint8_t
 spritz_random8(spritz_ctx *ctx)
 {
   return drip(ctx);
 }
 
-/* Generates a random 32-bit (4 bytes) from the spritz state `spritz_ctx`.
- * spritz_random32() usable after spritz_setup() or spritz_setup_withIV().
- */
+/* Generates a random 32-bit (4 bytes) from the spritz state `spritz_ctx`. */
 uint32_t
 spritz_random32(spritz_ctx *ctx)
 {
-  /* Code with the same result:
-   * uint32_t b;
-   * b = (uint32_t)(     (uint32_t)(spritz_random8(ctx)) <<  0);
-   * b = (uint32_t)(b | ((uint32_t)(spritz_random8(ctx)) <<  8));
-   * b = (uint32_t)(b | ((uint32_t)(spritz_random8(ctx)) << 16));
-   * b = (uint32_t)(b | ((uint32_t)(spritz_random8(ctx)) << 24));
-   */
   return (uint32_t)(
       ((uint32_t)(spritz_random8(ctx)) <<  0)
     | ((uint32_t)(spritz_random8(ctx)) <<  8)
@@ -361,9 +350,9 @@ spritz_random32(spritz_ctx *ctx)
  * This guarantees the selected random number will be inside
  * [2**32 % upper_bound, 2**32) which maps back to [0, upper_bound)
  * after reduction modulo upper_bound.
- * spritz_random32_uniform() usable after spritz_setup() or spritz_setup_withIV().
+ *
+ * spritz_random32_uniform() derives from OpenBSD's arc4random_uniform()
  */
- /* spritz_random32_uniform() derives from OpenBSD's arc4random_uniform() */
 uint32_t
 spritz_random32_uniform(spritz_ctx *ctx, uint32_t upper_bound)
 {
@@ -391,9 +380,7 @@ spritz_random32_uniform(spritz_ctx *ctx, uint32_t upper_bound)
   }
 }
 
-/* Add entropy to the spritz state `spritz_ctx` using the internal function absorb().
- * spritz_add_entropy() usable after spritz_setup() or spritz_setup_withIV().
- */
+/* Add entropy to the spritz state `spritz_ctx` using the internal function absorb(). */
 void
 spritz_add_entropy(spritz_ctx *ctx,
             const uint8_t *entropy, uint16_t len)
@@ -401,9 +388,7 @@ spritz_add_entropy(spritz_ctx *ctx,
   absorbBytes(ctx, entropy, len);
 }
 
-/* Encrypt or decrypt data chunk by XOR-ing it with the spritz keystream.
- * spritz_crypt() usable after spritz_setup() or spritz_setup_withIV().
- */
+/* Encrypt or decrypt data chunk by XOR-ing it with the spritz keystream. */
 void
 spritz_crypt(spritz_ctx *ctx,
              const uint8_t *data, uint16_t dataLen,

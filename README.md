@@ -46,8 +46,9 @@ uint8_t spritz_compare(const uint8_t *data_a, const uint8_t *data_b,
 Timing-safe comparison for `data_a` and `data_b` equality.
 This function can be used to compare the password's hash safely.
 
-Return zero (0x00) if `data_a` equals `data_b` or if `len` is zero,
-and a non-zero value if they are not equal.
+Return equality result.
+Zero (0x00) if `data_a` equals `data_b` OR if `len` is zero,
+A non-zero value will be returned if they are NOT equal.
 
 ```c
 void spritz_memzero(uint8_t *buf, uint16_t len)
@@ -101,7 +102,6 @@ returned is outside the range [0, 2\*\*32 % `upper_bound`).
 This guarantees the selected random number will be inside
 [2\*\*32 % `upper_bound`, 2\*\*32) which maps back to [0, `upper_bound`)
 after reduction modulo `upper_bound`.
-> `spritz_random32_uniform()` derives from OpenBSD's `arc4random_uniform()`.
 
 ```c
 void spritz_add_entropy(spritz_ctx *ctx,
@@ -189,24 +189,24 @@ Not `k + (spritz_random8(ctx) % m)` or `k + (spritz_random32(ctx) % m)`.
 ### Constants
 **SPRITZ_TIMING_SAFE_CRUSH**
 
-If defined, the equal time `crush()` will be used.
+If defined, The equal time `crush()` will be used.
 
 `SPRITZ_TIMING_SAFE_CRUSH` is defined by default.
 
 **SPRITZ_WIPE_TRACES**
 
-If defined, sensitive data like `spritz_ctx` will be wiped, when they are
+If defined, Sensitive data like `spritz_ctx` will be wiped, when they are
 no longer needed, in the functions: `spritz_hash()`, `spritz_mac()`.
 
 `SPRITZ_WIPE_TRACES` is defined by default.
 
 **SPRITZ_WIPE_TRACES_PARANOID**
 
-If defined, the library functions internal variables will be wiped if they
+If defined, The library functions internal variables will be wiped if they
 contain a bit or more of spritz state, such as temporary variables in a swap
 function or user data. Variables that contain data length will not be wiped.
 
-If defined, then `SPRITZ_WIPE_TRACES` and `SPRITZ_TIMING_SAFE_CRUSH`, will
+If defined, Then `SPRITZ_WIPE_TRACES` and `SPRITZ_TIMING_SAFE_CRUSH`, will
 be assumed and defined automatically.
 
 `SPRITZ_WIPE_TRACES_PARANOID` is defined by default.
