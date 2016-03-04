@@ -48,7 +48,7 @@ This function can be used to compare the password's hash safely.
 
 Return equality result.
 Zero (0x00) if `data_a` equals `data_b` OR if `len` is zero,
-A non-zero value will be returned if they are NOT equal.
+Non-zero value if they are NOT equal.
 
 ```c
 void spritz_memzero(uint8_t *buf, uint16_t len)
@@ -267,6 +267,6 @@ Compiling this library using *GCC* or *Clang* will give more security for functi
 
 - The source-code: The MIT License.
 
-- Documentation (e.g. this): Licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0).
+- Documentation (e.g. this file content): Licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0).
 
-- The examples: public domain.
+- Examples: Public domain.

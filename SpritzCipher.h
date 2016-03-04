@@ -43,7 +43,7 @@ extern "C" {
 /** SPRITZ_WIPE_TRACES
  * If defined, sensitive data (like spritz_ctx) when they are
  * no longer needed in functions such as hash and mac will be wiped.
- * Functions that SPRITZ_WIPE_TRACES is involved with: {spritz_hash, spritz_mac}
+ * Functions that SPRITZ_WIPE_TRACES is involved with: spritz_hash(), spritz_mac().
  */
 #define SPRITZ_WIPE_TRACES
 
@@ -80,22 +80,22 @@ extern "C" {
 
 
 /** spritz_ctx
- * Brief: The context (contains the state), Holds indices and s-box.
+ * The context (contains the state), Holds indices and s-box.
  */
 typedef struct
 {
   uint8_t s[SPRITZ_N], i, j, k, z, a, w;
 #ifdef SPRITZ_WIPE_TRACES_PARANOID
-  /* tmp1: For: spritz_state_s_swap(), safe timing crush().
-   * tmp2: For the safe timing crush().
+  /* `tmp1` for: spritz_state_s_swap(), safe timing crush().
+   * `tmp2` for: The safe timing crush().
    */
   uint8_t tmp1, tmp2;
 #endif
 } spritz_ctx;
 
 /** spritz_compare()
- * Brief: Timing-safe equality comparison for `data_a` and `data_b`.
- *        This function can be used to compare the password's hash safely.
+ * Timing-safe equality comparison for `data_a` and `data_b`.
+ * This function can be used to compare the password's hash safely.
  *
  * Parameter data_a: Data a to be compare with b.
  * Parameter data_b: Data b to be compare with a.
@@ -103,13 +103,13 @@ typedef struct
  *
  * Return: Equality result.
  *         Zero (0x00) if `data_a` equals `data_b` OR if `len` is zero,
- *         A non-zero value will be returned if they are NOT equal.
+ *         Non-zero value if they are NOT equal.
  */
 uint8_t
 spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len);
 
 /** spritz_memzero()
- * Brief: Wipe `buf` data by replacing it with zeros (0x00).
+ * Wipe `buf` data by replacing it with zeros (0x00).
  *
  * Parameter buf: Data to replace it with zeros (0x00).
  * Parameter len: Length of array in bytes.
@@ -118,7 +118,7 @@ void
 spritz_memzero(uint8_t *buf, uint16_t len);
 
 /** spritz_state_memzero()
- * Brief: Wipe `spritz_ctx`'s data by replacing its data with zeros (0x00).
+ * Wipe `spritz_ctx`'s data by replacing its data with zeros (0x00).
  *
  * Parameter ctx: The context.
  */
@@ -127,7 +127,7 @@ spritz_state_memzero(spritz_ctx *ctx);
 
 
 /** spritz_setup()
- * Brief: Setup the spritz state `spritz_ctx` with a key.
+ * Setup the spritz state `spritz_ctx` with a key.
  *
  * Parameter ctx:    The context.
  * Parameter key:    The key.
@@ -138,7 +138,7 @@ spritz_setup(spritz_ctx *ctx,
              const uint8_t *key, uint8_t keyLen);
 
 /** spritz_setup_withiv()
- * Brief: Setup the spritz state `spritz_ctx` with a key and nonce/salt/iv.
+ * Setup the spritz state `spritz_ctx` with a key and nonce/salt/iv.
  *
  * Parameter ctx:      The context.
  * Parameter key:      The key.
@@ -152,8 +152,8 @@ spritz_setup_withIV(spritz_ctx *ctx,
                     const uint8_t *nonce, uint8_t nonceLen);
 
 /** spritz_random8()
- * Brief: Generates a random byte from the spritz state `spritz_ctx`.
- *        Usable only after calling spritz_setup() or spritz_setup_withiv().
+ * Generates a random byte from the spritz state `spritz_ctx`.
+ * Usable only after calling spritz_setup() or spritz_setup_withiv().
  *
  * Parameter ctx: The context.
  *
@@ -163,8 +163,8 @@ uint8_t
 spritz_random8(spritz_ctx *ctx);
 
 /** spritz_random32()
- * Brief: Generates a random 32-bit (4 bytes) from the spritz state `spritz_ctx`.
- *        Usable only after calling spritz_setup() or spritz_setup_withiv().
+ * Generates a random 32-bit (4 bytes) from the spritz state `spritz_ctx`.
+ * Usable only after calling spritz_setup() or spritz_setup_withiv().
  *
  * Parameter ctx: The context.
  *
@@ -174,11 +174,11 @@ uint32_t
 spritz_random32(spritz_ctx *ctx);
 
 /** spritz_random32_uniform()
- * Brief: Calculate a uniformly distributed random number less than upper_bound avoiding modulo bias.
- *        Usable only after calling spritz_setup() or spritz_setup_withiv().
+ * Calculate a uniformly distributed random number less than upper_bound avoiding modulo bias.
+ * Usable only after calling spritz_setup() or spritz_setup_withiv().
  *
  * Parameter ctx:         The context.
- * Parameter upper_bound: The roof, (upper_bound - 1) is the largest random number that can be returned.
+ * Parameter upper_bound: The roof, `upper_bound - 1` is the largest number that can be returned.
  *
  * Return: Random number less than upper_bound, 0 if upper_bound<2.
  */
@@ -186,8 +186,8 @@ uint32_t
 spritz_random32_uniform(spritz_ctx *ctx, uint32_t upper_bound);
 
 /** spritz_add_entropy()
- * Brief: Add entropy to the spritz state `spritz_ctx` using absorb().
- *        Usable only after calling spritz_setup() or spritz_setup_withiv().
+ * Add entropy to the spritz state `spritz_ctx` using absorb().
+ * Usable only after calling spritz_setup() or spritz_setup_withiv().
  *
  * Parameter ctx:     The context.
  * Parameter entropy: The entropy array.
@@ -198,8 +198,8 @@ spritz_add_entropy(spritz_ctx *ctx,
                    const uint8_t *entropy, uint16_t len);
 
 /** spritz_crypt()
- * Brief: Encrypt or decrypt data chunk by xor-ing it with the spritz keystream.
- *        Usable only after calling spritz_setup() or spritz_setup_withiv().
+ * Encrypt or decrypt data chunk by xor-ing it with the spritz keystream.
+ * Usable only after calling spritz_setup() or spritz_setup_withiv().
  *
  * Parameter ctx:     The context.
  * Parameter data:    The data to encrypt or decrypt.
@@ -213,7 +213,7 @@ spritz_crypt(spritz_ctx *ctx,
 
 
 /** spritz_hash_setup()
- * Brief: Setup the spritz hash state `spritz_ctx`.
+ * Setup the spritz hash state `spritz_ctx`.
  *
  * Parameter hash_ctx: The hash context (ctx).
  */
@@ -221,7 +221,7 @@ void
 spritz_hash_setup(spritz_ctx *hash_ctx);
 
 /** spritz_hash_update()
- * Brief: Add a message/data chunk `data` to hash.
+ * Add a message/data chunk `data` to hash.
  *
  * Parameter hash_ctx: The hash context (ctx).
  * Parameter data:     The data chunk to hash.
@@ -232,7 +232,7 @@ spritz_hash_update(spritz_ctx *hash_ctx,
                    const uint8_t *data, uint16_t dataLen);
 
 /** spritz_hash_final()
- * Brief: Output the hash digest.
+ * Output the hash digest.
  *
  * Parameter hash_ctx:  The hash context (ctx).
  * Parameter digest:    The digest (hash) output.
@@ -243,7 +243,7 @@ spritz_hash_final(spritz_ctx *hash_ctx,
                   uint8_t *digest, uint8_t digestLen);
 
 /** spritz_hash()
- * Brief: Cryptographic hash function.
+ * Cryptographic hash function.
  *
  * Parameter digest:    The digest (hash) output.
  * Parameter digestlen: Length of the digest in bytes.
@@ -256,7 +256,7 @@ spritz_hash(uint8_t *digest, uint8_t digestLen,
 
 
 /** spritz_mac_setup()
- * Brief: Setup the spritz message authentication code (MAC) state `spritz_ctx`.
+ * Setup the spritz message authentication code (MAC) state `spritz_ctx`.
  *
  * Parameter mac_ctx: The message authentication code (MAC) context (ctx).
  * Parameter key:     The secret key.
@@ -267,7 +267,7 @@ spritz_mac_setup(spritz_ctx *mac_ctx,
                  const uint8_t *key, uint16_t keyLen);
 
 /** spritz_mac_update()
- * Brief: Add a message/data chunk to message authentication code (MAC).
+ * Add a message/data chunk to message authentication code (MAC).
  *
  * Parameter hash_ctx: The hash context (ctx).
  * Parameter msg:      The message chunk to be authenticated.
@@ -278,7 +278,7 @@ spritz_mac_update(spritz_ctx *mac_ctx,
                   const uint8_t *msg, uint16_t msgLen);
 
 /** spritz_mac_final()
- * Brief: Output the message authentication code (MAC) digest.
+ * Output the message authentication code (MAC) digest.
  *
  * Parameter mac_ctx:   The message authentication code (MAC) context (ctx).
  * Parameter digest:    Message authentication code (MAC) digest output.
@@ -289,7 +289,7 @@ spritz_mac_final(spritz_ctx *mac_ctx,
                  uint8_t *digest, uint8_t digestLen);
 
 /** spritz_mac()
- * Brief: Message authentication code (MAC) function.
+ * Message Authentication Code (MAC) function.
  *
  * Parameter digest:    Message authentication code (MAC) digest output.
  * Parameter digestlen: Length of the digest in bytes.
