@@ -54,7 +54,7 @@ extern "C" {
  * Variables that contain data length will not be wiped.
  *
  * If defined, Then SPRITZ_WIPE_TRACES and SPRITZ_TIMING_SAFE_CRUSH
- * will be assumed and defined automatically.
+ * will be defined automatically.
  */
 #define SPRITZ_WIPE_TRACES_PARANOID
 
@@ -174,7 +174,7 @@ uint32_t
 spritz_random32(spritz_ctx *ctx);
 
 /** spritz_random32_uniform()
- * Calculate a uniformly distributed random number less than `upper_bound` avoiding modulo bias.
+ * Calculate an uniformly distributed random number less than `upper_bound` avoiding modulo bias.
  *
  * Uniformity is achieved by generating new random numbers until the one
  * returned is outside the range [0, 2**32 % upper_bound).

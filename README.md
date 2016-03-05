@@ -95,7 +95,7 @@ Generates a random 32-bit (4 bytes) from the spritz state `spritz_ctx`.
 uint32_t spritz_random32_uniform(spritz_ctx *ctx, uint32_t upper_bound)
 ```
 
-Calculate a uniformly distributed random number less than `upper_bound` avoiding *modulo bias*.
+Calculate an uniformly distributed random number less than `upper_bound` avoiding *modulo bias*.
 Uniformity is achieved by generating new random numbers until the one
 returned is outside the range [0, 2\*\*32 % `upper_bound`).
 This guarantees the selected random number will be inside
@@ -205,8 +205,7 @@ If defined, The library functions internal variables will be wiped if they
 contain a bit or more of spritz state, such as temporary variables in a swap
 function or user data. Variables that contain data length will not be wiped.
 
-If defined, Then `SPRITZ_WIPE_TRACES` and `SPRITZ_TIMING_SAFE_CRUSH`, will
-be assumed and defined automatically.
+If defined, Then `SPRITZ_WIPE_TRACES` and `SPRITZ_TIMING_SAFE_CRUSH`, will be defined automatically.
 
 `SPRITZ_WIPE_TRACES_PARANOID` is defined by default.
 
@@ -226,12 +225,10 @@ spritz library (MAJOR . MINOR . PATCH) using Semantic Versioning.
 
 * [SpritzBestPractice](examples/SpritzBestPractice/SpritzBestPractice.ino):
 Hash 32 KB of a Spritz stream (pseudo-random number generator output) then print the result.
-This code show what the library can do (show off the API).
 An embedded entropy/seed for the pseudo-random number generator is used.
 
 * [SpritzBestPracticePassword](examples/SpritzBestPracticePassword/SpritzBestPracticePassword.ino):
 Generate a strong Alphanumeric passwords, and then print it.
-This code show what the library can do (show off the API).
 An embedded entropy/seed for the pseudo-random number generator is used.
 
 * [SpritzCryptTest](examples/SpritzCryptTest/SpritzCryptTest.ino):
