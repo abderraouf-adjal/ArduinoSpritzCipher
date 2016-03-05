@@ -1,17 +1,16 @@
-# Spritz Library for Arduino
+# Spritz Library For Arduino
 
 > Spritz - a spongy RC4-like stream cipher and hash function.
 
 This library contains a cryptographic pseudo-random number generator,
-a cryptographic hash function, a message authentication code (MAC) function,
-data encryption/decryption using Key and Nonce/Salt/IV, and some
-general-purpose functions such as timing-safe comparison and data wiping from memory.
+cryptographic hash and message authentication code (MAC) functions,
+can perform symmetric-key authenticated data encryption, and general-purpose
+functions for timing-safe comparison and wiping data from memory.
 
 This C Spritz library can be used to:
-  - Hash data
-  - Perform data encryption
-  - Perform authenticated encryption
-  - Generate random numbers from entropy/seed
+  - Hash and authenticate data.
+  - Perform symmetric-key authenticated data encryption.
+  - Generate random numbers and strings from entropy/seed.
 
 [This library's GitHub repository](https://github.com/abderraouf-adjal/ArduinoSpritzCipher).
 
@@ -22,7 +21,7 @@ This C Spritz library can be used to:
 
 ## Library Content
 
-See the source code and the header file for the details.
+#### Read the source code for details.
 
 ### Types
 

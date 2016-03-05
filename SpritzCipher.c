@@ -209,10 +209,17 @@ drip(spritz_ctx *ctx)
 
 /* |====================|| User Functions ||====================| */
 
-/* Timing-safe comparison for `data_a` and `data_b` equality.
+/** spritz_compare()
+ * Timing-safe equality comparison for `data_a` and `data_b`.
  * This function can be used to compare the password's hash safely.
- * Return zero (0x00) if `data_a` equals `data_b` or if `len` is zero,
- *  if they are not equal, a non-zero value will be returned.
+ *
+ * Parameter data_a: Data a to be compare with b.
+ * Parameter data_b: Data b to be compare with a.
+ * Parameter len:    Length of the array in bytes.
+ *
+ * Return: Equality result.
+ *         Zero (0x00) if `data_a` equals `data_b` OR if `len` is zero,
+ *         Non-zero value if they are NOT equal.
  */
 uint8_t
 /* Disable optimization for this function if compiler is GCC */
@@ -248,7 +255,12 @@ spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
   return d;
 }
 
-/* Wipe `buf` data by replacing it with zeros (0x00). */
+/** spritz_memzero()
+ * Wipe `buf` data by replacing it with zeros (0x00).
+ *
+ * Parameter buf: Data to replace it with zeros (0x00).
+ * Parameter len: Length of array in bytes.
+ */
 void
 /* Disable optimization for this function if compiler is GCC */
 #if defined(__GNUC__) && !defined(__clang__)
@@ -266,7 +278,11 @@ spritz_memzero(uint8_t *buf, uint16_t len)
   }
 }
 
-/* Wipe `spritz_ctx`'s data by replacing its data with zeros (0x00). */
+/** spritz_state_memzero()
+ * Wipe `spritz_ctx`'s data by replacing its data with zeros (0x00).
+ *
+ * Parameter ctx: The context.
+ */
 void
 /* Disable optimization for this function if compiler is GCC */
 #if defined(__GNUC__) && !defined(__clang__)
@@ -298,7 +314,13 @@ spritz_state_memzero(spritz_ctx *ctx)
 }
 
 
-/* Setup the spritz state `spritz_ctx` with a key */
+/** spritz_setup()
+ * Setup the spritz state `spritz_ctx` with a key.
+ *
+ * Parameter ctx:    The context.
+ * Parameter key:    The key.
+ * Parameter keylen: Length of the key in bytes.
+ */
 void
 spritz_setup(spritz_ctx *ctx,
              const uint8_t *key, uint8_t keyLen)
@@ -310,7 +332,15 @@ spritz_setup(spritz_ctx *ctx,
   }
 }
 
-/* Setup the spritz state `spritz_ctx` with a key and nonce/Salt/IV */
+/** spritz_setup_withiv()
+ * Setup the spritz state `spritz_ctx` with a key and nonce/salt/iv.
+ *
+ * Parameter ctx:      The context.
+ * Parameter key:      The key.
+ * Parameter keylen:   Length of the key in bytes.
+ * Parameter nonce:    The nonce (salt).
+ * Parameter noncelen: Length of the nonce in bytes.
+ */
 void
 spritz_setup_withIV(spritz_ctx *ctx,
                     const uint8_t *key, uint8_t keyLen,
@@ -325,14 +355,28 @@ spritz_setup_withIV(spritz_ctx *ctx,
   }
 }
 
-/* Generates a random byte from the spritz state `spritz_ctx`. */
+/** spritz_random8()
+ * Generates a random byte from the spritz state `spritz_ctx`.
+ * Usable only after calling spritz_setup() or spritz_setup_withiv().
+ *
+ * Parameter ctx: The context.
+ *
+ * Return: Byte of keystream.
+ */
 uint8_t
 spritz_random8(spritz_ctx *ctx)
 {
   return drip(ctx);
 }
 
-/* Generates a random 32-bit (4 bytes) from the spritz state `spritz_ctx`. */
+/** spritz_random32()
+ * Generates a random 32-bit (4 bytes) from the spritz state `spritz_ctx`.
+ * Usable only after calling spritz_setup() or spritz_setup_withiv().
+ *
+ * Parameter ctx: The context.
+ *
+ * Return: 32-bit (4 bytes) of keystream.
+ */
 uint32_t
 spritz_random32(spritz_ctx *ctx)
 {
@@ -343,15 +387,22 @@ spritz_random32(spritz_ctx *ctx)
     | ((uint32_t)(spritz_random8(ctx)) << 24));
 }
 
-/* Calculate a uniformly distributed random number less than upper_bound
- * avoiding `modulo bias`.
+/** spritz_random32_uniform()
+ * Calculate a uniformly distributed random number less than `upper_bound` avoiding modulo bias.
+ *
  * Uniformity is achieved by generating new random numbers until the one
  * returned is outside the range [0, 2**32 % upper_bound).
  * This guarantees the selected random number will be inside
  * [2**32 % upper_bound, 2**32) which maps back to [0, upper_bound)
  * after reduction modulo upper_bound.
- *
  * spritz_random32_uniform() derives from OpenBSD's arc4random_uniform()
+ *
+ * Usable only after calling spritz_setup() or spritz_setup_withiv().
+ *
+ * Parameter ctx:         The context.
+ * Parameter upper_bound: The roof, `upper_bound - 1` is the largest number that can be returned.
+ *
+ * Return: Random number less than upper_bound, 0 if upper_bound<2.
  */
 uint32_t
 spritz_random32_uniform(spritz_ctx *ctx, uint32_t upper_bound)
@@ -380,7 +431,14 @@ spritz_random32_uniform(spritz_ctx *ctx, uint32_t upper_bound)
   }
 }
 
-/* Add entropy to the spritz state `spritz_ctx` using the internal function absorb(). */
+/** spritz_add_entropy()
+ * Add entropy to the spritz state `spritz_ctx` using absorb().
+ * Usable only after calling spritz_setup() or spritz_setup_withiv().
+ *
+ * Parameter ctx:     The context.
+ * Parameter entropy: The entropy array.
+ * Parameter len:     Length of the entropy array in bytes.
+ */
 void
 spritz_add_entropy(spritz_ctx *ctx,
             const uint8_t *entropy, uint16_t len)
@@ -388,7 +446,15 @@ spritz_add_entropy(spritz_ctx *ctx,
   absorbBytes(ctx, entropy, len);
 }
 
-/* Encrypt or decrypt data chunk by XOR-ing it with the spritz keystream. */
+/** spritz_crypt()
+ * Encrypt or decrypt data chunk by XOR-ing it with the spritz keystream.
+ * Usable only after calling spritz_setup() or spritz_setup_withiv().
+ *
+ * Parameter ctx:     The context.
+ * Parameter data:    The data to encrypt or decrypt.
+ * Parameter datalen: Length of the data in bytes.
+ * Parameter dataout: The output.
+ */
 void
 spritz_crypt(spritz_ctx *ctx,
              const uint8_t *data, uint16_t dataLen,
@@ -402,14 +468,24 @@ spritz_crypt(spritz_ctx *ctx,
 }
 
 
-/* Setup the spritz hash state `spritz_ctx` */
+/** spritz_hash_setup()
+ * Setup the spritz hash state `spritz_ctx`.
+ *
+ * Parameter hash_ctx: The hash context (ctx).
+ */
 void
 spritz_hash_setup(spritz_ctx *hash_ctx)
 {
   spritz_state_init(hash_ctx);
 }
 
-/* Add a message/data chunk `data` to hash. */
+/** spritz_hash_update()
+ * Add a message/data chunk `data` to hash.
+ *
+ * Parameter hash_ctx: The hash context (ctx).
+ * Parameter data:     The data chunk to hash.
+ * Parameter datalen:  Length of the data in bytes.
+ */
 void
 spritz_hash_update(spritz_ctx *hash_ctx,
                    const uint8_t *data, uint16_t dataLen)
@@ -417,7 +493,13 @@ spritz_hash_update(spritz_ctx *hash_ctx,
   absorbBytes(hash_ctx, data, dataLen);
 }
 
-/* Output the hash digest */
+/** spritz_hash_final()
+ * Output the hash digest.
+ *
+ * Parameter hash_ctx:  The hash context (ctx).
+ * Parameter digest:    The digest (hash) output.
+ * Parameter digestlen: Length of the digest in bytes.
+ */
 void
 spritz_hash_final(spritz_ctx *hash_ctx,
                   uint8_t *digest, uint8_t digestLen)
@@ -435,7 +517,14 @@ spritz_hash_final(spritz_ctx *hash_ctx,
   }
 }
 
-/* Cryptographic hash function */
+/** spritz_hash()
+ * Cryptographic hash function.
+ *
+ * Parameter digest:    The digest (hash) output.
+ * Parameter digestlen: Length of the digest in bytes.
+ * Parameter data:      The data to hash.
+ * Parameter datalen:   Length of the data in bytes.
+ */
 void
 spritz_hash(uint8_t *digest, uint8_t digestLen,
             const uint8_t *data, uint16_t dataLen)
@@ -453,7 +542,13 @@ spritz_hash(uint8_t *digest, uint8_t digestLen,
 }
 
 
-/* Setup the spritz message authentication code (MAC) state `spritz_ctx` */
+/** spritz_mac_setup()
+ * Setup the spritz message authentication code (MAC) state `spritz_ctx`.
+ *
+ * Parameter mac_ctx: The message authentication code (MAC) context (ctx).
+ * Parameter key:     The secret key.
+ * Parameter keylen:  Length of the key in bytes.
+ */
 void
 spritz_mac_setup(spritz_ctx *mac_ctx,
                  const uint8_t *key, uint16_t keyLen)
@@ -463,7 +558,13 @@ spritz_mac_setup(spritz_ctx *mac_ctx,
   absorbStop(mac_ctx);
 }
 
-/* Add a message/data chunk to message authentication code (MAC) */
+/** spritz_mac_update()
+ * Add a message/data chunk to message authentication code (MAC).
+ *
+ * Parameter hash_ctx: The hash context (ctx).
+ * Parameter msg:      The message chunk to be authenticated.
+ * Parameter msglen:   Length of the message in bytes.
+ */
 void
 spritz_mac_update(spritz_ctx *mac_ctx,
                   const uint8_t *msg, uint16_t msgLen)
@@ -471,7 +572,13 @@ spritz_mac_update(spritz_ctx *mac_ctx,
   spritz_hash_update(mac_ctx, msg, msgLen); /* absorbBytes() */
 }
 
-/* Output the message authentication code (MAC) digest */
+/** spritz_mac_final()
+ * Output the message authentication code (MAC) digest.
+ *
+ * Parameter mac_ctx:   The message authentication code (MAC) context (ctx).
+ * Parameter digest:    Message authentication code (MAC) digest output.
+ * Parameter digestlen: Length of the digest in bytes.
+ */
 void
 spritz_mac_final(spritz_ctx *mac_ctx,
                  uint8_t *digest, uint8_t digestLen)
@@ -479,7 +586,16 @@ spritz_mac_final(spritz_ctx *mac_ctx,
   spritz_hash_final(mac_ctx, digest, digestLen);
 }
 
-/* message authentication code (MAC) function */
+/** spritz_mac()
+ * Message Authentication Code (MAC) function.
+ *
+ * Parameter digest:    Message authentication code (MAC) digest output.
+ * Parameter digestlen: Length of the digest in bytes.
+ * Parameter msg:       The message to be authenticated.
+ * Parameter msglen:    Length of the message in bytes.
+ * Parameter key:       The secret key.
+ * Parameter keylen:    Length of the key in bytes.
+ */
 void
 spritz_mac(uint8_t *digest, uint8_t digestLen,
            const uint8_t *msg, uint16_t msgLen,

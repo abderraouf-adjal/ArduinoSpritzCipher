@@ -174,7 +174,15 @@ uint32_t
 spritz_random32(spritz_ctx *ctx);
 
 /** spritz_random32_uniform()
- * Calculate a uniformly distributed random number less than upper_bound avoiding modulo bias.
+ * Calculate a uniformly distributed random number less than `upper_bound` avoiding modulo bias.
+ *
+ * Uniformity is achieved by generating new random numbers until the one
+ * returned is outside the range [0, 2**32 % upper_bound).
+ * This guarantees the selected random number will be inside
+ * [2**32 % upper_bound, 2**32) which maps back to [0, upper_bound)
+ * after reduction modulo upper_bound.
+ * spritz_random32_uniform() derives from OpenBSD's arc4random_uniform()
+ *
  * Usable only after calling spritz_setup() or spritz_setup_withiv().
  *
  * Parameter ctx:         The context.
@@ -198,7 +206,7 @@ spritz_add_entropy(spritz_ctx *ctx,
                    const uint8_t *entropy, uint16_t len);
 
 /** spritz_crypt()
- * Encrypt or decrypt data chunk by xor-ing it with the spritz keystream.
+ * Encrypt or decrypt data chunk by XOR-ing it with the spritz keystream.
  * Usable only after calling spritz_setup() or spritz_setup_withiv().
  *
  * Parameter ctx:     The context.
