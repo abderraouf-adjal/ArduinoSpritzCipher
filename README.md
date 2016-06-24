@@ -207,7 +207,7 @@ function or user data. Variables that contain data length will not be wiped.
 
 If defined, Then `SPRITZ_WIPE_TRACES` and `SPRITZ_TIMING_SAFE_CRUSH`, will be defined automatically.
 
-`SPRITZ_WIPE_TRACES_PARANOID` is defined by default.
+`SPRITZ_WIPE_TRACES_PARANOID` is **NOT** defined by default.
 
 **SPRITZ_N** = `256` - Present the value of N in this spritz implementation, *Do NOT change `SPRITZ_N` value*.
 

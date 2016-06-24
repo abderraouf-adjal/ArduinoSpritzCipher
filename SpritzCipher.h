@@ -56,7 +56,7 @@ extern "C" {
  * If defined, Then SPRITZ_WIPE_TRACES and SPRITZ_TIMING_SAFE_CRUSH
  * will be defined automatically.
  */
-#define SPRITZ_WIPE_TRACES_PARANOID
+/* #define SPRITZ_WIPE_TRACES_PARANOID */
 
 #ifdef SPRITZ_WIPE_TRACES_PARANOID
 # ifndef SPRITZ_TIMING_SAFE_CRUSH
