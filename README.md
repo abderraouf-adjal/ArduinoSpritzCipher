@@ -211,14 +211,14 @@ If defined, Then `SPRITZ_WIPE_TRACES` and `SPRITZ_TIMING_SAFE_CRUSH`, will be de
 
 **SPRITZ_N** = `256` - Present the value of N in this spritz implementation, *Do NOT change `SPRITZ_N` value*.
 
-**SPRITZ_LIBRARY_VERSION_STRING** = `"1.0.1"` - Present the version of this
+**SPRITZ_LIBRARY_VERSION_STRING** = `"1.0.2"` - Present the version of this
 spritz library (MAJOR . MINOR . PATCH) using Semantic Versioning.
 
 **SPRITZ_LIBRARY_VERSION_MAJOR** = `1` - The MAJOR version of the library.
 
 **SPRITZ_LIBRARY_VERSION_MINOR** = `0` - The MINOR version of the library.
 
-**SPRITZ_LIBRARY_VERSION_PATCH** = `1` - The PATCH version of the library.
+**SPRITZ_LIBRARY_VERSION_PATCH** = `2` - The PATCH version of the library.
 
 
 ## Examples
