@@ -243,9 +243,6 @@ Hash function test.
 * [SpritzMACTest](examples/SpritzMACTest/SpritzMACTest.ino):
 Message authentication code (MAC) function test.
 
-* [SpritzBenchmark](examples/SpritzBenchmark/SpritzBenchmark.ino):
-ArduinoSpritzCipher library benchmark (performance test).
-
 
 ## Installation Guide
 
