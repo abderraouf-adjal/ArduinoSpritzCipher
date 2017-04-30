@@ -83,7 +83,7 @@ Setup the spritz state `spritz_ctx` with a `key` and `nonce`/Salt/IV.
 uint8_t spritz_random8(spritz_ctx *ctx)
 ```
 
-Generates a random byte from the spritz state `spritz_ctx`.
+Generates a random byte (8-bit) from the spritz state `spritz_ctx`.
 
 ```c
 uint32_t spritz_random32(spritz_ctx *ctx)
@@ -178,11 +178,15 @@ Output the Message Authentication Code (MAC) digest.
 `spritz_random8()`, `spritz_random32()`, `spritz_random32_uniform()`, `spritz_add_entropy()`, `spritz_crypt()`.
 Are usable only after calling `spritz_setup()` or `spritz_setup_withIV()`.
 
-Use `spritz_state_memzero()` after `spritz_hash_final()` or `spritz_mac_final()`
-if you need to wipe the used `spritz_ctx`'s data.
+Functions `spritz_random*()` requires `spritz_setup()` or `spritz_setup_withIV()` initialized with an entropy (random data), 128-bit of entropy at least.
+Arduino Uno's ATmega328P and many microcontrollers and microprocessors does not have a real source of entropy,
+you may need an external source of entropy such as external hardware to get it, or at least a prestored random data updated with `spritz_random*()`.
 
 To generate a random number in a range [k, m) use `k + spritz_random32_uniform(ctx, m)`,
 Not `k + (spritz_random8(ctx) % m)` or `k + (spritz_random32(ctx) % m)`.
+
+Use `spritz_state_memzero()` after `spritz_hash_final()` or `spritz_mac_final()`
+if you need to wipe the used `spritz_ctx`'s data.
 
 
 ### Constants
@@ -259,7 +263,7 @@ Compiling this library using *GCC* or *Clang* will give more security for functi
 
 ## Copyright and License
 
-> Copyright (c) 2015-2016 Abderraouf Adjal
+> Copyright (c) 2015-2017 Abderraouf Adjal
 
 - The source-code: The MIT License.
 
