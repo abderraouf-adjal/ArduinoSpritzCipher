@@ -12,9 +12,19 @@
  * This example code is in the public domain.
  */
 
+/* ArduinoSpritzCipher documentation: README.md */
+
 
 #include <SpritzCipher.h>
 
+
+/* In a real case, get entropy by using hardware, NOT an embedded data like this example.
+ * 
+ * Arduino Uno's ATmega328P and many microcontrollers and microprocessors
+ * does NOT have a real/official way to get entropy,
+ * you will/may need getting entropy by using hardware (recommended),
+ * or at least a pre-stored random data updated with `spritz_random*()` output (NOT recommended).
+ */
 
 /* The RNG seed (64 digits of Pi) */
 const uint8_t entropy[64] =

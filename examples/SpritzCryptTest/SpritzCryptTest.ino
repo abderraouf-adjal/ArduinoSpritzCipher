@@ -10,6 +10,8 @@
  * This example code is in the public domain.
  */
 
+/* ArduinoSpritzCipher documentation: README.md */
+
 
 #include <SpritzCipher.h>
 

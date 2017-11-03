@@ -179,8 +179,9 @@ Output the Message Authentication Code (MAC) digest.
 Are usable only after calling `spritz_setup()` or `spritz_setup_withIV()`.
 
 Functions `spritz_random*()` requires `spritz_setup()` or `spritz_setup_withIV()` initialized with an entropy (random data), 128-bit of entropy at least.
-Arduino Uno's ATmega328P and many microcontrollers and microprocessors does not have a real source of entropy,
-you may need an external source of entropy such as external hardware to get it, or at least a prestored random data updated with `spritz_random*()`.
+Arduino Uno's ATmega328P and many microcontrollers and microprocessors does NOT have a real/official way to get entropy,
+
+**you will/may need getting entropy** by using hardware (recommended), or at least a pre-stored random data updated with `spritz_random*()` output (NOT recommended).
 
 To generate a random number in a range [k, m) use `k + spritz_random32_uniform(ctx, m)`,
 Not `k + (spritz_random8(ctx) % m)` or `k + (spritz_random32(ctx) % m)`.
