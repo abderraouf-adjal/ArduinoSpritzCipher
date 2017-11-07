@@ -12,9 +12,13 @@
  * This example code is in the public domain.
  */
 
-/* ArduinoSpritzCipher documentation: README.md */
+/* ArduinoSpritzCipher documentation: <README.md> */
 
 
+/* ArduinoSpritzCipher is configurable in <SpritzCipher.h> with:
+ * SPRITZ_TIMING_SAFE_CRUSH, SPRITZ_WIPE_TRACES, SPRITZ_WIPE_TRACES_PARANOID.
+ * For detailed information, read the documentation.
+ */
 #include <SpritzCipher.h>
 
 
@@ -27,7 +31,7 @@
  */
 
 /* The RNG seed (64 digits of Pi) */
-const uint8_t entropy[64] =
+const uint8_t entropy_example[64] =
 { '3', '1', '4', '1', '5', '9', '2', '6',
   '5', '3', '5', '8', '9', '7', '9', '3',
   '2', '3', '8', '4', '6', '2', '6', '4',
@@ -69,7 +73,7 @@ void loop() {
   Serial.println("\n[Hash 32 KB of Spritz random bytes generator output]\n");
 
   /* Make a 256-bit hash of the entropy in "buf" using one function */
-  spritz_hash(buf, (uint8_t)(sizeof(buf)), entropy, (uint8_t)(sizeof(entropy)));
+  spritz_hash(buf, (uint8_t)(sizeof(buf)), entropy_example, (uint8_t)(sizeof(entropy_example)));
   /* Initialize/Seed the RNG with the hash of entropy */
   spritz_setup(&rng_ctx, buf, (uint8_t)(sizeof(buf)));
 

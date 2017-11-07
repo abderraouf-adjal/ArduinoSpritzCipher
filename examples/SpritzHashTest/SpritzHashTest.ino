@@ -12,9 +12,13 @@
  * This example code is in the public domain.
  */
 
-/* ArduinoSpritzCipher documentation: README.md */
+/* ArduinoSpritzCipher documentation: <README.md> */
 
 
+/* ArduinoSpritzCipher is configurable in <SpritzCipher.h> with:
+ * SPRITZ_TIMING_SAFE_CRUSH, SPRITZ_WIPE_TRACES, SPRITZ_WIPE_TRACES_PARANOID.
+ * For detailed information, read the documentation.
+ */
 #include <SpritzCipher.h>
 
 

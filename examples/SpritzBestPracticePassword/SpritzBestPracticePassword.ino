@@ -11,9 +11,13 @@
  * This example code is in the public domain.
  */
 
-/* ArduinoSpritzCipher documentation: README.md */
+/* ArduinoSpritzCipher documentation: <README.md> */
 
 
+/* ArduinoSpritzCipher is configurable in <SpritzCipher.h> with:
+ * SPRITZ_TIMING_SAFE_CRUSH, SPRITZ_WIPE_TRACES, SPRITZ_WIPE_TRACES_PARANOID.
+ * For detailed information, read the documentation.
+ */
 #include <SpritzCipher.h>
 
 
@@ -26,7 +30,7 @@
  */
 
 /* The RNG seed (64 digits of Pi) */
-uint8_t entropy[64] =
+uint8_t entropy_example[64] =
 { '3', '1', '4', '1', '5', '9', '2', '6',
   '5', '3', '5', '8', '9', '7', '9', '3',
   '2', '3', '8', '4', '6', '2', '6', '4',
@@ -69,11 +73,11 @@ void loop() {
    */
   /* Make a 256-bit hash of the entropy in "buf" using one function */
   spritz_hash_setup(&the_ctx); /* Initialize */
-  spritz_hash_update(&the_ctx, entropy, (uint16_t)(sizeof(entropy))); /* Add data */
+  spritz_hash_update(&the_ctx, entropy_example, (uint16_t)(sizeof(entropy_example))); /* Add data */
   spritz_hash_final(&the_ctx, buf, (uint8_t)(sizeof(buf))); /* Output the final hash */
 
   spritz_state_memzero(&the_ctx); /* wipe "the_ctx" data by replacing it with zeros (0x00) */
-  spritz_memzero(entropy, (uint16_t)(sizeof(entropy))); /* wipe "entropy" data by replacing it with zeros (0x00) */
+  spritz_memzero(entropy_example, (uint16_t)(sizeof(entropy_example))); /* wipe "entropy" data by replacing it with zeros (0x00) */
 
   /* Initialize/Seed the RNG with the hash of entropy */
   spritz_setup(&the_ctx, buf, (uint8_t)(sizeof(buf)));
