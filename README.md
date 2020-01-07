@@ -236,7 +236,7 @@ An embedded entropy/seed for the pseudo-random number generator is used.
 Generate a strong Alphanumeric passwords, and then print it.
 An embedded entropy/seed for the pseudo-random number generator is used.
 
-* [SpritzBestPracticePasswordESP8266](examples/SpritzBestPracticePassword/SpritzBestPracticePasswordESP8266.ino):
+* [SpritzBestPracticePasswordESP8266](examples/SpritzBestPracticePasswordESP8266/SpritzBestPracticePasswordESP8266.ino):
 Generate a strong Alphanumeric passwords, and then print it.
 This example is for ESP8266 SoC, it uses a hardware RNG in ESP8266 as an initialization entropy.
 
