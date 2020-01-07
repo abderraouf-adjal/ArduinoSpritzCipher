@@ -216,14 +216,14 @@ If defined, Then `SPRITZ_WIPE_TRACES` and `SPRITZ_TIMING_SAFE_CRUSH`, will be de
 
 **SPRITZ_N** = `256` - Present the value of N in this spritz implementation, *Do NOT change `SPRITZ_N` value*.
 
-**SPRITZ_LIBRARY_VERSION_STRING** = `"1.0.4"` - Present the version of this
+**SPRITZ_LIBRARY_VERSION_STRING** = `"1.0.5"` - Present the version of this
 spritz library (MAJOR . MINOR . PATCH) using Semantic Versioning.
 
 **SPRITZ_LIBRARY_VERSION_MAJOR** = `1` - The MAJOR version of the library.
 
 **SPRITZ_LIBRARY_VERSION_MINOR** = `0` - The MINOR version of the library.
 
-**SPRITZ_LIBRARY_VERSION_PATCH** = `4` - The PATCH version of the library.
+**SPRITZ_LIBRARY_VERSION_PATCH** = `5` - The PATCH version of the library.
 
 
 ## Examples
@@ -235,6 +235,10 @@ An embedded entropy/seed for the pseudo-random number generator is used.
 * [SpritzBestPracticePassword](examples/SpritzBestPracticePassword/SpritzBestPracticePassword.ino):
 Generate a strong Alphanumeric passwords, and then print it.
 An embedded entropy/seed for the pseudo-random number generator is used.
+
+* [SpritzBestPracticePasswordESP8266](examples/SpritzBestPracticePassword/SpritzBestPracticePasswordESP8266.ino):
+Generate a strong Alphanumeric passwords, and then print it.
+This example is for ESP8266 SoC, it uses a hardware RNG in ESP8266 as an initialization entropy.
 
 * [SpritzCryptTest](examples/SpritzCryptTest/SpritzCryptTest.ino):
 Test the library encryption/decryption function.
@@ -264,7 +268,7 @@ Compiling this library using *GCC* or *Clang* will give more security for functi
 
 ## Copyright and License
 
-> Copyright (c) 2015-2017 Abderraouf Adjal
+> Copyright (c) 2015-2020 Abderraouf Adjal
 
 - The source-code: The MIT License.
 

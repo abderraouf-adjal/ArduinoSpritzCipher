@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Abderraouf Adjal
+ * Copyright (c) 2015-2020 Abderraouf Adjal
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -73,10 +73,10 @@ extern "C" {
 #define SPRITZ_N 256
 
 /* `Semantic Versioning` of this library */
-#define SPRITZ_LIBRARY_VERSION_STRING "1.0.4"
+#define SPRITZ_LIBRARY_VERSION_STRING "1.0.5"
 #define SPRITZ_LIBRARY_VERSION_MAJOR 1
 #define SPRITZ_LIBRARY_VERSION_MINOR 0
-#define SPRITZ_LIBRARY_VERSION_PATCH 4
+#define SPRITZ_LIBRARY_VERSION_PATCH 5
 
 
 /** spritz_ctx
