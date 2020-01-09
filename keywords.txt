@@ -1,5 +1,9 @@
+# Arduino IDE syntax coloring map for SpritzCipher library
+
+# Datatypes:
 spritz_ctx	KEYWORD1
 
+# Methods and Functions
 spritz_compare	KEYWORD2
 spritz_memzero	KEYWORD2
 spritz_state_memzero	KEYWORD2
@@ -19,6 +23,7 @@ spritz_mac_update	KEYWORD2
 spritz_mac_final	KEYWORD2
 spritz_mac	KEYWORD2
 
+# Constants
 SPRITZ_N	LITERAL1
 SPRITZ_LIBRARY_VERSION_STRING	LITERAL1
 SPRITZ_LIBRARY_VERSION_MAJOR	LITERAL1
