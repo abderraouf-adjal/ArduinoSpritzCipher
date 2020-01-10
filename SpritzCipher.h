@@ -73,10 +73,10 @@ extern "C" {
 #define SPRITZ_N 256
 
 /* `Semantic Versioning` of this library */
-#define SPRITZ_LIBRARY_VERSION_STRING "1.0.5"
+#define SPRITZ_LIBRARY_VERSION_STRING "1.0.6"
 #define SPRITZ_LIBRARY_VERSION_MAJOR 1
 #define SPRITZ_LIBRARY_VERSION_MINOR 0
-#define SPRITZ_LIBRARY_VERSION_PATCH 5
+#define SPRITZ_LIBRARY_VERSION_PATCH 6
 
 
 /** spritz_ctx
