@@ -270,8 +270,8 @@ Compiling this library using *GCC* or *Clang* will give more security for functi
 
 > Copyright (c) 2015-2020 Abderraouf Adjal
 
-- The source-code: The MIT License.
+- The source-code: ISC License.
 
-- Documentation (e.g. this file content): Licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0).
+- Documentation (e.g. this file content): Public domain.
 
 - Examples: Public domain.
