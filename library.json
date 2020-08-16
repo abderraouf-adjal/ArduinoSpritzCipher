@@ -1,0 +1,22 @@
+{
+    "name": "SpritzCipher",
+    "version": "1.1.0",
+    "description": "Spritz library for Arduino, CSPRNG, cryptographic hash and MAC functions, symmetric-key data encryption, and some general-purpose functions.",
+    "keywords": "arduino, spritz, cipher, crypto, encryption, hash, mac, prng, rng, security",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/abderraouf-adjal/ArduinoSpritzCipher.git"
+    },
+    "authors": [
+        {
+            "name": "Abderraouf Adjal",
+            "email": "abderraouf.adjal@gmail.com",
+            "url": "https://github.com/abderraouf-adjal",
+            "maintainer": true
+        }
+    ],
+    "license": "ISC",
+    "homepage": "https://github.com/abderraouf-adjal/ArduinoSpritzCipher",
+    "frameworks": "*",
+    "platforms": "*"
+}
