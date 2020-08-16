@@ -31,14 +31,18 @@ extern "C" {
  * If defined, the equal time crush() will be used.
  * This may NOT be useful in some compilers with optimization (except GCC and Clang).
  */
-#define SPRITZ_TIMING_SAFE_CRUSH
+#if 1
+# define SPRITZ_TIMING_SAFE_CRUSH
+#endif
 
 /** SPRITZ_WIPE_TRACES
  * If defined, sensitive data (like spritz_ctx) when they are
  * no longer needed in functions such as hash and mac will be wiped.
  * Functions that SPRITZ_WIPE_TRACES is involved with: spritz_hash(), spritz_mac().
  */
-#define SPRITZ_WIPE_TRACES
+#if 0
+# define SPRITZ_WIPE_TRACES
+#endif
 
 /** SPRITZ_WIPE_TRACES_PARANOID
  * If defined, the library functions internal variables will be wiped if it contains
@@ -49,7 +53,9 @@ extern "C" {
  * If defined, Then SPRITZ_WIPE_TRACES and SPRITZ_TIMING_SAFE_CRUSH
  * will be defined automatically.
  */
-/* #define SPRITZ_WIPE_TRACES_PARANOID */
+#if 0
+# define SPRITZ_WIPE_TRACES_PARANOID
+#endif
 
 #ifdef SPRITZ_WIPE_TRACES_PARANOID
 # ifndef SPRITZ_TIMING_SAFE_CRUSH
@@ -66,10 +72,10 @@ extern "C" {
 #define SPRITZ_N 256
 
 /* `Semantic Versioning` of this library */
-#define SPRITZ_LIBRARY_VERSION_STRING "1.0.8"
+#define SPRITZ_LIBRARY_VERSION_STRING "1.1.0"
 #define SPRITZ_LIBRARY_VERSION_MAJOR 1
-#define SPRITZ_LIBRARY_VERSION_MINOR 0
-#define SPRITZ_LIBRARY_VERSION_PATCH 8
+#define SPRITZ_LIBRARY_VERSION_MINOR 1
+#define SPRITZ_LIBRARY_VERSION_PATCH 0
 
 
 /** spritz_ctx
@@ -77,7 +83,8 @@ extern "C" {
  */
 typedef struct
 {
-  uint8_t s[SPRITZ_N], i, j, k, z, a, w;
+  uint8_t s[SPRITZ_N];
+  uint8_t i, j, k, z, a, w;
 #ifdef SPRITZ_WIPE_TRACES_PARANOID
   /* `tmp1` for: spritz_state_s_swap(), safe timing crush().
    * `tmp2` for: The safe timing crush().

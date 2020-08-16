@@ -8,20 +8,22 @@ can perform symmetric-key authenticated data encryption, and general-purpose
 functions for timing-safe comparison and wiping data from memory.
 
 This C Spritz library can be used to:
-  - Hash and authenticate data.
-  - Perform symmetric-key authenticated data encryption.
-  - Generate random numbers and strings from entropy/seed.
+
+- Hash and authenticate data.
+- Perform symmetric-key authenticated data encryption.
+- Generate random numbers and strings from entropy/seed.
 
 [This library's GitHub repository](https://github.com/abderraouf-adjal/ArduinoSpritzCipher).
 
 [This library's Bitbucket repository](https://bitbucket.org/abderraouf-adjal/arduinospritzcipher) (Backup).
 
-**Spritz paper:** https://people.csail.mit.edu/rivest/pubs/RS14.pdf
+**Spritz paper:** <https://people.csail.mit.edu/rivest/pubs/RS14.pdf>
 
+---
 
 ## Library Content
 
-#### Read the source code for details.
+**Read the source code for details.**
 
 ### Types
 
@@ -33,7 +35,6 @@ This C Spritz library can be used to:
 **uint16_t** - unsigned integer type with width of 16-bit, MIN=0;MAX=65,535.
 
 **uint32_t** - unsigned integer type with width of 32-bit, MIN=0;MAX=4,294,967,295.
-
 
 ### Functions
 
@@ -173,8 +174,8 @@ void spritz_mac_final(spritz_ctx *mac_ctx,
 
 Output the Message Authentication Code (MAC) digest.
 
+#### Notes
 
-##### Notes:
 `spritz_random8()`, `spritz_random32()`, `spritz_random32_uniform()`, `spritz_add_entropy()`, `spritz_crypt()`.
 Are usable only after calling `spritz_setup()` or `spritz_setup_withIV()`.
 
@@ -189,69 +190,73 @@ Not `k + (spritz_random8(ctx) % m)` or `k + (spritz_random32(ctx) % m)`.
 Use `spritz_state_memzero()` after `spritz_hash_final()` or `spritz_mac_final()`
 if you need to wipe the used `spritz_ctx`'s data.
 
-
 ### Constants
-**SPRITZ_TIMING_SAFE_CRUSH**
+
+Configure library settings in the file `SpritzCipher.h`.
+
+- **SPRITZ_TIMING_SAFE_CRUSH**
 
 If defined, The equal time `crush()` will be used.
 
 `SPRITZ_TIMING_SAFE_CRUSH` is defined by default.
 
-**SPRITZ_WIPE_TRACES**
+- **SPRITZ_WIPE_TRACES**
 
 If defined, Sensitive data like `spritz_ctx` will be wiped, when they are
 no longer needed, in the functions: `spritz_hash()`, `spritz_mac()`.
 
-`SPRITZ_WIPE_TRACES` is defined by default.
+`SPRITZ_WIPE_TRACES` is **NOT** defined by default.
 
-**SPRITZ_WIPE_TRACES_PARANOID**
+- **SPRITZ_WIPE_TRACES_PARANOID**
 
 If defined, The library functions internal variables will be wiped if they
 contain a bit or more of spritz state, such as temporary variables in a swap
 function or user data. Variables that contain data length will not be wiped.
 
-If defined, Then `SPRITZ_WIPE_TRACES` and `SPRITZ_TIMING_SAFE_CRUSH`, will be defined automatically.
+If `SPRITZ_WIPE_TRACES_PARANOID` defined, Then `SPRITZ_WIPE_TRACES` and `SPRITZ_TIMING_SAFE_CRUSH`, will be defined automatically.
 
 `SPRITZ_WIPE_TRACES_PARANOID` is **NOT** defined by default.
 
-**SPRITZ_N** = `256` - Present the value of N in this spritz implementation, *Do NOT change `SPRITZ_N` value*.
+- **SPRITZ_N** = `256` - Present the value of N in this spritz implementation, *Do NOT change `SPRITZ_N` value*.
 
-**SPRITZ_LIBRARY_VERSION_STRING** = `"x.y.z"` - Present the version of this
+- **SPRITZ_LIBRARY_VERSION_STRING** = `"x.y.z"` - Present the version of this
 spritz library (MAJOR . MINOR . PATCH) using Semantic Versioning.
 
-**SPRITZ_LIBRARY_VERSION_MAJOR** = `x` - The MAJOR version of the library.
+- **SPRITZ_LIBRARY_VERSION_MAJOR** = `x` - The MAJOR version of the library.
 
-**SPRITZ_LIBRARY_VERSION_MINOR** = `y` - The MINOR version of the library.
+- **SPRITZ_LIBRARY_VERSION_MINOR** = `y` - The MINOR version of the library.
 
-**SPRITZ_LIBRARY_VERSION_PATCH** = `z` - The PATCH version of the library.
+- **SPRITZ_LIBRARY_VERSION_PATCH** = `z` - The PATCH version of the library.
 
+---
 
 ## Examples
 
-* [SpritzBestPractice](examples/SpritzBestPractice/SpritzBestPractice.ino):
+- [SpritzBestPractice](examples/SpritzBestPractice/SpritzBestPractice.ino):
 Hash 32 KB of a Spritz stream (pseudo-random number generator output) then print the result.
 An embedded entropy/seed for the pseudo-random number generator is used.
 
-* [SpritzBestPracticePassword](examples/SpritzBestPracticePassword/SpritzBestPracticePassword.ino):
+- [SpritzBestPracticePassword](examples/SpritzBestPracticePassword/SpritzBestPracticePassword.ino):
 Generate a strong Alphanumeric passwords, and then print it.
 An embedded entropy/seed for the pseudo-random number generator is used.
 
-* [SpritzBestPracticePasswordESP8266](examples/SpritzBestPracticePasswordESP8266/SpritzBestPracticePasswordESP8266.ino):
+- [SpritzBestPracticePasswordESP8266](examples/SpritzBestPracticePasswordESP8266/SpritzBestPracticePasswordESP8266.ino):
 Generate a strong Alphanumeric passwords, and then print it.
 This example is for ESP8266 SoC, it uses a hardware RNG in ESP8266 as an initialization entropy.
 
-* [SpritzCryptTest](examples/SpritzCryptTest/SpritzCryptTest.ino):
+- [SpritzCryptTest](examples/SpritzCryptTest/SpritzCryptTest.ino):
 Test the library encryption/decryption function.
 
-* [SpritzStreamTest](examples/SpritzStreamTest/SpritzStreamTest.ino):
+- [SpritzStreamTest](examples/SpritzStreamTest/SpritzStreamTest.ino):
 Generate random bytes (Spritz stream) test.
 
-* [SpritzHashTest](examples/SpritzHashTest/SpritzHashTest.ino):
+- [SpritzHashTest](examples/SpritzHashTest/SpritzHashTest.ino):
 Hash function test.
 
-* [SpritzMACTest](examples/SpritzMACTest/SpritzMACTest.ino):
+- [SpritzMACTest](examples/SpritzMACTest/SpritzMACTest.ino):
 Message authentication code (MAC) function test.
 
+---
 
 ## Installation Guide
 
@@ -260,11 +265,13 @@ Message authentication code (MAC) function test.
 
 Compiling this library using *GCC* or *Clang* will give more security for functions that should be compiled with *zero optimization* (`-O0`) like `spritz_compare()`.
 
+---
 
 ## Reporting bugs
 
 [Create an issue on GitHub](https://github.com/abderraouf-adjal/ArduinoSpritzCipher/issues).
 
+---
 
 ## Copyright and License
 

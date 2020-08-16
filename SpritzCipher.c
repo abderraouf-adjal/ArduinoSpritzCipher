@@ -23,7 +23,7 @@
 #define SPRITZ_N_HALF 128 /* SPRITZ_N / 2 */
 
 
-static void
+static inline void
 spritz_state_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
 {
 #ifdef SPRITZ_WIPE_TRACES_PARANOID
@@ -38,7 +38,7 @@ spritz_state_s_swap(spritz_ctx *ctx, uint8_t index_a, uint8_t index_b)
 }
 
 
-static void
+static inline void
 spritz_state_init(spritz_ctx *ctx)
 {
   uint8_t i = 0;
@@ -56,7 +56,7 @@ spritz_state_init(spritz_ctx *ctx)
   ctx->w = 1;
 }
 
-static void
+static inline void
 update(spritz_ctx *ctx)
 {
   ctx->i = (uint8_t)(ctx->i + ctx->w);
@@ -65,7 +65,7 @@ update(spritz_ctx *ctx)
   spritz_state_s_swap(ctx, ctx->i, ctx->j);
 }
 
-static void
+static inline void
 whip(spritz_ctx *ctx)
 {
   uint8_t i;
@@ -81,7 +81,7 @@ whip(spritz_ctx *ctx)
 }
 
 #ifdef SPRITZ_TIMING_SAFE_CRUSH
-static void
+static inline void
 /* SPRITZ_TIMING_SAFE_CRUSH and GCC, disable optimization for this function */
 # if defined(__GNUC__) && !defined(__clang__)
 __attribute__ ((optimize("O0")))
@@ -135,7 +135,7 @@ crush(spritz_ctx *ctx)
 }
 #endif
 
-static void
+static inline void
 shuffle(spritz_ctx *ctx)
 {
   whip(ctx);
@@ -147,7 +147,7 @@ shuffle(spritz_ctx *ctx)
 }
 
 /* Note: Nibble=4-bit; Octet=2*Nibble=8-bit; Byte=Octet (in modern/most computers) */
-static void
+static inline void
 absorbNibble(spritz_ctx *ctx, const uint8_t nibble)
 {
   if (ctx->a == SPRITZ_N_HALF) {
@@ -156,13 +156,13 @@ absorbNibble(spritz_ctx *ctx, const uint8_t nibble)
   spritz_state_s_swap(ctx, ctx->a, (uint8_t)(SPRITZ_N_HALF + nibble));
   ctx->a++;
 }
-static void
+static inline void
 absorb(spritz_ctx *ctx, const uint8_t octet)
 {
   absorbNibble(ctx, octet % 16); /* With the Right/Low nibble */
   absorbNibble(ctx, octet / 16); /* With the Left/High nibble */
 }
-static void
+static inline void
 absorbBytes(spritz_ctx *ctx, const uint8_t *buf, uint16_t len)
 {
   uint16_t i;
@@ -172,7 +172,7 @@ absorbBytes(spritz_ctx *ctx, const uint8_t *buf, uint16_t len)
   }
 }
 
-static void
+static inline void
 absorbStop(spritz_ctx *ctx)
 {
   if (ctx->a == SPRITZ_N_HALF) {
@@ -182,14 +182,14 @@ absorbStop(spritz_ctx *ctx)
   ctx->a++;
 }
 
-static uint8_t
+static inline uint8_t
 output(spritz_ctx *ctx)
 {
   ctx->z = ctx->s[(ctx->s[(ctx->s[(ctx->z + ctx->k) % SPRITZ_N] + ctx->i) % SPRITZ_N] + ctx->j) % SPRITZ_N];
   return ctx->z;
 }
 
-static uint8_t
+static inline uint8_t
 drip(spritz_ctx *ctx)
 {
   if (ctx->a) {
@@ -522,11 +522,25 @@ void
 spritz_hash(uint8_t *digest, uint8_t digestLen,
             const uint8_t *data, uint16_t dataLen)
 {
+  uint8_t i;
   spritz_ctx hash_ctx;
 
-  spritz_hash_setup(&hash_ctx); /* spritz_state_init() */
-  spritz_hash_update(&hash_ctx, data, dataLen); /* absorbBytes() */
-  spritz_hash_final(&hash_ctx, digest, digestLen);
+  /* spritz_hash_setup() */
+  spritz_state_init(&hash_ctx);
+
+  /* spritz_hash_update() */
+  absorbBytes(&hash_ctx, data, dataLen);
+
+  /* Same as spritz_hash_final() */
+  absorbStop(&hash_ctx);
+  absorb(&hash_ctx, digestLen);
+  /* squeeze() */
+  if (hash_ctx.a) {
+    shuffle(&hash_ctx);
+  }
+  for (i = 0; i < digestLen; i++) {
+    digest[i] = drip(&hash_ctx);
+  }
 
   /* `hash_ctx` data will be replaced with 0x00 if SPRITZ_WIPE_TRACES is defined */
 #ifdef SPRITZ_WIPE_TRACES
@@ -546,8 +560,8 @@ void
 spritz_mac_setup(spritz_ctx *mac_ctx,
                  const uint8_t *key, uint16_t keyLen)
 {
-  spritz_hash_setup(mac_ctx); /* spritz_state_init() */
-  spritz_hash_update(mac_ctx, key, keyLen); /* absorbBytes() */
+  spritz_state_init(mac_ctx); /* spritz_hash_setup() */
+  absorbBytes(mac_ctx, key, keyLen); /* spritz_hash_update() */
   absorbStop(mac_ctx);
 }
 
@@ -562,7 +576,7 @@ void
 spritz_mac_update(spritz_ctx *mac_ctx,
                   const uint8_t *msg, uint16_t msgLen)
 {
-  spritz_hash_update(mac_ctx, msg, msgLen); /* absorbBytes() */
+  absorbBytes(mac_ctx, msg, msgLen); /* spritz_hash_update() */
 }
 
 /** spritz_mac_final()
@@ -576,7 +590,18 @@ void
 spritz_mac_final(spritz_ctx *mac_ctx,
                  uint8_t *digest, uint8_t digestLen)
 {
-  spritz_hash_final(mac_ctx, digest, digestLen);
+  /* Same as spritz_hash_final() */
+  uint8_t i;
+
+  absorbStop(mac_ctx);
+  absorb(mac_ctx, digestLen);
+  /* squeeze() */
+  if (mac_ctx->a) {
+    shuffle(mac_ctx);
+  }
+  for (i = 0; i < digestLen; i++) {
+    digest[i] = drip(mac_ctx);
+  }
 }
 
 /** spritz_mac()
@@ -594,11 +619,28 @@ spritz_mac(uint8_t *digest, uint8_t digestLen,
            const uint8_t *msg, uint16_t msgLen,
            const uint8_t *key, uint16_t keyLen)
 {
+  uint8_t i;
   spritz_ctx mac_ctx;
 
-  spritz_mac_setup(&mac_ctx, key, keyLen);
-  spritz_mac_update(&mac_ctx, msg, msgLen); /* absorbBytes() */
-  spritz_mac_final(&mac_ctx, digest, digestLen);
+  /* spritz_mac_setup() */
+  spritz_state_init(&mac_ctx); /* spritz_hash_setup() */
+  absorbBytes(&mac_ctx, key, keyLen); /* spritz_hash_update() */
+  absorbStop(&mac_ctx);
+
+  /* spritz_mac_update() */
+  absorbBytes(&mac_ctx, msg, msgLen); /* spritz_hash_update() */
+
+  /* spritz_mac_final() */
+  /* Same as spritz_hash_final() */
+  absorbStop(&mac_ctx);
+  absorb(&mac_ctx, digestLen);
+  /* squeeze() */
+  if (mac_ctx.a) {
+    shuffle(&mac_ctx);
+  }
+  for (i = 0; i < digestLen; i++) {
+    digest[i] = drip(&mac_ctx);
+  }
 
   /* `mac_ctx` data will be replaced with 0x00 if SPRITZ_WIPE_TRACES is defined */
 #ifdef SPRITZ_WIPE_TRACES
