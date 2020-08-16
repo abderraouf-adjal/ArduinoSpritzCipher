@@ -2,7 +2,7 @@
 /**
  * Copyright (c) 2015-2020 Abderraouf Adjal
  *
- * Permission to use, copy, modify, and distribute this software for any
+ * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
  *
@@ -66,10 +66,10 @@ extern "C" {
 #define SPRITZ_N 256
 
 /* `Semantic Versioning` of this library */
-#define SPRITZ_LIBRARY_VERSION_STRING "1.0.7"
+#define SPRITZ_LIBRARY_VERSION_STRING "1.0.8"
 #define SPRITZ_LIBRARY_VERSION_MAJOR 1
 #define SPRITZ_LIBRARY_VERSION_MINOR 0
-#define SPRITZ_LIBRARY_VERSION_PATCH 7
+#define SPRITZ_LIBRARY_VERSION_PATCH 8
 
 
 /** spritz_ctx
