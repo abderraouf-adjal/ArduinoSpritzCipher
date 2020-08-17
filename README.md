@@ -194,6 +194,15 @@ if you need to wipe the used `spritz_ctx`'s data.
 
 Configure library settings in the file `SpritzCipher.h`.
 
+- **SPRITZ_USE_LIBC**
+
+Use C standard library functions such as `memset()` to zero buffers.
+It can be useful for performnce if the lib-C functions are optimized in low-level.
+If the compiler is not GCC or Clang, you will see a security warning about code optimization
+is not off in some sensitive functions.
+
+`SPRITZ_USE_LIBC` is **NOT** defined by default.
+
 - **SPRITZ_TIMING_SAFE_CRUSH**
 
 If defined, The equal time `crush()` will be used.
