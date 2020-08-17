@@ -374,10 +374,10 @@ uint32_t
 spritz_random32(spritz_ctx *ctx)
 {
   return (uint32_t)(
-      ((uint32_t)(spritz_random8(ctx)) <<  0)
-    | ((uint32_t)(spritz_random8(ctx)) <<  8)
-    | ((uint32_t)(spritz_random8(ctx)) << 16)
-    | ((uint32_t)(spritz_random8(ctx)) << 24));
+      ((uint32_t)(drip(ctx)) <<  0)
+    | ((uint32_t)(drip(ctx)) <<  8)
+    | ((uint32_t)(drip(ctx)) << 16)
+    | ((uint32_t)(drip(ctx)) << 24));
 }
 
 /** spritz_random32_uniform()
