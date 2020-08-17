@@ -232,6 +232,8 @@ spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
   }
 
 #ifdef SPRITZ_WIPE_TRACES_PARANOID
+# if !defined(__GNUC__) && !defined(__clang__)
+  /* Not GCC or Clang, Optimization isn't off. */
   /* It may be possible to use `d=!!d;` for performnce,
    * But audit the assembly code first.
    */
@@ -243,6 +245,16 @@ spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
   d |= d >> 6; /* |_|S|_|_|_|_|_|D| */
   d |= d >> 7; /* |S|_|_|_|_|_|_|D| */
   d &= 1;      /* |0|0|0|0|0|0|0|D| Zero all bits except LSB */
+# else
+  /* Else if GCC or Clang, no optimization */
+  /* Timing-safe non-zero value to `1`. */
+  if (d == 0U) {
+    d = 0U;
+  }
+  else {
+    d = 1U;
+  }
+# endif
 #endif
 
   return d;
