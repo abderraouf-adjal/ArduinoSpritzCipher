@@ -264,6 +264,10 @@ This example is for ESP8266 SoC, it uses a hardware RNG in ESP8266 as an initial
 - [SpritzCryptTest](examples/SpritzCryptTest/SpritzCryptTest.ino):
 Test the library encryption/decryption function.
 
+- [SpritzCryptInplaceTest](examples/SpritzCryptInplaceTest/SpritzCryptInplaceTest.ino):
+Test the library encryption/decryption function doing encrypt and decrypt
+in same buffer for less RAM usage.
+
 - [SpritzStreamTest](examples/SpritzStreamTest/SpritzStreamTest.ino):
 Generate random bytes (Spritz stream) test.
 

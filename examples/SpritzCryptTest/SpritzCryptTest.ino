@@ -14,7 +14,8 @@
 
 
 /* ArduinoSpritzCipher is configurable in <SpritzCipher.h> with:
- * SPRITZ_TIMING_SAFE_CRUSH, SPRITZ_WIPE_TRACES, SPRITZ_WIPE_TRACES_PARANOID.
+ * SPRITZ_TIMING_SAFE_CRUSH, SPRITZ_WIPE_TRACES, SPRITZ_WIPE_TRACES_PARANOID,
+ * SPRITZ_USE_LIBC.
  * For detailed information, read the documentation.
  */
 #include <SpritzCipher.h>
