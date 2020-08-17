@@ -14,6 +14,7 @@ spritz_random32	KEYWORD2
 spritz_random32_uniform	KEYWORD2
 spritz_add_entropy	KEYWORD2
 spritz_crypt	KEYWORD2
+spritz_crypt_inplace	KEYWORD2
 spritz_hash_setup	KEYWORD2
 spritz_hash_update	KEYWORD2
 spritz_hash_final	KEYWORD2

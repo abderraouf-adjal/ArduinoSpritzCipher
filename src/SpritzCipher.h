@@ -33,7 +33,7 @@ extern "C" {
  */
 #if 0
 # define SPRITZ_USE_LIBC
-# include <string.h>
+# include <string.h> /* For `memset()` */
 # if !defined(__GNUC__) && !defined(__clang__) /* Not GCC or Clang. */
 #  warning "SPRITZ_USE_LIBC warning: Code optimization isn't off in some security functions."
 # endif /* Not GCC or Clang. */
@@ -230,6 +230,19 @@ void
 spritz_crypt(spritz_ctx *ctx,
              const uint8_t *data, uint16_t dataLen,
              uint8_t *dataOut);
+
+/** spritz_crypt_inplace()
+ * Encrypt or decrypt data chunk by XOR-ing it with the spritz keystream
+ * and put the output in the same buffer `data`.
+ * Usable only after calling spritz_setup() or spritz_setup_withiv().
+ *
+ * Parameter ctx:     The context.
+ * Parameter data:    The data to encrypt or decrypt, also the output.
+ * Parameter datalen: Length of the data in bytes.
+ */
+void
+spritz_crypt_inplace(spritz_ctx *ctx,
+                     uint8_t *data, uint16_t dataLen);
 
 
 /** spritz_hash_setup()

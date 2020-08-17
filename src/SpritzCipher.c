@@ -479,6 +479,26 @@ spritz_crypt(spritz_ctx *ctx,
   }
 }
 
+/** spritz_crypt_inplace()
+ * Encrypt or decrypt data chunk by XOR-ing it with the spritz keystream
+ * and put the output in the same buffer `data`.
+ * Usable only after calling spritz_setup() or spritz_setup_withiv().
+ *
+ * Parameter ctx:     The context.
+ * Parameter data:    The data to encrypt or decrypt, also the output.
+ * Parameter datalen: Length of the data in bytes.
+ */
+void
+spritz_crypt_inplace(spritz_ctx *ctx,
+                     uint8_t *data, uint16_t dataLen)
+{
+  uint16_t i;
+
+  for (i = 0; i < dataLen; i++) {
+    data[i] ^= drip(ctx);
+  }
+}
+
 
 /** spritz_hash_setup()
  * Setup the spritz hash state `spritz_ctx`.
