@@ -119,6 +119,14 @@ void spritz_crypt(spritz_ctx *ctx,
 Encrypt or decrypt `data` chunk by XOR-ing it with the spritz keystream.
 
 ```c
+void spritz_crypt_inplace(spritz_ctx *ctx,
+                          uint8_t *data, uint16_t dataLen)
+```
+
+Encrypt or decrypt data chunk by XOR-ing it with the spritz keystream
+and put the output in the same buffer `data`.
+
+```c
 void spritz_hash(uint8_t *digest, uint8_t digestLen,
                  const uint8_t *data, uint16_t dataLen)
 ```
