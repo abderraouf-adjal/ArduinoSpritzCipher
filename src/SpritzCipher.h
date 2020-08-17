@@ -27,6 +27,18 @@ extern "C" {
 #include <stdint.h> /* uint8_t, uint16_t, uint32_t */
 
 
+/** SPRITZ_USE_LIBC
+ * Use C standard library functions such as `memset()` to zero buffers.
+ * It can be useful for performnce if the lib-C functions are optimized in low-level.
+ */
+#if 0
+# define SPRITZ_USE_LIBC
+# include <string.h>
+# if !defined(__GNUC__) && !defined(__clang__) /* Not GCC or Clang. */
+#  warning "SPRITZ_USE_LIBC warning: Code optimization isn't off in some security functions."
+# endif /* Not GCC or Clang. */
+#endif
+
 /** SPRITZ_TIMING_SAFE_CRUSH
  * If defined, the equal time crush() will be used.
  * This may NOT be useful in some compilers with optimization (except GCC and Clang).
@@ -69,7 +81,7 @@ extern "C" {
 /** SPRITZ_N
  * Present the value of N in this spritz implementation, DO NOT change SPRITZ_N value.
  */
-#define SPRITZ_N 256
+#define SPRITZ_N 256U
 
 /* `Semantic Versioning` of this library */
 #define SPRITZ_LIBRARY_VERSION_STRING "1.1.0"

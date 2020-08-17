@@ -254,8 +254,8 @@ spritz_compare(const uint8_t *data_a, const uint8_t *data_b, uint16_t len)
   else {
     d = 1U;
   }
-# endif
-#endif
+# endif /* !defined(__GNUC__) && !defined(__clang__) */
+#endif /* SPRITZ_WIPE_TRACES_PARANOID */
 
   return d;
 }
@@ -276,11 +276,15 @@ __attribute__ ((optnone))
 #endif
 spritz_memzero(uint8_t *buf, uint16_t len)
 {
+#ifdef SPRITZ_USE_LIBC
+  memset(buf, 0, len * sizeof(uint8_t));
+#else
   uint16_t i;
 
   for (i = 0; i < len; i++) {
     buf[i] = 0;
   }
+#endif
 }
 
 /** spritz_state_memzero()
@@ -298,12 +302,15 @@ __attribute__ ((optnone))
 #endif
 spritz_state_memzero(spritz_ctx *ctx)
 {
+#ifdef SPRITZ_USE_LIBC
+  memset(ctx->s, 0, SPRITZ_N);
+#else
   uint8_t i = 0;
-
   /* Loop for SPRITZ_N=256 */
   do {
     ctx->s[i] = 0;
   } while (++i);
+#endif
 
   ctx->i = 0;
   ctx->j = 0;
