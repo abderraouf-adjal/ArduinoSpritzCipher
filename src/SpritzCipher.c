@@ -19,8 +19,8 @@
 #include "SpritzCipher.h" /* Data types and constants */
 
 
-#define SPRITZ_N_MINUS_1 255 /* SPRITZ_N - 1 */
-#define SPRITZ_N_HALF 128 /* SPRITZ_N / 2 */
+#define SPRITZ_N_MINUS_1 255U /* SPRITZ_N - 1 */
+#define SPRITZ_N_HALF 128U /* SPRITZ_N / 2 */
 
 
 static inline void
@@ -53,7 +53,7 @@ spritz_state_init(spritz_ctx *ctx)
   ctx->k = 0;
   ctx->z = 0;
   ctx->a = 0;
-  ctx->w = 1;
+  ctx->w = 1U;
 }
 
 static inline void
@@ -77,7 +77,7 @@ whip(spritz_ctx *ctx)
     update(ctx);
   }
 
-  ctx->w = (uint8_t)(ctx->w + 2);
+  ctx->w = (uint8_t)(ctx->w + 2U);
 }
 
 #ifdef SPRITZ_TIMING_SAFE_CRUSH
@@ -105,7 +105,7 @@ crush(spritz_ctx *ctx)
       ctx->s[j] = ctx->tmp2; /* ctx->s[j]=s_j */
     }
   }
-# else
+# else /* SPRITZ_WIPE_TRACES_PARANOID */
   uint8_t s_i, s_j;
   for (; i < SPRITZ_N_HALF; i++, j--) {
     s_i = ctx->s[i];
@@ -133,7 +133,7 @@ crush(spritz_ctx *ctx)
     }
   }
 }
-#endif
+#endif /* SPRITZ_TIMING_SAFE_CRUSH */
 
 static inline void
 shuffle(spritz_ctx *ctx)
@@ -421,7 +421,7 @@ spritz_random32_uniform(spritz_ctx *ctx, uint32_t upper_bound)
 {
   uint32_t r, min;
 
-  if (upper_bound < 2)
+  if (upper_bound < 2U)
   {
     return 0;
   }

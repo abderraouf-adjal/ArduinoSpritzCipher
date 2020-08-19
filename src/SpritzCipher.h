@@ -79,7 +79,8 @@ extern "C" {
 #endif
 
 /** SPRITZ_N
- * Present the value of N in this spritz implementation, DO NOT change SPRITZ_N value.
+ * Present the value of N in this spritz implementation,
+ * DO NOT change SPRITZ_N value.
  */
 #define SPRITZ_N 256U
 
